@@ -3,7 +3,7 @@
 use Drupal\composer_deploy\ComposerDeployHandler;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Url;
-use DrupalFinder\DrupalFinder;
+use DrupalFinder\DrupalFinderComposerRuntime;
 
 /**
  * @param array $info
@@ -14,9 +14,9 @@ function composer_deploy_system_info_alter(array &$info, Extension $file, $type)
   $handler = &drupal_static(__FUNCTION__);
 
   if (!isset($handler)) {
-    $drupalFinder = new DrupalFinder();
-    if ($drupalFinder->locateRoot(DRUPAL_ROOT)) {
-      $handler = ComposerDeployHandler::fromVendorDir($drupalFinder->getVendorDir());
+    $drupalFinder = new DrupalFinderComposerRuntime();
+    if ($drupalFinder->getDrupalRoot()) {
+      $handler = new ComposerDeployHandler($drupalFinder);
       $prefixes = \Drupal::config('composer_deploy.settings')->get('prefixes');
 
       if (!empty($prefixes)) {
@@ -33,14 +33,18 @@ function composer_deploy_system_info_alter(array &$info, Extension $file, $type)
   }
 
   if (empty($info['version']) && $handler) {
-    $project = basename($file->getFilename(), '.info.yml');
-    $package = $handler->getPackage($project);
+    $extensionName = basename($file->getFilename(), '.info.yml');
+    $package = $handler->getPackageByPath(DRUPAL_ROOT. '/' . $file->getPath());
+    if (!$package) {
+      $package = $handler->getPackage($extensionName);
+    }
     if ($package) {
       // Skip processing for Drupal submodules. Submodules (e.g. ldap_authentication ldap) are shipped as metapackages.
       if ($package['type'] == 'metapackage') {
         return;
       }
 
+      [$vendor, $project] = explode('/', $package['name']);
       $info['project'] = $project;
       $info['composer_deploy_git_hash'] = isset($package['source']['reference']) ? $package['source']['reference'] : NULL;
 
@@ -79,19 +83,32 @@ function composer_deploy_preprocess_update_project_status(&$variables) {
   if (!in_array($project_type, ['module', 'theme'])) {
     return;
   }
-  $projectData = \Drupal::service('extension.list.' . $project_type)->getExtensionInfo($variables['project']['name']);
+
+  // All extensions (modules, themes, etc.) in a project have the same metadata
+  // because they share the same source repository. The metadata is provided by
+  // composer_deploy_system_info_alter().
+  // Therefore, the first extension from the project is used to get the git-metadata
+  // for the whole project.
+  $projects = \Drupal::service('update.manager')->getProjects();
+  $extensionName = array_key_first($projects[$variables['project']['name']]['includes']);
+  $projectData = \Drupal::service('extension.list.' . $project_type)->getExtensionInfo($extensionName);
+
+  $currentVersion = $variables['project']['existing_version'];
+
+  // Replace our current version with the specific hash when on -dev release.
+  if (str_ends_with($variables['project']['existing_version'], 'dev')) {
+    $currentVersion = $projectData['composer_deploy_git_hash'] ?? NULL;
+  }
+
+  // Unable to detect current version (git reference)
+  if ($currentVersion === NULL) {
+    return;
+  }
 
   foreach ($variables['versions'] as &$version) {
-
-    $currentVersion = $variables['project']['existing_version'];
-    // Replace our current version with the specific hash when on -dev release.
-    if (substr($variables['project']['existing_version'], -3) == 'dev') {
-      $currentVersion = $projectData['composer_deploy_git_hash'];
-    }
-
     $upstreamVersion = $version['#version']['tag'];
     // When the upstream is using dev, switch to branch tag.
-    if (substr($version['#version']['tag'], -3) == 'dev') {
+    if (str_ends_with($version['#version']['tag'], 'dev')) {
       $upstreamVersion = substr($version['#version']['tag'], 0, -4);
     }
 

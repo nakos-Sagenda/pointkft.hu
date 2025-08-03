@@ -5,6 +5,7 @@
   "license": "GPL-2.0+",
   "minimum-stability": "dev",
   "require": {
-    "webflo/drupal-finder": "^1.2"
+    "php": ">=8.1",
+    "webflo/drupal-finder": "^1.3"
   }
 }

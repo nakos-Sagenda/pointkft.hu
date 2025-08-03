@@ -2,11 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\composer_deploy\ComposerDeployHanlder.
+ * Contains \Drupal\composer_deploy\ComposerDeployHandler.
  */
 
 namespace Drupal\composer_deploy;
 
+use DrupalFinder\DrupalFinderComposerRuntime;
+use Symfony\Component\Filesystem\Path;
+
+/**
+ * @internal
+ */
 class ComposerDeployHandler {
 
   protected $packages = [];
@@ -18,14 +24,24 @@ class ComposerDeployHandler {
    */
   protected $prefixes = ['drupal'];
 
-  public function __construct($path) {
-    $packages = json_decode(file_get_contents($path), TRUE);
+  /**
+   * @var \DrupalFinder\DrupalFinder
+   */
+  protected $drupalFinder;
+
+  public function __construct(DrupalFinderComposerRuntime $drupalFinder) {
+    $this->drupalFinder = $drupalFinder;
+
+    $packages = json_decode(file_get_contents($this->drupalFinder->getVendorDir() . '/composer/installed.json'), TRUE);
     // Composer 2.0 compatibility.
     // @see https://getcomposer.org/upgrade/UPGRADE-2.0.md
     $packages = $packages['packages'] ?? $packages;
     $this->packages = is_array($packages) ? $packages : [];
   }
 
+  /**
+   * @deprecated. Use \Drupal\composer_deploy\ComposerDeployHandler::getPackageByPath instead.
+   */
   public function getPackage($projectName) {
     foreach ($this->packages as $package) {
       foreach ($this->prefixes as $prefix) {
@@ -37,8 +53,16 @@ class ComposerDeployHandler {
     return FALSE;
   }
 
-  public static function fromVendorDir($vendor_dir) {
-    return new static($vendor_dir . '/composer/installed.json');
+  public function getPackageByPath($path) {
+    foreach ($this->packages as $package) {
+      if (isset($package['install-path'])) {
+        $packagePath = $this->drupalFinder->getVendorDir() . '/composer/' . $package['install-path'];
+        if (Path::isBasePath($packagePath, $path)) {
+          return $package;
+        }
+      }
+    }
+    return FALSE;
   }
 
   /**
