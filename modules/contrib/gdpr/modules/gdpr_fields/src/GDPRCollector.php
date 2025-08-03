@@ -5,7 +5,7 @@ namespace Drupal\gdpr_fields;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\gdpr_fields\Entity\GdprFieldConfigEntity;
 use function in_array;
@@ -19,7 +19,7 @@ class GDPRCollector {
   /**
    * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
@@ -29,7 +29,6 @@ class GDPRCollector {
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   private $entityFieldManager;
-
 
   /**
    * Bundle info.
@@ -41,7 +40,7 @@ class GDPRCollector {
   /**
    * Constructs a GDPRCollector object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
@@ -49,9 +48,9 @@ class GDPRCollector {
    *   Bundle info.
    */
   public function __construct(
-    EntityTypeManager $entityTypeManager,
+    EntityTypeManagerInterface $entityTypeManager,
     EntityFieldManagerInterface $entityFieldManager,
-    EntityTypeBundleInfoInterface $bundleInfo
+    EntityTypeBundleInfoInterface $bundleInfo,
   ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->entityFieldManager = $entityFieldManager;

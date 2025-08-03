@@ -1,5 +1,5 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies: {}
 id: gdpr_sar
 label: 'SARs Request'

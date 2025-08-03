@@ -43,7 +43,7 @@ class GdprMyAgreementsBlock extends BlockBase implements ContainerFactoryPluginI
     ContainerInterface $container,
     array $configuration,
     $pluginId,
-    $pluginDefinition
+    $pluginDefinition,
   ) {
     return new static(
       $configuration,
@@ -76,7 +76,7 @@ class GdprMyAgreementsBlock extends BlockBase implements ContainerFactoryPluginI
     $pluginId,
     $pluginDefinition,
     ClassResolverInterface $classResolver,
-    AccountProxyInterface $currentUser
+    AccountProxyInterface $currentUser,
   ) {
     parent::__construct($configuration, $pluginId, $pluginDefinition);
     $this->classResolver = $classResolver;

@@ -49,7 +49,7 @@ class ConsentWidget extends WidgetBase {
     ContainerInterface $container,
     array $configuration,
     $plugin_id,
-    $plugin_definition
+    $plugin_definition,
   ) {
     return new static(
       $plugin_id,
@@ -87,7 +87,7 @@ class ConsentWidget extends WidgetBase {
     array $settings,
     array $third_party_settings,
     ConsentUserResolverPluginManager $gdprConsentResolverManager,
-    AccountInterface $currentUser
+    AccountInterface $currentUser,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
     $this->gdprConsentResolverManager = $gdprConsentResolverManager;

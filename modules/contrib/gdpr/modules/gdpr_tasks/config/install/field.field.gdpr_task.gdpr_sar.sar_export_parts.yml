@@ -14,7 +14,7 @@ label: 'Sar Export Parts'
 description: ''
 required: false
 translatable: false
-default_value: {  }
+default_value: {}
 default_value_callback: ''
 settings:
   file_directory: gdpr-exports
@@ -22,5 +22,5 @@ settings:
   max_filesize: ''
   description_field: false
   handler: 'default:file'
-  handler_settings: {  }
+  handler_settings: {}
 field_type: file

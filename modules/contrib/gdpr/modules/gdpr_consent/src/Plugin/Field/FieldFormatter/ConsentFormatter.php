@@ -74,7 +74,7 @@ class ConsentFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $output = [];
-
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage('gdpr_consent_agreement');
 
     foreach ($items as $delta => $item) {

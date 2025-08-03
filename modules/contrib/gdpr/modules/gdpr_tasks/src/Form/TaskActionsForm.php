@@ -77,7 +77,7 @@ class TaskActionsForm extends ContentEntityForm {
     EventDispatcherInterface $event_dispatcher,
     Anonymizer $anonymizer,
     TaskManager $task_manager,
-    QueueFactory $queue
+    QueueFactory $queue,
   ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     $this->eventDispatcher = $event_dispatcher;
@@ -139,7 +139,7 @@ class TaskActionsForm extends ContentEntityForm {
     $errors = $this->anonymizer->run($entity);
 
     if (count($errors) === 0) {
-      $this->eventDispatcher->dispatch(RightToBeForgottenCompleteEvent::EVENT_NAME, new RightToBeForgottenCompleteEvent($email));
+      $this->eventDispatcher->dispatch(new RightToBeForgottenCompleteEvent($email), RightToBeForgottenCompleteEvent::EVENT_NAME);
     }
 
     return $errors;

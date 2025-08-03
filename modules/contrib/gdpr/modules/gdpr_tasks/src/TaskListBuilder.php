@@ -3,6 +3,8 @@
 namespace Drupal\gdpr_tasks;
 
 use Drupal\Component\Datetime\DateTimePlus;
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -25,13 +27,29 @@ class TaskListBuilder extends EntityListBuilder {
   protected $bundleStorage;
 
   /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+
+  /**
+   * The date time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $dateTime;
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
-      $container->get('entity_type.manager')->getStorage($entity_type->getBundleEntityType())
+      $container->get('entity_type.manager')->getStorage($entity_type->getBundleEntityType()),
+      $container->get('date.formatter'),
+      $container->get('datetime.time')
     );
   }
 
@@ -44,10 +62,22 @@ class TaskListBuilder extends EntityListBuilder {
    *   The entity storage class.
    * @param \Drupal\Core\Entity\EntityStorageInterface $bundle_storage
    *   The entity bundle storage class.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
+   * @param \Drupal\Component\Datetime\TimeInterface $date_time
+   *   The date time service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityStorageInterface $bundle_storage) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    EntityStorageInterface $storage,
+    EntityStorageInterface $bundle_storage,
+    DateFormatterInterface $date_formatter,
+    TimeInterface $date_time,
+  ) {
     parent::__construct($entity_type, $storage);
     $this->bundleStorage = $bundle_storage;
+    $this->dateFormatter = $date_formatter;
+    $this->dateTime = $date_time;
   }
 
   /**
@@ -77,11 +107,9 @@ class TaskListBuilder extends EntityListBuilder {
     $row['user'] = $entity->getOwner()->toLink()->toString();
     $row['type'] = $this->bundleStorage->load($entity->bundle())->label();
     $row['created'] = DateTimePlus::createFromTimestamp($entity->getCreatedTime())->format('j/m/Y - H:m');
-
-    $date_formatter = \Drupal::service('date.formatter');
-    $row['created'] .= ' - ' . $date_formatter->formatDiff(
+    $row['created'] .= ' - ' . $this->dateFormatter->formatDiff(
       $entity->getCreatedTime(),
-      \Drupal::time()->getRequestTime(), ['granularity' => 1]) . ' ago';
+      $this->dateTime->getRequestTime(), ['granularity' => 1]) . ' ago';
 
     $row['requested_by'] = $entity->requested_by->entity->toLink()->toString();
     return $row + parent::buildRow($entity);

@@ -2,13 +2,9 @@
 
 namespace Drupal\gdpr_dump\Form;
 
-use Drupal\anonymizer\Anonymizer\AnonymizerPluginManager;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\gdpr_dump\Service\GdprDatabaseManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use function array_column;
 use function implode;
@@ -50,36 +46,11 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('config.factory'),
-      $container->get('database'),
-      $container->get('plugin.manager.anonymizer'),
-      $container->get('gdpr_dump.database_manager')
-    );
-  }
-
-  /**
-   * SettingsForm constructor.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The config factory.
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
-   * @param \Drupal\anonymizer\Anonymizer\AnonymizerPluginManager $pluginManager
-   *   The plugin manager for anonymizers.
-   * @param \Drupal\gdpr_dump\Service\GdprDatabaseManager $gdprDatabaseManager
-   *   Database manager service.
-   */
-  public function __construct(
-    ConfigFactoryInterface $configFactory,
-    Connection $database,
-    AnonymizerPluginManager $pluginManager,
-    GdprDatabaseManager $gdprDatabaseManager
-  ) {
-    parent::__construct($configFactory);
-    $this->database = $database;
-    $this->pluginManager = $pluginManager;
-    $this->databaseManager = $gdprDatabaseManager;
+    $instance = parent::create($container);
+    $instance->database = $container->get('database');
+    $instance->pluginManager = $container->get('plugin.manager.anonymizer');
+    $instance->databaseManager = $container->get('gdpr_dump.database_manager');
+    return $instance;
   }
 
   /**

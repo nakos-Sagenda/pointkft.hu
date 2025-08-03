@@ -10,7 +10,7 @@ use function array_keys;
  * The GDPR database manager service.
  *
  * @package Drupal\gdpr_dump\Service
- *  The GDPR database manager serice
+ *  The GDPR database manager service.
  */
 class GdprDatabaseManager {
 
@@ -28,7 +28,7 @@ class GdprDatabaseManager {
    *   The database connection.
    */
   public function __construct(
-    Connection $database
+    Connection $database,
   ) {
     $this->database = $database;
   }

@@ -1,6 +1,6 @@
 name: General Data Protection Regulation (GDPR) - Consent Tracking
 description: Allow tracking of GDPR Consent
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^9 || ^10 || ^11
 type: module
 package: General Data Protection Regulation
 
@@ -12,7 +12,7 @@ dependencies:
   - entity_reference_revisions:entity_reference_revisions
   - drupal:views
 
-# Information added by Drupal.org packaging script on 2023-04-13
-version: '3.0.0'
+# Information added by Drupal.org packaging script on 2025-02-26
+version: '3.1.2'
 project: 'gdpr'
-datestamp: 1681377088
+datestamp: 1740573521

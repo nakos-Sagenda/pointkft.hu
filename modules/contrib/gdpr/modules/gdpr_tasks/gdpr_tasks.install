@@ -8,7 +8,7 @@
 /**
  * Implements hook_requirements().
  */
-function gdpr_tasks_requirements() {
+function gdpr_tasks_requirements($phase) {
   $requirements = [];
 
   $requirements['gdpr_tasks_ext_zip']['title'] = t('GDPR Tasks: Zip extension');
@@ -31,7 +31,12 @@ function gdpr_tasks_requirements() {
   ) {
     $requirements['gdpr_tasks_private_files_setup']['title'] = t('GDPR Tasks: Private Files');
     $requirements['gdpr_tasks_private_files_setup']['description'] = t('The private files folder is not set up.');
-    $requirements['gdpr_tasks_private_files_setup']['severity'] = REQUIREMENT_ERROR;
+    if ($phase === 'install') {
+      $requirements['gdpr_tasks_private_files_setup']['severity'] = REQUIREMENT_WARNING;
+    }
+    else {
+      $requirements['gdpr_tasks_private_files_setup']['severity'] = REQUIREMENT_ERROR;
+    }
   }
   else {
     $destination = 'private://';

@@ -28,7 +28,7 @@ display:
           perm: 'view gdpr tasks'
       cache:
         type: tag
-        options: {  }
+        options: {}
       query:
         type: views_query
         options:
@@ -36,7 +36,7 @@ display:
           distinct: false
           replica: false
           query_comment: ''
-          query_tags: {  }
+          query_tags: {}
       exposed_form:
         type: basic
         options:
@@ -112,7 +112,7 @@ display:
             custom_date_format: ''
             timezone: ''
           group_column: value
-          group_columns: {  }
+          group_columns: {}
           group_rows: true
           delta_limit: 0
           delta_offset: 0
@@ -177,7 +177,7 @@ display:
           settings:
             use_description_as_link_text: true
           group_column: ''
-          group_columns: {  }
+          group_columns: {}
           group_rows: true
           delta_limit: 0
           delta_offset: 0
@@ -214,7 +214,7 @@ display:
               authenticated: authenticated
             reduce: false
             operator_limit_selection: false
-            operator_list: {  }
+            operator_list: {}
           is_grouped: false
           group_info:
             label: ''
@@ -225,8 +225,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           entity_type: gdpr_task
           entity_field: type
           plugin_id: bundle
@@ -255,7 +255,7 @@ display:
               authenticated: authenticated
             placeholder: ''
             operator_limit_selection: false
-            operator_list: {  }
+            operator_list: {}
           is_grouped: false
           group_info:
             label: ''
@@ -266,15 +266,15 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+            default_group_multiple: {}
+            group_items: {}
           entity_type: gdpr_task
           entity_field: status
           plugin_id: string
-      sorts: {  }
+      sorts: {}
       title: 'My data requests'
-      header: {  }
-      footer: {  }
+      header: {}
+      footer: {}
       empty:
         area_text_custom:
           id: area_text_custom
@@ -287,7 +287,7 @@ display:
           tokenize: false
           content: 'No data requests have been completed yet.'
           plugin_id: text_custom
-      relationships: {  }
+      relationships: {}
       arguments:
         user_id:
           id: user_id
@@ -306,7 +306,6 @@ display:
           default_argument_type: user
           default_argument_options:
             user: false
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -320,13 +319,13 @@ display:
           validate:
             type: none
             fail: 'not found'
-          validate_options: {  }
+          validate_options: {}
           break_phrase: false
           not: false
           entity_type: gdpr_task
           entity_field: user_id
           plugin_id: numeric
-      display_extenders: {  }
+      display_extenders: {}
     cache_metadata:
       max-age: 0
       contexts:
@@ -342,7 +341,7 @@ display:
     display_title: Page
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders: {}
       path: user/%user/gdpr/requests
     cache_metadata:
       max-age: 0

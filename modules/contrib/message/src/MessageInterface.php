@@ -2,14 +2,15 @@
 
 namespace Drupal\message;
 
-use Drupal\user\EntityOwnerInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Language\Language;
+use Drupal\user\EntityOwnerInterface;
 
 /**
  * Provides an interface defining a Message entity.
  */
-interface MessageInterface extends ContentEntityInterface, EntityOwnerInterface {
+interface MessageInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 
   /**
    * Set the message template.
@@ -121,6 +122,10 @@ interface MessageInterface extends ContentEntityInterface, EntityOwnerInterface 
    *
    * @param array $ids
    *   The messages IDs to delete.
+   *
+   * @deprecated in message:1.2.0 and is removed from message:2.0.0. Instead, each
+   *   entity should call the ::delete() method explicitly.
+   * @see https://www.drupal.org/project/message/issues/3091343
    */
   public static function deleteMultiple(array $ids);
 

@@ -12,9 +12,9 @@ label: User
 description: ''
 required: false
 translatable: false
-default_value: {  }
+default_value: {}
 default_value_callback: ''
 settings:
   handler: 'default:user'
-  handler_settings: {  }
+  handler_settings: {}
 field_type: entity_reference

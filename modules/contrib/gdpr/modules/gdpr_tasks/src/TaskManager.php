@@ -56,7 +56,7 @@ class TaskManager {
   public function __construct(
     EntityTypeManager $entityTypeManager,
     AccountProxy $currentUser,
-    FileSystemInterface $fileSystem
+    FileSystemInterface $fileSystem,
   ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->taskStorage = $entityTypeManager->getStorage('gdpr_task');

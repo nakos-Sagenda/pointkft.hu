@@ -67,11 +67,11 @@ function gdpr_tasks_file_access(FileInterface $file, $operation, AccountInterfac
 function gdpr_tasks_entity_type_alter(array &$entity_types) {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   // Excluded entity types.
-  $exlude_entity_types = [
+  $exclude_entity_types = [
     'gdpr_tasks',
   ];
 
-  foreach ($exlude_entity_types as $type) {
+  foreach ($exclude_entity_types as $type) {
     if (isset($entity_types[$type])) {
       $entity_types[$type]->set('gdpr_entity_traversal_exclude', TRUE);
     }

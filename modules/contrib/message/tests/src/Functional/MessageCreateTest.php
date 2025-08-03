@@ -3,7 +3,6 @@
 namespace Drupal\Tests\message\Functional;
 
 use Drupal\message\Entity\Message;
-use Drupal\user\Entity\User;
 
 /**
  * Tests message creation and default values.
@@ -25,7 +24,7 @@ class MessageCreateTest extends MessageTestBase {
   public function setUp():void {
     parent::setUp();
 
-    $this->user = $this->drupalcreateuser();
+    $this->user = $this->drupalCreateUser();
   }
 
   /**
@@ -42,7 +41,7 @@ class MessageCreateTest extends MessageTestBase {
 
     $message->save();
 
-    /* @var Message $message */
+    /** @var \Drupal\message\Entity\Message $message */
     $this->assertEquals($this->user->id(), $message->getOwnerId(), 'The default value for uid was set correctly.');
   }
 

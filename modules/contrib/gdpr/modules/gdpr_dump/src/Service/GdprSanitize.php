@@ -33,8 +33,7 @@ class GdprSanitize extends GdprSqlDump {
       $this->database->schema()->dropTable($table);
       $this->database->schema()->renameTable($gdprTable, $table);
     }
-
-    $this->database->popTransaction($transaction->name());
+    unset($transaction);
   }
 
 }

@@ -31,7 +31,12 @@ function gdpr_fields_form_field_config_edit_form_alter(&$form, FormStateInterfac
     '#open' => TRUE,
   ];
 
-  GdprFieldSettingsForm::buildFormFields($form['field']['gdpr_fields'], $field->getTargetEntityTypeId(), $field->getTargetBundle(), $field->getName());
+  if (isset($form_state->getStorage()['field_config'])) {
+    GdprFieldSettingsForm::buildFormFields($form['field']['gdpr_fields'], $field->getTargetEntityTypeId(), $field->getTargetBundle(), $field->getName(), $form_state->getStorage()['field_config']);
+  }
+  else {
+    GdprFieldSettingsForm::buildFormFields($form['field']['gdpr_fields'], $field->getTargetEntityTypeId(), $field->getTargetBundle(), $field->getName());
+  }
 
   $form['actions']['submit']['#submit'][] = 'gdpr_fields_form_field_config_edit_form_submit';
 }

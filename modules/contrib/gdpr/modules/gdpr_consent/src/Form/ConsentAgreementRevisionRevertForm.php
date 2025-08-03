@@ -2,10 +2,12 @@
 
 namespace Drupal\gdpr_consent\Form;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
 use Drupal\gdpr_consent\Entity\ConsentAgreementInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -40,12 +42,28 @@ class ConsentAgreementRevisionRevertForm extends ConfirmFormBase {
   protected $dateFormatter;
 
   /**
+   * The date time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $dateTime;
+
+  /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager')->getStorage('gdpr_consent_agreement'),
-      $container->get('date.formatter')
+      $container->get('date.formatter'),
+      $container->get('datetime.time'),
+      $container->get('messenger')
     );
   }
 
@@ -56,10 +74,21 @@ class ConsentAgreementRevisionRevertForm extends ConfirmFormBase {
    *   The Consent Agreement storage.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
+   * @param \Drupal\Component\Datetime\TimeInterface $date_time
+   *   The date time service.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
    */
-  public function __construct(EntityStorageInterface $entityStorage, DateFormatterInterface $dateFormatter) {
+  public function __construct(
+    EntityStorageInterface $entityStorage,
+    DateFormatterInterface $dateFormatter,
+    TimeInterface $date_time,
+    MessengerInterface $messenger,
+  ) {
     $this->consentAgreementStorage = $entityStorage;
     $this->dateFormatter = $dateFormatter;
+    $this->dateTime = $date_time;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -101,7 +130,9 @@ class ConsentAgreementRevisionRevertForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $gdpr_consent_agreement_revision = NULL) {
-    $this->revision = $this->consentAgreementStorage->loadRevision($gdpr_consent_agreement_revision);
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $consentAgreementStorage */
+    $consentAgreementStorage = $this->consentAgreementStorage;
+    $this->revision = $consentAgreementStorage->loadRevision($gdpr_consent_agreement_revision);
     $form = parent::buildForm($form, $form_state);
 
     return $form;
@@ -125,7 +156,7 @@ class ConsentAgreementRevisionRevertForm extends ConfirmFormBase {
       '%title' => $this->revision->label(),
       '%revision' => $this->revision->getRevisionId(),
     ]);
-    \Drupal::messenger()->addMessage($this->t('Consent Agreement %title has been reverted to the revision from %revision-date.', [
+    $this->messenger->addMessage($this->t('Consent Agreement %title has been reverted to the revision from %revision-date.', [
       '%title' => $this->revision->label(),
       '%revision-date' => $this->dateFormatter->format($originalRevisionTimestamp),
     ]));
@@ -149,7 +180,7 @@ class ConsentAgreementRevisionRevertForm extends ConfirmFormBase {
   protected function prepareRevertedRevision(ConsentAgreementInterface $revision, FormStateInterface $form_state) {
     $revision->setNewRevision();
     $revision->isDefaultRevision(TRUE);
-    $revision->setRevisionCreationTime(\Drupal::time()->getRequestTime());
+    $revision->setRevisionCreationTime($this->dateTime->getRequestTime());
 
     return $revision;
   }

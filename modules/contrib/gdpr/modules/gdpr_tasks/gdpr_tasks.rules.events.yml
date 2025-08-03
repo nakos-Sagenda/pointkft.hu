@@ -3,8 +3,8 @@ gdpr_tasks.rules_rta_complete:
   category: 'GDPR'
   context:
     user:
-        type: 'entity:user'
-        label: 'The user'
+      type: 'entity:user'
+      label: 'The user'
     link:
       type: 'string'
       label: 'The URL to download the report'

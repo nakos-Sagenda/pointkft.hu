@@ -16,13 +16,29 @@ services:
       - '@file_system'
   gdpr_tasks.rta_traversal:
     class: Drupal\gdpr_fields\EntityTraversalFactory
-    arguments: ['@service_container', 'Drupal\gdpr_tasks\Traversal\RightToAccessEntityTraversal']
+    arguments:
+      [
+        '@service_container',
+        'Drupal\gdpr_tasks\Traversal\RightToAccessEntityTraversal',
+      ]
   gdpr_tasks.rta_display_traversal:
     class: Drupal\gdpr_fields\EntityTraversalFactory
-    arguments: ['@service_container', '\Drupal\gdpr_tasks\Traversal\RightToAccessDisplayTraversal']
+    arguments:
+      [
+        '@service_container',
+        '\Drupal\gdpr_tasks\Traversal\RightToAccessDisplayTraversal',
+      ]
   gdpr_tasks.rtf_traversal:
     class: Drupal\gdpr_fields\EntityTraversalFactory
-    arguments: ['@service_container', '\Drupal\gdpr_tasks\Traversal\RightToBeForgottenEntityTraversal']
+    arguments:
+      [
+        '@service_container',
+        '\Drupal\gdpr_tasks\Traversal\RightToBeForgottenEntityTraversal',
+      ]
   gdpr_tasks.rtf_display_traversal:
     class: Drupal\gdpr_fields\EntityTraversalFactory
-    arguments: ['@service_container', '\Drupal\gdpr_tasks\Traversal\RightToBeForgottenDisplayTraversal']
+    arguments:
+      [
+        '@service_container',
+        '\Drupal\gdpr_tasks\Traversal\RightToBeForgottenDisplayTraversal',
+      ]

@@ -58,7 +58,7 @@ class RightToBeForgottenEntityTraversal extends EntityTraversal {
     EntityFieldManagerInterface $entityFieldManager,
     $base_entity,
     ModuleHandlerInterface $module_handler,
-    AnonymizerFactory $anonymizer_factory
+    AnonymizerFactory $anonymizer_factory,
   ) {
     parent::__construct($entityTypeManager, $entityFieldManager, $base_entity);
     $this->moduleHandler = $module_handler;

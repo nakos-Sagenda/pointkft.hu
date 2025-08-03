@@ -5,7 +5,6 @@ namespace Drupal\anonymizer\Anonymizer;
 use Drupal\anonymizer\Service\FakerServiceInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -15,8 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *  The anonymizer package.
  */
 abstract class AnonymizerBase extends PluginBase implements AnonymizerInterface, ContainerFactoryPluginInterface {
-
-  use ContainerAwareTrait;
 
   /**
    * The faker service.
@@ -44,7 +41,7 @@ abstract class AnonymizerBase extends PluginBase implements AnonymizerInterface,
     ContainerInterface $container,
     array $configuration,
     $plugin_id,
-    $plugin_definition
+    $plugin_definition,
   ) {
     return new static(
       $configuration,
@@ -70,7 +67,7 @@ abstract class AnonymizerBase extends PluginBase implements AnonymizerInterface,
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    FakerServiceInterface $faker
+    FakerServiceInterface $faker,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->faker = $faker;

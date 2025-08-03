@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Link;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\gdpr\Form\ContentLinksForm;
@@ -50,9 +51,6 @@ function gdpr_checklistapi_checklist_items() {
   $contentLinks = Drupal::config(ContentLinksForm::GDPR_CONTENT_CONF_KEY)
     ->get('links');
 
-  /** @var \Drupal\Core\Render\RendererInterface $renderer */
-  $renderer = Drupal::service('renderer');
-
   if (!empty($contentLinks[$langCode])) {
     $linkLabels = ContentLinksForm::requiredContentList();
 
@@ -96,7 +94,7 @@ function gdpr_checklistapi_checklist_items() {
 
       $description['#items'][] = t('@title (@status)', [
         '@title' => $title,
-        '@status' => $renderer->renderPlain($configStatus),
+        '@status' => gdpr_handle_renderer_isolation($configStatus),
       ]);
     }
   }
@@ -110,7 +108,7 @@ function gdpr_checklistapi_checklist_items() {
     $privacyPolicyDescription = t('Please verify manually that such content of similar titles exists and has been published.');
   }
   else {
-    $contentDiscoveryDescription = $renderer->renderPlain($description);
+    $contentDiscoveryDescription = gdpr_handle_renderer_isolation($description);
     $contentDiscoveryDescription = t('You can configure content links here: @config_link', [
       '@config_link' => $contentConfigFormLink,
     ]) . $contentDiscoveryDescription;
@@ -192,7 +190,7 @@ function gdpr_checklistapi_checklist_items() {
       ],
       'user_role_permissions' => [
         '#title' => t('I have examined all aspects of displayed personal data, associated with this site, to ensure that all users can access only permitted types of information according to their role'),
-        '#description' => t('Consider every use case in which Drupal fetches information from its database and exposes it to external parties. Bear in mind all possible scenarios extending beyond webpages, eg. RSS feeds, metadata and outgoing e-mail templates sent by the site.'),
+        '#description' => t('Consider every use case in which Drupal fetches information from its database and exposes it to external parties. Bear in mind all possible scenarios extending beyond webpages, eg. RSS feeds, metadata and outgoing email templates sent by the site.'),
       ],
     ],
     'configuration' => [
@@ -251,7 +249,7 @@ function gdpr_get_logging_responsibility_description() {
     ],
   ];
 
-  return Drupal::service('renderer')->renderPlain($logging_items);
+  return gdpr_handle_renderer_isolation($logging_items);
 }
 
 /**
@@ -262,8 +260,6 @@ function gdpr_get_logging_responsibility_description() {
  */
 function gdpr_get_gdpr_module_description() {
   $all_modules = gdpr_get_modules();
-
-  $renderer = Drupal::service('renderer');
 
   $module_handler = \Drupal::service('module_handler');
   $module_path = $module_handler->getModule(basename(__FILE__, '.module'))
@@ -298,7 +294,7 @@ function gdpr_get_gdpr_module_description() {
 
         $gdpr_modules_list['#items'][] = t('@title (@status)', [
           '@title' => $all_modules[$module_name]['name'],
-          '@status' => $renderer->renderPlain($status),
+          '@status' => gdpr_handle_renderer_isolation($status),
         ]);
       }
     }
@@ -312,12 +308,12 @@ function gdpr_get_gdpr_module_description() {
 
       $gdpr_modules_list['#items'][] = t('@title (@status)', [
         '@title' => $module_name,
-        '@status' => $renderer->renderPlain($status),
+        '@status' => gdpr_handle_renderer_isolation($status),
       ]);
     }
   }
 
-  $gdpr_modules = $renderer->renderPlain($gdpr_modules_list);
+  $gdpr_modules = gdpr_handle_renderer_isolation($gdpr_modules_list);
 
   $options = [
     'absolute' => TRUE,
@@ -360,8 +356,6 @@ function gdpr_get_module_statuses() {
 function gdpr_get_module_list($type) {
   $c_modules = gdpr_get_module_list_by_type($type);
 
-  $renderer = Drupal::service('renderer');
-
   $modules_list = [
     '#theme' => 'item_list',
     '#items' => [],
@@ -387,12 +381,12 @@ function gdpr_get_module_list($type) {
 
       $modules_list['#items'][] = t('@title (@status)', [
         '@title' => $all_modules[$c_module]['name'],
-        '@status' => $renderer->renderPlain($status),
+        '@status' => gdpr_handle_renderer_isolation($status),
       ]);
     }
   }
 
-  return $renderer->renderPlain($modules_list);
+  return gdpr_handle_renderer_isolation($modules_list);
 }
 
 /**
@@ -466,4 +460,17 @@ function gdpr_get_modules() {
   }
   Drupal::cache()->set('modules.list', $modules_list);
   return $modules_list;
+}
+
+/**
+ * Handling the renderInIsolation of renderer service.
+ */
+function gdpr_handle_renderer_isolation($value) {
+  /** @var \Drupal\Core\Render\RendererInterface $renderer */
+  // @phpstan-ignore-next-line as it's used on purpose.
+  $renderer = \Drupal::service('renderer');
+  return method_exists(RendererInterface::class, 'renderPlain') ?
+  // @phpstan-ignore-next-line as it is deprecated.
+  $renderer->renderPlain($value) :
+  $renderer->renderInIsolation($value);
 }

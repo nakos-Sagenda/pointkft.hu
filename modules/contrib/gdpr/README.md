@@ -97,7 +97,7 @@ Planned Features:
 
 
 ## Maintainers
-
+[//]: # cspell:disable
 - Levente Besenyei - [lbesenyei](https://www.drupal.org/u/lbesenyei)
 - Peter Pónya - [pedrop](https://www.drupal.org/u/pedrop)
 - Máté Havelant - [mhavelant](https://www.drupal.org/u/mhavelant)

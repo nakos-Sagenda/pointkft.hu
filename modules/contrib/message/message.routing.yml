@@ -31,14 +31,6 @@ entity.message_template.delete_form:
   requirements:
     _permission: 'administer message templates'
 
-message.messages:
-  path: '/admin/content/message'
-  defaults:
-    _title: 'Messages'
-    _entity_list: 'message'
-  requirements:
-    _permission: 'overview messages'
-
 message.main_settings:
   path: '/admin/config/message'
   defaults:
@@ -53,12 +45,5 @@ message.settings:
     _title: 'Message'
     _description: 'Message settings'
     _form: 'Drupal\message\Form\MessageSettingsForm'
-  requirements:
-    _permission: 'administer message templates'
-
-message.multiple_delete_confirm:
-  path: '/admin/content/message/delete'
-  defaults:
-    _form: '\Drupal\message\Form\DeleteMultiple'
   requirements:
     _permission: 'administer message templates'

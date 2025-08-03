@@ -38,7 +38,7 @@ class PasswordAnonymizer extends AnonymizerBase {
     ContainerInterface $container,
     array $configuration,
     $plugin_id,
-    $plugin_definition
+    $plugin_definition,
   ) {
     return new static(
       $configuration,
@@ -68,7 +68,7 @@ class PasswordAnonymizer extends AnonymizerBase {
     $plugin_id,
     $plugin_definition,
     PasswordInterface $password,
-    FakerServiceInterface $faker
+    FakerServiceInterface $faker,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $faker);
     $this->password = $password;

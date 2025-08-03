@@ -42,7 +42,11 @@ class GdprFieldSettingsForm extends FormBase {
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
    */
-  public function __construct(EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entityTypeManager, MessengerInterface $messenger) {
+  public function __construct(
+    EntityFieldManagerInterface $entity_field_manager,
+    EntityTypeManagerInterface $entityTypeManager,
+    MessengerInterface $messenger,
+  ) {
     $this->entityFieldManager = $entity_field_manager;
     $this->entityTypeManager = $entityTypeManager;
     $this->messenger = $messenger;
@@ -235,12 +239,14 @@ class GdprFieldSettingsForm extends FormBase {
    *   Bundle.
    * @param string $field_name
    *   Field.
+   * @param \Drupal\field\Entity\FieldConfig $field_config
+   *   The field config object.
    *
    * @see gdpr_fields_form_field_config_edit_form_submit
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public static function buildFormFields(array &$form, $entity_type = NULL, $bundle_name = NULL, $field_name = NULL) {
+  public static function buildFormFields(array &$form, $entity_type = NULL, $bundle_name = NULL, $field_name = NULL, $field_config = NULL) {
     $entityTypeManager = \Drupal::entityTypeManager();
     $entityDefinition = $entityTypeManager->getDefinition($entity_type);
 
@@ -262,6 +268,18 @@ class GdprFieldSettingsForm extends FormBase {
     $anonymizerDefinitions = $anonymizerFactory->getDefinitions();
     $fieldDefinition = $fieldManager->getFieldDefinitions($entity_type, $bundle_name)[$field_name];
 
+    // From D10.2 onwards field definition is not yet available,
+    // when we add the form elements in the field settings form.
+    // Set field definition from form_state if getFieldDefinitions() fails.
+    if (!$fieldDefinition && $field_config) {
+      $fieldDefinition = $field_config;
+    }
+
+    // Set warning that the GDPR fields couldn't be loaded.
+    if (!$fieldDefinition) {
+      \Drupal::messenger()->addWarning(t('Failed to add GDPR fields to the form.'));
+    }
+
     $form['gdpr_enabled'] = [
       '#type' => 'checkbox',
       '#title' => t('This is a GDPR field'),
@@ -278,7 +296,7 @@ class GdprFieldSettingsForm extends FormBase {
       '#value' => $config->sarsFilename,
     ];
 
-    if ($fieldDefinition->getType() === 'entity_reference') {
+    if ($fieldDefinition && $fieldDefinition->getType() === 'entity_reference') {
       $innerEntityType = $fieldDefinition->getSetting('target_type');
       $innerEntityDefinition = $entityTypeManager->getDefinition($innerEntityType);
 
@@ -375,7 +393,7 @@ class GdprFieldSettingsForm extends FormBase {
       ];
     }
     // Otherwise check if this can be removed.
-    elseif (!$config->propertyCanBeRemoved($fieldDefinition, $errorMessage)) {
+    elseif ($fieldDefinition && !$config->propertyCanBeRemoved($fieldDefinition, $errorMessage)) {
       unset($form['gdpr_rtf']['#options']['remove']);
       $form['gdpr_rtf_disabled'] = [
         '#type' => 'item',
@@ -385,7 +403,7 @@ class GdprFieldSettingsForm extends FormBase {
     }
 
     // Force removal to 'no' for computed properties.
-    if ($fieldDefinition->isComputed()) {
+    if ($fieldDefinition && $fieldDefinition->isComputed()) {
       $form['gdpr_rtf']['#default_value'] = 'no';
       $form['gdpr_rtf']['#disabled'] = TRUE;
       $form['gdpr_rtf']['#description'] = t('*This is a computed field and cannot be removed.');

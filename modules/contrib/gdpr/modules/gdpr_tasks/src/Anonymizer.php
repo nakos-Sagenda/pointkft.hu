@@ -88,7 +88,7 @@ class Anonymizer {
     AccountProxyInterface $currentUser,
     ConfigFactoryInterface $configFactory,
     EntityTraversalFactory $traversalFactory,
-    FileSystemInterface $fileSystem
+    FileSystemInterface $fileSystem,
   ) {
     $this->database = $database;
     $this->entityTypeManager = $entityTypeManager;
@@ -189,7 +189,7 @@ class Anonymizer {
   private function checkExportDirectoryExists() {
     $directory = $this->configFactory->get(RemovalSettingsForm::CONFIG_KEY)
       ->get(RemovalSettingsForm::EXPORT_DIRECTORY);
-    return !empty($directory) && $this->fileSystem->prepareDirectory($directory);
+    return !empty($directory) && $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
   }
 
   /**

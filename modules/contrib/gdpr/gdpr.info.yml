@@ -1,6 +1,6 @@
 name: General Data Protection Regulation (GDPR)
 description: Provides help for making your drupal site GDPR-compliant.
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^9 || ^10 || ^11
 type: module
 configure: checklistapi.checklists.gdpr_checklist
 package: General Data Protection Regulation
@@ -8,7 +8,7 @@ package: General Data Protection Regulation
 dependencies:
   - checklistapi:checklistapi
 
-# Information added by Drupal.org packaging script on 2023-04-13
-version: '3.0.0'
+# Information added by Drupal.org packaging script on 2025-02-26
+version: '3.1.2'
 project: 'gdpr'
-datestamp: 1681377088
+datestamp: 1740573521

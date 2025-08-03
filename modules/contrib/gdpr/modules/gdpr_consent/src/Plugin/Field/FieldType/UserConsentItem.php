@@ -118,6 +118,7 @@ class UserConsentItem extends FieldItemBase {
     $agreement_ids = \Drupal::entityQuery('gdpr_consent_agreement')
       ->condition('status', 1)
       ->sort('title')
+      ->accessCheck(TRUE)
       ->execute();
 
     $agreements = ConsentAgreement::loadMultiple($agreement_ids);

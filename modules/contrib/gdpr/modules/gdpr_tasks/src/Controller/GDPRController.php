@@ -64,7 +64,7 @@ class GDPRController extends ControllerBase {
     AccountProxyInterface $current_user,
     MessengerInterface $messenger,
     TaskManager $task_manager,
-    QueueFactory $queue
+    QueueFactory $queue,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;

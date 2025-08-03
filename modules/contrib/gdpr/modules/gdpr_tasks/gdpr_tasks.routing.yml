@@ -12,6 +12,7 @@ gdpr_tasks.request:
     _controller: '\Drupal\gdpr_tasks\Controller\GDPRController::requestPage'
     _title: 'Create Data Request'
   requirements:
+    _csrf_token: 'TRUE'
     _permission: 'create gdpr tasks'
   options:
     parameters:

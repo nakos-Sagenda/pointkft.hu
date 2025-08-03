@@ -87,9 +87,9 @@ class ConsentAgreementController extends ControllerBase {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   public function revisionShow($gdpr_consent_agreement_revision) {
-    $gdprConsentAgreement = $this->entityTypeManager
-      ->getStorage('gdpr_consent_agreement')
-      ->loadRevision($gdpr_consent_agreement_revision);
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $gdprConsentAgreement */
+    $gdprConsentAgreement = $this->entityTypeManager->getStorage('gdpr_consent_agreement');
+    $gdprConsentAgreement->loadRevision($gdpr_consent_agreement_revision);
     $viewBuilder = $this->entityTypeManager
       ->getViewBuilder('gdpr_consent_agreement');
 
@@ -108,9 +108,9 @@ class ConsentAgreementController extends ControllerBase {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   public function revisionPageTitle($gdpr_consent_agreement_revision) {
-    $gdprConsentAgreement = $this->entityTypeManager
-      ->getStorage('gdpr_consent_agreement')
-      ->loadRevision($gdpr_consent_agreement_revision);
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $gdprConsentAgreement */
+    $gdprConsentAgreement = $this->entityTypeManager->getStorage('gdpr_consent_agreement');
+    $gdprConsentAgreement->loadRevision($gdpr_consent_agreement_revision);
     return $this->t('Revision of %title from %date', [
       '%title' => $gdprConsentAgreement->label(),
       '%date' => $this->dateFormatter->format($gdprConsentAgreement->getRevisionCreationTime()),
@@ -132,7 +132,7 @@ class ConsentAgreementController extends ControllerBase {
    */
   public function revisionOverview(ConsentAgreement $gdpr_consent_agreement) {
     $account = $this->currentUser();
-    /** @var \Drupal\gdpr_consent\ConsentAgreementStorageInterface $storage */
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage('gdpr_consent_agreement');
 
     $build['#title'] = $this->t('Revisions for %title', ['%title' => $gdpr_consent_agreement->title->value]);
@@ -163,7 +163,10 @@ class ConsentAgreementController extends ControllerBase {
           'gdpr_consent_agreement' => $gdpr_consent_agreement->id(),
           'gdpr_consent_agreement_revision' => $vid,
         ]))->toRenderable();
-        $link = $this->renderer->renderPlain($link);
+        $link = method_exists($this->renderer, 'renderPlain') ?
+        // @phpstan-ignore-next-line as it is deprecated.
+        $this->renderer->renderPlain($link) :
+        $this->renderer->renderInIsolation($link);
       }
       else {
         $link = $gdpr_consent_agreement->toLink($date)->toString();
@@ -176,7 +179,10 @@ class ConsentAgreementController extends ControllerBase {
           '#template' => '{% trans %}{{ date }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}',
           '#context' => [
             'date' => $link,
-            'username' => $this->renderer->renderPlain($username),
+            'username' => method_exists($this->renderer, 'renderPlain') ?
+            // @phpstan-ignore-next-line as it is deprecated.
+            $this->renderer->renderPlain($username) :
+            $this->renderer->renderInIsolation($username),
             'message' => [
               '#markup' => $revision->getRevisionLogMessage(),
               '#allowed_tags' => Xss::getHtmlTagList(),
@@ -257,6 +263,7 @@ class ConsentAgreementController extends ControllerBase {
    */
   public function myAgreements(AccountInterface $user) {
     $map = $this->entityFieldManager->getFieldMapByFieldType('gdpr_user_consent');
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $agreement_storage */
     $agreement_storage = $this->entityTypeManager->getStorage('gdpr_consent_agreement');
     $rows = [];
 

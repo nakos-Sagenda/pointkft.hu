@@ -48,6 +48,7 @@ class GdprSqlMysql extends SqlMysql {
    */
   public function __construct($dbSpec, $options) {
     parent::__construct($dbSpec, $options);
+    // @phpstan-ignore-next-line as it is used on purpose.
     $this->gdprDumpConfig = \Drupal::config(SettingsForm::GDPR_DUMP_CONF_KEY);
     $this->tablesToAnonymize = $this->gdprDumpConfig->get('mapping') ?? [];
     $this->tablesToSkip = array_keys($this->gdprDumpConfig->get('empty_tables') ?? []);
@@ -56,10 +57,10 @@ class GdprSqlMysql extends SqlMysql {
   /**
    * Execute a SQL dump and return the path to the resulting dump file.
    *
-   * @return mixed
-   *   Bool or void.
+   * @return string|bool|null
+   *   Returns path to dump file, bool or void.
    */
-  public function dump(): mixed {
+  public function dump(): string|bool|null {
     /** @var string|bool $file Path where dump file should be stored. If TRUE, generate a path based on usual backup directory and current date.*/
     $file = $this->getOption('result-file');
     $fileSuffix = '';
@@ -137,7 +138,7 @@ class GdprSqlMysql extends SqlMysql {
    *   ready for executing. If multiple statements are needed,
    *   enclose in parenthesis.
    */
-  public function dumpCmd($tableSelection): ?string {
+  public function dumpCmd($tableSelection): string {
     $multipleCommands = FALSE;
     $skipTables = $tableSelection['skip'];
     $structureTables = $tableSelection['structure'];

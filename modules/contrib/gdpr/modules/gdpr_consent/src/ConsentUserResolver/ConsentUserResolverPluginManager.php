@@ -38,7 +38,7 @@ class ConsentUserResolverPluginManager extends DefaultPluginManager {
   public function __construct(
     \Traversable $namespaces,
     CacheBackendInterface $cacheBackend,
-    ModuleHandlerInterface $moduleHandler
+    ModuleHandlerInterface $moduleHandler,
   ) {
     parent::__construct(
       'Plugin/Gdpr/ConsentUserResolver',

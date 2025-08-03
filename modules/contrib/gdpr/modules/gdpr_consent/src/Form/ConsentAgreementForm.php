@@ -40,7 +40,7 @@ class ConsentAgreementForm extends ContentEntityForm {
     EntityRepositoryInterface $entity_repository,
     EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
     TimeInterface $time = NULL,
-    AccountInterface $current_user
+    AccountInterface $current_user,
   ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     $this->currentUser = $current_user;

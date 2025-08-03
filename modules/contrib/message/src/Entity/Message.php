@@ -3,9 +3,8 @@
 namespace Drupal\message\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Annotation\PluralTranslation;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
@@ -49,12 +48,22 @@ use Drupal\user\UserInterface;
  *     "views_data" = "Drupal\message\MessageViewsData",
  *     "form" = {
  *       "default" = "Drupal\Core\Entity\ContentEntityForm",
+ *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm",
+ *     },
+ *     "route_provider" = {
+ *       "html" = "\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
  *     },
  *   },
- *   field_ui_base_route = "entity.message_template.edit_form"
+ *   field_ui_base_route = "entity.message_template.edit_form",
+ *   admin_permission = "administer messages",
+ *   links = {
+ *     "delete-multiple-form" = "/admin/content/message/delete",
+ *   }
  * )
  */
 class Message extends ContentEntityBase implements MessageInterface {
+
+  use EntityChangedTrait;
 
   /**
    * Holds the arguments of the message instance.
@@ -198,9 +207,14 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setDescription(t('The time that the message was created.'))
       ->setTranslatable(TRUE);
 
+    $fields['changed'] = BaseFieldDefinition::create('changed')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The time that the message was last edited.'))
+      ->setTranslatable(TRUE);
+
     $fields['arguments'] = BaseFieldDefinition::create('map')
       ->setLabel(t('Arguments'))
-      ->setDescription(t('Holds the arguments of the message in serialise format.'));
+      ->setDescription(t('Holds the arguments of the message in serialize format.'));
 
     return $fields;
   }
@@ -337,38 +351,15 @@ class Message extends ContentEntityBase implements MessageInterface {
   /**
    * {@inheritdoc}
    *
-   * @return \Drupal\message\MessageInterface
-   *   A message entity ready to be save.
-   */
-  public static function create(array $values = []) {
-    return parent::create($values);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @return \Drupal\message\MessageInterface
-   *   A requested message entity.
-   */
-  public static function load($id) {
-    return parent::load($id);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @return \Drupal\message\MessageInterface[]
-   *   Array of requested message entities.
-   */
-  public static function loadMultiple(array $ids = NULL) {
-    return parent::loadMultiple($ids);
-  }
-
-  /**
-   * {@inheritdoc}
+   * @deprecated in message:1.2.0 and is removed from message:2.0.0. Instead, each
+   *   entity should call the ::delete() method explicitly.
+   * @see https://www.drupal.org/project/message/issues/3091343
    */
   public static function deleteMultiple(array $ids) {
-    \Drupal::entityTypeManager()->getStorage('message')->delete($ids);
+    @trigger_error('\Drupal\message\Entity\Message::deleteMultiple is deprecated in message:1.2.0 and is removed from message:2.0.0. Instead, each entity should call the ::delete() method explicitly. See https://www.drupal.org/project/message/issues/3091343', E_USER_DEPRECATED);
+    $storage = \Drupal::entityTypeManager()->getStorage('message');
+    $entities = $storage->loadMultiple($ids);
+    $storage->delete($entities);
   }
 
   /**
@@ -412,6 +403,17 @@ class Message extends ContentEntityBase implements MessageInterface {
    */
   public static function getCurrentUserId() {
     return [\Drupal::currentUser()->id()];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function label() {
+    $params = [
+      '@id' => $this->id(),
+      '@template' => $this->getTemplate()->label(),
+    ];
+    return t('Message ID @id (template: @template)', $params);
   }
 
 }

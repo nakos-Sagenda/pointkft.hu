@@ -26,7 +26,7 @@ entity.gdpr_task.canonical:
   title: 'View'
 
 entity.gdpr_task.delete_form:
-  route_name:  entity.gdpr_task.delete_form
-  base_route:  entity.gdpr_task.canonical
+  route_name: entity.gdpr_task.delete_form
+  base_route: entity.gdpr_task.canonical
   title: Delete
   weight: 10

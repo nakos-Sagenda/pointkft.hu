@@ -5,7 +5,9 @@ namespace Drupal\message\Form;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Url;
 use Drupal\message\FormElement\MessageTemplateMultipleTextField;
 use Drupal\message\MessagePurgePluginManager;
@@ -14,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Form controller for node type forms.
  */
-class MessageTemplateForm extends EntityForm {
+final class MessageTemplateForm extends EntityForm {
 
   /**
    * The entity being used by this form.
@@ -31,21 +33,43 @@ class MessageTemplateForm extends EntityForm {
   protected $purgeManager;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs the message template form.
    *
    * @param \Drupal\message\MessagePurgePluginManager $purge_manager
    *   The message purge plugin manager service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
    */
-  public function __construct(MessagePurgePluginManager $purge_manager) {
+  public function __construct(MessagePurgePluginManager $purge_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler) {
     $this->purgeManager = $purge_manager;
+    $this->languageManager = $language_manager;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('plugin.manager.message.purge')
+    return new self(
+      $container->get('plugin.manager.message.purge'),
+      $container->get('language_manager'),
+      $container->get('module_handler'),
     );
   }
 
@@ -87,9 +111,11 @@ class MessageTemplateForm extends EntityForm {
       '#default_value' => $this->entity->getDescription(),
       '#description' => $this->t('The human-readable description of this message template.'),
     ];
+    $current_language = $this->languageManager->getCurrentLanguage()->getId();
+    $multiple = new MessageTemplateMultipleTextField($this->entity, [get_class($this), 'addMoreAjax'], $current_language);
 
-    $multiple = new MessageTemplateMultipleTextField($this->entity, [get_class($this), 'addMoreAjax']);
-    $multiple->textField($form, $form_state);
+    $has_token_module = $this->moduleHandler->moduleExists('token');
+    $multiple->textField($form, $form_state, $has_token_module);
 
     $settings = $this->entity->getSettings();
 
@@ -103,7 +129,7 @@ class MessageTemplateForm extends EntityForm {
       '#title' => $this->t('Clear empty tokens'),
       '#type' => 'checkbox',
       '#description' => $this->t('When this option is selected, empty tokens will be removed from display.'),
-      '#default_value' => isset($settings['token options']['clear']) ? $settings['token options']['clear'] : FALSE,
+      '#default_value' => $settings['token options']['clear'] ?? FALSE,
     ];
 
     $form['settings']['token options']['token replace'] = [
@@ -132,16 +158,9 @@ class MessageTemplateForm extends EntityForm {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = t('Save message template');
-    $actions['delete']['#value'] = t('Delete message template');
+    $actions['submit']['#value'] = $this->t('Save message template');
+    $actions['delete']['#value'] = $this->t('Delete message template');
     return $actions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validate(array $form, FormStateInterface $form_state) {
-    parent::validate($form, $form_state);
   }
 
   /**
@@ -183,13 +202,19 @@ class MessageTemplateForm extends EntityForm {
     }, $text);
     $this->entity->set('text', $text);
 
+    $new = $this->entity->isNew();
     parent::save($form, $form_state);
 
     $params = [
-      '@template' => $form_state->getValue('label'),
+      '%template' => $form_state->getValue('label'),
     ];
 
-    $this->messenger()->addMessage($this->t('The message template @template created successfully.', $params));
+    if ($new) {
+      $this->messenger()->addMessage($this->t('The message template %template created successfully.', $params));
+    }
+    else {
+      $this->messenger()->addMessage($this->t('The message template %template has been updated.', $params));
+    }
     $form_state->setRedirect('message.overview_templates');
     return $this->entity;
   }

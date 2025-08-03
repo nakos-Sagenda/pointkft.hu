@@ -92,7 +92,7 @@ class GdprSqlDump {
     ConfigFactoryInterface $configFactory,
     Connection $database,
     GdprDatabaseManager $gdprDatabaseManager,
-    AnonymizerFactory $pluginFactory
+    AnonymizerFactory $pluginFactory,
   ) {
     $this->tablesToAnonymize = $configFactory->get(SettingsForm::GDPR_DUMP_CONF_KEY)->get('mapping') ?? [];
     $this->tablesToSkip = $configFactory->get(SettingsForm::GDPR_DUMP_CONF_KEY)->get('empty_tables') ?? [];
@@ -214,7 +214,7 @@ class GdprSqlDump {
       }
     }
 
-    $this->database->popTransaction($transaction->name());
+    unset($transaction);
   }
 
   /**
@@ -339,7 +339,7 @@ class GdprSqlDump {
       $gdprTable = self::GDPR_TABLE_PREFIX . $table;
       $this->database->schema()->dropTable($gdprTable);
     }
-    $this->database->popTransaction($transaction->name());
+    unset($transaction);
   }
 
 }

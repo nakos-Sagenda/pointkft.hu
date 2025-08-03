@@ -7,11 +7,11 @@ id: gdpr_task.removal_log
 field_name: removal_log
 entity_type: gdpr_task
 type: gdpr_task_item
-settings: {  }
+settings: {}
 module: gdpr_tasks
 locked: false
 cardinality: -1
 translatable: true
-indexes: {  }
+indexes: {}
 persist_with_no_fields: false
 custom_storage: false

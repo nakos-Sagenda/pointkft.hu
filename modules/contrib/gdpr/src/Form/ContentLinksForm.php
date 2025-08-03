@@ -2,10 +2,8 @@
 
 namespace Drupal\gdpr\Form;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use function explode;
 use function in_array;
@@ -38,26 +36,9 @@ class ContentLinksForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('config.factory'),
-      $container->get('language_manager')
-    );
-  }
-
-  /**
-   * ContentLinksForm constructor.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The config factory.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
-   *   The language manager.
-   */
-  public function __construct(
-    ConfigFactoryInterface $configFactory,
-    LanguageManagerInterface $languageManager
-  ) {
-    parent::__construct($configFactory);
-    $this->languageManager = $languageManager;
+    $instance = parent::create($container);
+    $instance->languageManager = $container->get('language_manager');
+    return $instance;
   }
 
   /**

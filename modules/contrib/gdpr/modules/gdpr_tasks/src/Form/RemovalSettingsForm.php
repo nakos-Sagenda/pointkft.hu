@@ -2,7 +2,6 @@
 
 namespace Drupal\gdpr_tasks\Form;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -29,26 +28,9 @@ class RemovalSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('config.factory'),
-      $container->get('file_system')
-    );
-  }
-
-  /**
-   * RemovalSettingsForm constructor.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   Config factory.
-   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
-   *   Filesystem.
-   */
-  public function __construct(
-    ConfigFactoryInterface $configFactory,
-    FileSystemInterface $fileSystem
-  ) {
-    parent::__construct($configFactory);
-    $this->fileSystem = $fileSystem;
+    $instance = parent::create($container);
+    $instance->fileSystem = $container->get('file_system');
+    return $instance;
   }
 
   /**
@@ -91,7 +73,7 @@ class RemovalSettingsForm extends ConfigFormBase {
         $form_state->setErrorByName('directory', $this->t('The directory is required.'));
         return;
       }
-      if (!$this->fileSystem->prepareDirectory($directory)) {
+      if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY)) {
         $form_state->setErrorByName('directory', $this->t("The directory does not exist or it's not writable."));
         return;
       }

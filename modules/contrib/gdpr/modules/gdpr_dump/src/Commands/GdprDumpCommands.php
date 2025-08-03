@@ -37,7 +37,7 @@ class GdprDumpCommands extends DrushCommands {
    */
   public function __construct(
     GdprSqlDump $dump,
-    GdprSanitize $sanitize
+    GdprSanitize $sanitize,
   ) {
     parent::__construct();
     $this->dumpService = $dump;
