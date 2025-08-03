@@ -6,13 +6,14 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
-use Drupal\Core\Link;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\user\UserInterface;
 
 /**
@@ -129,7 +130,7 @@ function login_destination_toolbar_alter(&$items) {
 function login_destination_menu_links_discovered_alter(&$links) {
   $moduleHandler = \Drupal::service('module_handler');
 
-  // If Admin Toolbar Tools is enabled, remove its 'Logout' link
+  // If Admin Toolbar Tools is enabled, remove its 'Logout' link.
   if ($moduleHandler->moduleExists('admin_toolbar_tools')) {
     if (isset($links['admin_toolbar_tools.user.logout'])) {
       unset($links['admin_toolbar_tools.user.logout']);
@@ -170,7 +171,7 @@ function login_destination_entity_presave(EntityInterface $entity) {
   // by administrator.
   $needs_verification = \Drupal::config('user.settings')->get('verify_mail');
   if ($needs_verification || !$entity->isActive()) {
-    return;
+    login_destination_perform_redirect('registration', $entity);
   }
   $entity->user_is_new = TRUE;
 }
@@ -197,4 +198,20 @@ function login_destination_perform_redirect($trigger, AccountInterface $account)
     }
     $service->prepareDestination($destination);
   }
+}
+
+/**
+ * Implements hook_block_build_alter().
+ */
+function login_destination_block_build_alter(array &$build, BlockPluginInterface $block) {
+  if ($block->getPluginId() == 'system_menu_block:account') {
+    $build['#cache']['contexts'][] = 'url.path';
+  }
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function login_destination_element_info_alter(array &$info) {
+  $info['link']['#pre_render'][] = 'Drupal\login_destination\LoginDestination::preRender';
 }

@@ -2,7 +2,7 @@ name: Login Destination
 type: module
 description: Customizes the destination the user is redirected to after login/logout/registration/one-time login.
 package: User
-core_version_requirement: "^8.7.10 || ^9 || ^10"
+core_version_requirement: "^8.7.10 || ^9 || ^10 || ^11"
 configure: login_destination.list
 
 dependencies:
@@ -11,7 +11,7 @@ dependencies:
 test_dependencies:
   - admin_toolbar:admin_toolbar_tools
 
-# Information added by Drupal.org packaging script on 2023-03-30
-version: '8.x-2.0-beta6'
+# Information added by Drupal.org packaging script on 2025-05-06
+version: '8.x-2.0-beta9'
 project: 'login_destination'
-datestamp: 1680182202
+datestamp: 1746559030
