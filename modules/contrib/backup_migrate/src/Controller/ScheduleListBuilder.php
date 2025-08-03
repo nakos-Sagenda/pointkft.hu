@@ -5,7 +5,6 @@ namespace Drupal\backup_migrate\Controller;
 use Drupal\backup_migrate\Entity\Schedule;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
-use Exception;
 
 /**
  * Provides a listing of Schedule entities.
@@ -35,7 +34,7 @@ class ScheduleListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     if (!$entity instanceof Schedule) {
-      throw new Exception();
+      throw new \Exception();
     }
     $row['label'] = $entity->label();
     $row['enabled'] = $entity->get('enabled') ? $this->t('Yes') : $this->t('No');
@@ -78,15 +77,6 @@ class ScheduleListBuilder extends ConfigEntityListBuilder {
     }
 
     return $row + parent::buildRow($entity);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state);
-
-    \Drupal::messenger()->addMessage($this->t('The schedule settings have been updated.'));
   }
 
 }

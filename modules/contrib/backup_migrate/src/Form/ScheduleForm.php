@@ -142,6 +142,7 @@ class ScheduleForm extends EntityForm {
         ]));
     }
     $form_state->setRedirectUrl($backup_migrate_schedule->toUrl('collection'));
+    return $status;
   }
 
 }

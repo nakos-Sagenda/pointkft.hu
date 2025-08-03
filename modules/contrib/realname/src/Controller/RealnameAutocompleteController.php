@@ -2,12 +2,16 @@
 
 namespace Drupal\realname\Controller;
 
-use Drupal\system\Controller\EntityAutocompleteController;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Tags;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Entity\EntityAutocompleteMatcherInterface;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\system\Controller\EntityAutocompleteController;
 use Drupal\user\Entity\User;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -16,6 +20,25 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * Defines a route controller for entity autocomplete form elements.
  */
 class RealnameAutocompleteController extends EntityAutocompleteController {
+
+  public function __construct(
+    EntityAutocompleteMatcherInterface $matcher,
+    KeyValueStoreInterface $key_value,
+    private readonly Connection $database,
+  ) {
+    parent::__construct($matcher, $key_value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container): self {
+    return new self(
+      $container->get('entity.autocomplete_matcher'),
+      $container->get('keyvalue')->get('entity_autocomplete'),
+      $container->get('database'),
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -70,22 +93,21 @@ class RealnameAutocompleteController extends EntityAutocompleteController {
 
     // Get an array of matching entities.
     $match_operator = !empty($selection_settings['match_operator']) ? $selection_settings['match_operator'] : 'CONTAINS';
-    $include_anonymous = isset($selection_settings['include_anonymous']) ? $selection_settings['include_anonymous'] : TRUE;
+    $include_anonymous = isset($selection_settings['include_anonymous']) ?? TRUE;
 
-    $connection = \Drupal::database();
-    $query = $connection->select('users_field_data', 'u');
+    $query = $this->database->select('users_field_data', 'u');
     $query->fields('u', ['uid']);
     $query->leftJoin('realname', 'rn', 'u.uid = rn.uid');
     if ($match_operator == 'CONTAINS') {
       $query->condition((new Condition('OR'))
-        ->condition('rn.realname', '%' . $connection->escapeLike($string) . '%', 'LIKE')
-        ->condition('u.name', '%' . $connection->escapeLike($string) . '%', 'LIKE')
+        ->condition('rn.realname', '%' . $this->database->escapeLike($string) . '%', 'LIKE')
+        ->condition('u.name', '%' . $this->database->escapeLike($string) . '%', 'LIKE')
       );
     }
     else {
       $query->condition((new Condition('OR'))
-        ->condition('rn.realname', $connection->escapeLike($string) . '%', 'LIKE')
-        ->condition('u.name', $connection->escapeLike($string) . '%', 'LIKE')
+        ->condition('rn.realname', $this->database->escapeLike($string) . '%', 'LIKE')
+        ->condition('u.name', $this->database->escapeLike($string) . '%', 'LIKE')
       );
     }
     if ($include_anonymous == FALSE) {

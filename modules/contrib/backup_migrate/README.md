@@ -1,6 +1,6 @@
-# Backup and Migrate for Drupal 8 and 9
+# Backup and Migrate for Drupal 9
 
-This is a rewrite of Backup and Migrate for Drupal 8 and 9.
+This is a rewrite of Backup and Migrate for Drupal 9.
 
 ## Installation
 

@@ -5,11 +5,9 @@ namespace Drupal\backup_migrate\Drupal\Config;
 use Drupal\backup_migrate\Core\Config\ConfigInterface;
 use Drupal\backup_migrate\Core\Main\BackupMigrateInterface;
 use Drupal\backup_migrate\Core\Plugin\PluginManagerInterface;
-use Drupal\backup_migrate\Core\Source\FileDirectorySource;
-use Drupal\backup_migrate\Core\Source\MySQLiSource;
 use Drupal\backup_migrate\Entity\SettingsProfile;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\backup_migrate\Drupal\Destination\DrupalDirectoryDestination;
+
 /**
  *
  *
@@ -23,8 +21,7 @@ class DrupalConfigHelper {
    * @param \Drupal\backup_migrate\Core\Plugin\PluginManagerInterface $plugins
    *   The PluginManager containing all of the plugins to be configured.
    * @param string $operation
-   *   'backup', 'restore', or 'initialize' depending on the operation being
-   *   configured for.
+   *   Either 'backup', 'restore', or 'initialize' depending on the operation.
    * @param array $parents
    *   The form parents array.
    *
@@ -45,11 +42,10 @@ class DrupalConfigHelper {
   /**
    * Build the configuration form for a single plugin, source or destination.
    *
-   * @param DrupalDirectoryDestination|FileDirectorySource|MySQLiSource $plugin
+   * @param \Drupal\backup_migrate\Drupal\Destination\DrupalDirectoryDestination|FileDirectorySource|MySQLiSource $plugin
    *   The plugin, source or destination to build the form for.
    * @param string $operation
-   *   'backup', 'restore', or 'initialize' depending on the operation being
-   *   configured for.
+   *   Either 'backup', 'restore', or 'initialize' depending on the operation.
    * @param array $parents
    *
    * @return array
@@ -133,6 +129,9 @@ class DrupalConfigHelper {
             }
             if (!empty($item['multiline'])) {
               $form_item['#type'] = 'textarea';
+            }
+            if (!empty($item['default_value'])) {
+              $value = $item['default_value'];
             }
             break;
 
@@ -279,17 +278,19 @@ class DrupalConfigHelper {
    */
   public static function getSettingsProfileSelector($title, $default_value = NULL) {
     $options = [];
+    $profileSelector = [];
     foreach (SettingsProfile::loadMultiple() as $key => $profile) {
       $options[$key] = $profile->get('label');
     }
     if ($options) {
-      return [
+      $profileSelector = [
         '#type' => 'select',
         '#title' => $title,
         '#options' => $options,
         '#default_value' => $default_value,
       ];
     }
+    return $profileSelector;
   }
 
 }

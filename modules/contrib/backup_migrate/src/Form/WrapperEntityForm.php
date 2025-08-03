@@ -98,6 +98,7 @@ class WrapperEntityForm extends EntityForm {
         $form_state->setRedirectUrl($entity->toUrl('collection'));
         break;
     }
+    return $status;
   }
 
   /**

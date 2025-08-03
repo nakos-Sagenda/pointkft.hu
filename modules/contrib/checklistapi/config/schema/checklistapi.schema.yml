@@ -2,30 +2,30 @@
 
 checklistapi.progress.*:
   type: config_object
-  label: 'Checklist saved progress'
+  label: "Checklist saved progress"
   mapping:
     progress:
       type: mapping
-      label: 'The saved progress data.'
+      label: "The saved progress data."
       mapping:
-        '#changed':
+        "#changed":
           type: integer
-          label: 'Last changed timestamp'
-        '#changed_by':
+          label: "Last changed timestamp"
+        "#changed_by":
           type: string
-          label: 'Last change user ID'
-        '#completed_items':
+          label: "Last change user ID"
+        "#completed_items":
           type: integer
-          label: 'Number of completed items'
-        '#items':
+          label: "Number of completed items"
+        "#items":
           type: sequence
-          label: 'Checklist items'
+          label: "Checklist items"
           sequence:
             type: mapping
             mapping:
-              '#completed':
+              "#completed":
                 type: integer
-                label: 'Completed timestamp'
-              '#uid':
+                label: "Completed timestamp"
+              "#uid":
                 type: string
-                label: 'Completed user ID'
+                label: "Completed user ID"

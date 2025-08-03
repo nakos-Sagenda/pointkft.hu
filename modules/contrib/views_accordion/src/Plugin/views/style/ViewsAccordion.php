@@ -58,7 +58,7 @@ class ViewsAccordion extends StylePluginBase {
     // Find out how many items the display is currently configured to show
     // (row-start-open).
     $maxitems = $this->displayHandler->getOption('items_per_page');
-    // If items_per_page is set to unlimitted (0), 10 rows will be what the user
+    // If items_per_page is set to unlimited (0), 10 rows will be what the user
     // gets to choose from.
     $maxitems = ($maxitems == 0) ? 10 : $maxitems;
 
@@ -171,9 +171,9 @@ class ViewsAccordion extends StylePluginBase {
       '#default_value' => $this->options['heightStyle'],
       '#description' => $this->t('Controls the height of the accordion and each panel.'),
       '#options' => [
-        'auto' => 'auto',
-        'fill' => 'fill',
-        'content' => 'content',
+        'auto' => $this->t('auto'),
+        'fill' => $this->t('fill'),
+        'content' => $this->t('content'),
       ],
     ];
     $form['event'] = [
@@ -232,7 +232,7 @@ class ViewsAccordion extends StylePluginBase {
     $view_settings['usegroupheader'] = FALSE;
     foreach ($this->options['grouping'] as $group) {
       $view_settings['usegroupheader'] = $group['use-grouping-header'] == 1;
-      // @TODO handle multiple grouping.
+      // @todo handle multiple grouping.
       break;
     }
 
@@ -262,7 +262,7 @@ class ViewsAccordion extends StylePluginBase {
 
     $this->view->element['#attached']['library'][] = 'views_accordion/views_accordion.accordion';
 
-    // Add the appropiate effect library if necessary.
+    // Add the appropriate effect library if necessary.
     $effect = $this->options['animated'];
     if (($effect !== 'none') && ($effect !== 'swing') && ($effect !== 'linear')) {
       // jquery.ui.effects.core provides the easing effects.
@@ -295,7 +295,7 @@ class ViewsAccordion extends StylePluginBase {
     // The accordion header selector.
     $view_settings['header'] = '.' . $accordion_header_class;
     if ($view_settings['usegroupheader']) {
-      // @TODO we cannot set a class for the grouping h3 apparently...
+      // @todo we cannot set a class for the grouping h3 apparently...
       $view_settings['header'] = '.js-views-accordion-group-header';
     }
 
@@ -329,7 +329,7 @@ class ViewsAccordion extends StylePluginBase {
       if (!$group['rendered'] && $group['use-grouping-header']) {
         $errors[] = $this->t('Views accordion requires "Use rendered output to group rows" enabled in order to use the group header as the Accordion header.');
       }
-      // @TODO handle multiple grouping.
+      // @todo handle multiple grouping.
       break;
     }
     if ($this->options['collapsible'] !== 1 && $this->options['row-start-open'] === 'none') {

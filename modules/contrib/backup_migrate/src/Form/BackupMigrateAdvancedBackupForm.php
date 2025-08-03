@@ -5,6 +5,7 @@ namespace Drupal\backup_migrate\Form;
 use Drupal\backup_migrate\Drupal\Config\DrupalConfigHelper;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 
 /**
  * Provides a form for performing a 1-click site backup.
@@ -24,7 +25,7 @@ class BackupMigrateAdvancedBackupForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Leave a message about the Entire Site backup.
     // @see https://www.drupal.org/project/backup_migrate/issues/3151290
-    $this->messenger()->addMessage($this->t('It is recommended to not use the "Entire site" backup as it has a tendency of failing on anything but the tiniest of sites. Hopefully this will be fixed in a future release.'));
+    $this->messenger()->addMessage($this->t('It is recommended to not use the "Entire site" backup as it has a tendency of failing on anything but the tiniest of sites. Hopefully this will be fixed in a future release.'), MessengerInterface::TYPE_WARNING);
 
     $form = [];
 
@@ -57,7 +58,7 @@ class BackupMigrateAdvancedBackupForm extends FormBase {
     else {
       $filename_token = [
         '#type' => 'markup',
-        '#markup' => 'In order to use tokens for File Name, please install & enable <a href="https://www.drupal.org/project/token" arget="_blank">Token module</a>. <p></p>',
+        '#markup' => 'In order to use tokens for File Name, please install & enable <a href="https://www.drupal.org/project/token" target="_blank">Token module</a>. <p></p>',
       ];
     }
     array_splice($form['file'], 4, 0, ['filename_token' => $filename_token]);
@@ -87,6 +88,16 @@ class BackupMigrateAdvancedBackupForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
+
+    // @todo Currently there is a problem, where the download destination does not
+    // support taking the site offline.
+    // @see https://www.drupal.org/project/backup_migrate/issues/3475192
+    $destinationId = $form_state->getValue('destination_id');
+    $siteOffline = !empty($form_state->getValue('utils')['site_offline']) ? $form_state->getValue('utils')['site_offline'] : FALSE;
+    if ($destinationId === 'download' && $siteOffline) {
+      $form_state->setErrorByName('destination_id', $this->t('The Backup Destination "Download" does not support taking the site offline during backup.'));
+      $form_state->setErrorByName('utils][site_offline');
+    }
 
     $bam = backup_migrate_get_service_object($form_state->getValues());
 

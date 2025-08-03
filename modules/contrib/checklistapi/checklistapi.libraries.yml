@@ -5,3 +5,6 @@ checklistapi:
       checklistapi.css: {}
   js:
     checklistapi.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery

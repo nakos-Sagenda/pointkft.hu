@@ -1,63 +1,107 @@
-(function ($) {
-  'use strict';
+/**
+ * @file
+ * Defines JavaScript behaviors for the checklistapi module.
+ */
 
+(($, Drupal) => {
   /**
    * Updates the progress bar as checkboxes are changed.
    */
   Drupal.behaviors.checklistapiUpdateProgressBar = {
-    attach: function (context) {
-      const total_items = $(':checkbox.checklistapi-item', context).length;
-      let progress_bar = $('#checklistapi-checklist-form .progress__bar', context);
-      let progress_percentage = $('#checklistapi-checklist-form .progress__percentage', context);
-      $(':checkbox.checklistapi-item', context).change(function () {
-        const num_items_checked = $(':checkbox.checklistapi-item:checked', context).length;
-        const percent_complete = Math.round(num_items_checked / total_items * 100);
-        let args = {};
-        progress_bar.css('width', percent_complete + '%');
-        args['@complete'] = num_items_checked;
-        args['@total'] = total_items;
-        args['@percent'] = percent_complete;
-        progress_percentage.html(Drupal.t('@complete of @total (@percent%)', args));
+    attach(context) {
+      const totalItems = $(":checkbox.checklistapi-item", context).length;
+      const progressBar = $(
+        "#checklistapi-checklist-form .progress__bar",
+        context
+      );
+      const progressPercentage = $(
+        "#checklistapi-checklist-form .progress__percentage",
+        context
+      );
+      $(":checkbox.checklistapi-item", context).change(() => {
+        const numItemsChecked = $(
+          ":checkbox.checklistapi-item:checked",
+          context
+        ).length;
+        const percentComplete = Math.round(
+          (numItemsChecked / totalItems) * 100
+        );
+        const args = {};
+        progressBar.css("width", `${percentComplete}%`);
+        args["@complete"] = numItemsChecked;
+        args["@total"] = totalItems;
+        args["@percent"] = percentComplete;
+        progressPercentage.html(
+          Drupal.t("@complete of @total (@percent%)", args)
+        );
       });
-    }
+    },
   };
 
   /**
    * Provides the summary information for the checklist form vertical tabs.
    */
   Drupal.behaviors.checklistapiFieldsetSummaries = {
-    attach: function (context) {
-      $('#checklistapi-checklist-form .vertical-tabs__panes > details', context).drupalSetSummary(function (context) {
-        const total = $(':checkbox.checklistapi-item', context).length;
-        let args = {};
+    attach(context) {
+      $(
+        "#checklistapi-checklist-form .vertical-tabs__panes > details",
+        context
+      ).drupalSetSummary((context) => {
+        const total = $(":checkbox.checklistapi-item", context).length;
+        const args = {};
         if (total) {
-          args['@complete'] = $(':checkbox.checklistapi-item:checked', context).length;
-          args['@total'] = total;
-          args['@percent'] = Math.round(args['@complete'] / args['@total'] * 100);
-          return Drupal.t('@complete of @total (@percent%)', args);
+          args["@complete"] = $(
+            ":checkbox.checklistapi-item:checked",
+            context
+          ).length;
+          args["@total"] = total;
+          args["@percent"] = Math.round(
+            (args["@complete"] / args["@total"]) * 100
+          );
+          return Drupal.t("@complete of @total (@percent%)", args);
         }
       });
-    }
+    },
   };
 
   /**
    * Adds dynamic item descriptions toggling.
    */
   Drupal.behaviors.checklistapiCompactModeLink = {
-    attach: function (context) {
-      let is_compact_mode = $('#checklistapi-checklist-form', context).hasClass('compact-mode');
-      const text = is_compact_mode ? Drupal.t('Show item descriptions') : Drupal.t('Hide item descriptions');
-      $('#checklistapi-checklist-form .compact-link', context).html('<a href="#">' + text + '</a>');
-      $('#checklistapi-checklist-form .compact-link a', context).click(function () {
-        $(this).closest('#checklistapi-checklist-form').toggleClass('compact-mode');
-        let is_compact_mode = $(this).closest('#checklistapi-checklist-form').hasClass('compact-mode');
-        $(this)
-          .text(is_compact_mode ? Drupal.t('Show item descriptions') : Drupal.t('Hide item descriptions'))
-          .attr('title', is_compact_mode ? Drupal.t('Expand layout to include item descriptions.') : Drupal.t('Compress layout by hiding item descriptions.'));
-        document.cookie = 'Drupal.visitor.checklistapi_compact_mode=' + (is_compact_mode ? 1 : 0);
-        return false;
-      });
-    }
+    attach(context) {
+      const isCompactMode = $("#checklistapi-checklist-form", context).hasClass(
+        "compact-mode"
+      );
+      const text = isCompactMode
+        ? Drupal.t("Show item descriptions")
+        : Drupal.t("Hide item descriptions");
+      $("#checklistapi-checklist-form .compact-link", context).html(
+        `<a href="#">${text}</a>`
+      );
+      $("#checklistapi-checklist-form .compact-link a", context).click(
+        function () {
+          $(this)
+            .closest("#checklistapi-checklist-form")
+            .toggleClass("compact-mode");
+          $(this)
+            .text(
+              isCompactMode
+                ? Drupal.t("Show item descriptions")
+                : Drupal.t("Hide item descriptions")
+            )
+            .attr(
+              "title",
+              isCompactMode
+                ? Drupal.t("Expand layout to include item descriptions.")
+                : Drupal.t("Compress layout by hiding item descriptions.")
+            );
+          document.cookie = `Drupal.visitor.checklistapi_compact_mode=${
+            isCompactMode ? 1 : 0
+          }`;
+          return false;
+        }
+      );
+    },
   };
 
   /**
@@ -67,24 +111,28 @@
    * of this feature.
    */
   Drupal.behaviors.checklistapiPromptBeforeLeaving = {
-    getFormState: function () {
-      return $('#checklistapi-checklist-form :checkbox.checklistapi-item').serializeArray().toString();
+    getFormState() {
+      return $("#checklistapi-checklist-form :checkbox.checklistapi-item")
+        .serializeArray()
+        .toString();
     },
-    attach: function () {
+    attach() {
       const beginningState = this.getFormState();
-      $(window).bind('beforeunload', function () {
-        var endingState = Drupal.behaviors.checklistapiPromptBeforeLeaving.getFormState();
+      $(window).bind("beforeunload", () => {
+        const endingState =
+          Drupal.behaviors.checklistapiPromptBeforeLeaving.getFormState();
         if (beginningState !== endingState) {
-          return Drupal.t('Your changes will be lost if you leave the page without saving.');
+          return Drupal.t(
+            "Your changes will be lost if you leave the page without saving."
+          );
         }
       });
-      $('#checklistapi-checklist-form').submit(function () {
-        $(window).unbind('beforeunload');
+      $("#checklistapi-checklist-form").submit(() => {
+        $(window).unbind("beforeunload");
       });
-      $('#checklistapi-checklist-form .clear-saved-progress').click(function () {
-        $(window).unbind('beforeunload');
+      $("#checklistapi-checklist-form .clear-saved-progress").click(() => {
+        $(window).unbind("beforeunload");
       });
-    }
+    },
   };
-
-})(jQuery);
+})(jQuery, Drupal);

@@ -12,7 +12,7 @@ use Drupal\backup_migrate\Entity\Schedule;
 /**
  * Migrate last_run information from raw KeyValue to State API.
  */
-function backup_migrate_update_5001() {
+function backup_migrate_update_50001() {
   // Legacy KV name format.
   $kv = \Drupal::keyValue('backup_migrate_schedule:last_run');
 

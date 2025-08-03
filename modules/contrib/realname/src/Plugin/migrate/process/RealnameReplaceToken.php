@@ -2,8 +2,8 @@
 
 namespace Drupal\realname\Plugin\migrate\process;
 
-use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
@@ -20,7 +20,7 @@ class RealnameReplaceToken extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($realname_pattern) = $value;
+    [$realname_pattern] = $value;
 
     // Previous D7 realname token need to be replaced by D8 core token.
     //

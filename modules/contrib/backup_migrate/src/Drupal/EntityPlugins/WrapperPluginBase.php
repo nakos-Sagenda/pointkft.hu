@@ -24,14 +24,16 @@ abstract class WrapperPluginBase extends PluginBase implements WrapperPluginInte
   /**
    * Get the Backup and Migrate plugin object.
    *
-   * @return Drupal\backup_migrate\Core\Plugin\PluginInterface
+   * @return Drupal\backup_migrate\Core\Plugin\PluginInterface|null
    */
   public function getObject() {
     // If the class to wrap was specified in the annotation then add that class.
+    $object = NULL;
     $info = $this->getPluginDefinition();
     if ($info['wrapped_class']) {
-      return new $info['wrapped_class']($this->getConfig());
+      $object = new $info['wrapped_class']($this->getConfig());
     }
+    return $object;
   }
 
   /**

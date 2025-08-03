@@ -1,13 +1,15 @@
 {
-  "name": "drupal/views_accordion",
-  "description": "Provides an accordion views display plugin.",
-  "type": "drupal-module",
-  "homepage": "https://www.drupal.org/project/views_accordion",
-  "support": {
-    "issues": "https://www.drupal.org/project/issues/views_accordion"
-  },
-  "require": {
-    "drupal/jquery_ui_accordion": "^2.0"
-  },
-  "license": "GPL-2.0+"
+    "name": "drupal/views_accordion",
+    "type": "drupal-module",
+    "description": "Provides an accordion views display plugin.",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "homepage": "https://www.drupal.org/project/views_accordion",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/views_accordion",
+        "source": "https://git.drupalcode.org/project/views_accordion"
+    },
+    "require": {
+        "drupal/jquery_ui_accordion": "^2.0"
+    }
 }

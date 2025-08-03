@@ -71,6 +71,7 @@ class SettingsProfileForm extends EntityForm {
         ]));
     }
     $form_state->setRedirectUrl($backup_migrate_settings->toUrl('collection'));
+    return $status;
   }
 
 }

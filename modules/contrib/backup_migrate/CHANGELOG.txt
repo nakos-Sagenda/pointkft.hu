@@ -1,11 +1,64 @@
+Backup and Migrate 5.1.0, 2024-11-19
+----------------------------------------
+#3223057 by paulocs, larisse, DamienMcKenna, Anybody, Grevil: Add Drush command
+  for running a quick backup.
+#2968766 by paulocs, DamienMcKenna, intrafusion, larisse, fgm, hron84: Add
+  Drush commands for getting details of available configurations.
+#3262387 by DamienMcKenna: Remove support for Drupal 8.
+#3223058 by DamienMcKenna, paulocs, larisse: Add Drush command for running a
+  scheduled backup.
+#3258613 by Anybody, hmendes, pmagunia, DamienMcKenna: Improve Quick Backup
+  status message.
+#3262391 by DamienMcKenna: Coding standards improvements.
+#3296607 by Project Update Bot, DamienMcKenna: Automated Drupal 10 compatibility
+  fixes.
+By DamienMcKenna: Updated CHANGELOG.txt for recent 5.0.x changes already present
+  in 5.1.x.
+#2846650 by paulocs, Grevil, Dinu Rodnitchi, PhilY, aldairsoares, Anybody,
+  ikit-claw, bruno.bicudo, DamienMcKenna: Bring back "Description / note" field
+  to quick save tab.
+#3256830 by hmendes, beatrizrodrigues, DamienMcKenna: Fix deprecation notices in
+  tests.
+#3236380 by gabrielda, larisse, DamienMcKenna: Send email on success.
+#3216193 by hmendes, larisse, DamienMcKenna: Improve error handling when backup
+  cannot be decryption if the archive is encrypt.
+#3169587 by codebymikey, DamienMcKenna, solideogloria: Warning:
+  opendir(private://backup_migrate/scheduled): failed to open dir.
+#3262070 by WagnerMelo, Anybody, Grevil, hmendes, andregp, DamienMcKenna,
+  bruno.bicudo: Show date & time when restore / backup was successful.
+#3390910 by sarwan_verma, kepesv, DamienMcKenna: Drupal 10 compatibility
+  warnings - Call \Drupal\Core\Entity\Query\QueryInterface::accessCheck() with
+  TRUE or FALSE to specify whether access should be checked.
+#3433054 by benstallings, ankitv18, damienmckenna: Add Gitlab CI.
+#3438158 by Project Update Bot, grevil, vladimiraus, ankitv18, damienmckenna,
+  markie, solideogloria, benstallings: Automated Drupal 11 compatibility fixes.
+#3472560 by ankitv18, damienmckenna, solideogloria: Fix cspell pipeline.
+#3228379 by grevil, jillh68, solideogloria, slejnej, anybody, damienmckenna,
+  chris dart, jcnventura, jamesgrobertson, koffer, cristiroma, mrdrewkeller:
+  Download errors, backup files contain trailing HTML, corrupts archive backups.
+#3478354 by leslieg, damienmckenna: Add logo for compatibility with Project
+  Browser.
+By DamienMcKenna: Disable the upgrade_status test.
+
+
+Backup and Migrate 5.0.x-dev, 2023-xx-xx
+----------------------------------------
+#3338192 by tamerzg, DamienMcKenna: backup_migrate_update_5001 is never
+  executed due to CORE_MINIMUM_SCHEMA_VERSION.
+
+
 Backup and Migrate 5.0.3, 2022-12-18
 ------------------------------------
 #3304922 by ressa, DamienMcKenna: Drupal 10: Fatal error, logger must be
   compatible with Psr\Log\AbstractLogger.
 #3309272 by DamienMcKenna: Tests must define $modules as a protected variable.
+>>>>>>> 682924e (Issue #3338192 by tamerzg, DamienMcKenna: backup_migrate_update_5001 is never executed due to CORE_MINIMUM_SCHEMA_VERSION.)
 #3268401 by DamienMcKenna, Mok7tar, robcarr, crutch, solideogloria, donpwinston:
   filectime() and filesize() receiving NULL values.
+#3309301 by DamienMcKenna: Adjust site restore check to be less strict.
 #3305241 by DamienMcKenna, WagnerMelo: Improve test coverage, fix D10 issues.
+#3133933 by DamienMcKenna, ramonvasconcelos, larisse, paulocs, mrinalini9,
+  alexanderj, solideogloria, pflora: Send email on failure.
 #3258786 by DamienMcKenna, Universaldenker, keithn, elber, fchandler, Grevil:
   Using empty file as ZipArchive is deprecated.
 #3247231 by DamienMcKenna, guille_rodri: Sort in queryFiles function.

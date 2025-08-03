@@ -6,6 +6,7 @@ use Drupal\backup_migrate\Core\Destination\ListableDestinationInterface;
 use Drupal\backup_migrate\Drupal\Destination\DrupalBrowserDownloadDestination;
 use Drupal\backup_migrate\Entity\Destination;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\TableSort;
 
@@ -29,7 +30,7 @@ class BackupController extends ControllerBase {
       ->getStorage('backup_migrate_destination');
 
     $out = [];
-    foreach ($storage->getQuery()->execute() as $key) {
+    foreach ($storage->getQuery()->accessCheck(FALSE)->execute() as $key) {
       $entity = $storage->load($key);
       $destination = $entity->getObject();
       $label = $destination->confGet('name');
@@ -38,7 +39,7 @@ class BackupController extends ControllerBase {
         'title' => [
           '#markup' => '<h2>' . $this->t('Most recent backups in %dest', ['%dest' => $label]) . '</h2>',
         ],
-        'list' => $this::listDestinationBackups($destination, $key, 5),
+        'list' => $this->listDestinationBackups($destination, $key, 5),
       ];
       // Add the more link.
       if ($entity->access('backups') && $entity->hasLinkTemplate('backups')) {
@@ -119,13 +120,23 @@ class BackupController extends ControllerBase {
     $backups = $destination->queryFiles([], $order['sql'], $php_sort, $count);
 
     foreach ($backups as $backup_id => $backup) {
+      $col['description'] = [
+        '#markup' => '<div title="' . $backup->getFullName() . '" class="backup-migrate-description">' . $backup->getFullName() . '</div>',
+      ];
+
+      if (!empty($backup->getMeta('description'))) {
+        $col['description']['#markup'] .= ' <div title="' . $backup->getMeta('description') . '" class="backup-migrate-description">' . $backup->getMeta('description') . '</div>';
+      }
+      $format_data = !class_exists(ByteSizeMarkup::class) ?
+      // @phpstan-ignore-next-line as it requires for backward compatibility.
+      format_size($backup->getMeta('filesize')) :
+      ByteSizeMarkup::create($backup->getMeta('filesize'));
       $rows[] = [
         'data' => [
           // Cells.
-          $backup->getFullName(),
-          \Drupal::service('date.formatter')
-            ->format($backup->getMeta('datestamp')),
-          format_size($backup->getMeta('filesize')),
+          \Drupal::service('renderer')->render($col['description']),
+          \Drupal::service('date.formatter')->format($backup->getMeta('datestamp')),
+          $format_data,
           [
             'data' => [
               '#type' => 'operations',

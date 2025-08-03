@@ -3,9 +3,11 @@
 namespace Drupal\backup_migrate\Form;
 
 use Drupal\backup_migrate\Drupal\Config\DrupalConfigHelper;
+use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 
 /**
  * Provides a form for performing a 1-click site backup.
@@ -26,12 +28,17 @@ class BackupMigrateRestoreForm extends FormBase {
     $form = [];
 
     $bam = backup_migrate_get_service_object();
-
+    $format_data = !class_exists(ByteSizeMarkup::class) ?
+    // @phpstan-ignore-next-line as it requires for backward compatibility.
+    format_size(Environment::getUploadMaxSize()) :
+    ByteSizeMarkup::create(Environment::getUploadMaxSize());
     $form['backup_migrate_restore_upload'] = [
       '#title' => $this->t('Upload a Backup File'),
       '#type' => 'file',
       '#description' => $this->t("Upload a backup file created by Backup and Migrate. For other database or file backups please use another tool for import. Max file size: %size",
-        ["%size" => format_size(Environment::getUploadMaxSize())]
+        [
+          "%size" => $format_data,
+        ]
       ),
     ];
 

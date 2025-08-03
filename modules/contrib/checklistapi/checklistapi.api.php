@@ -82,7 +82,7 @@ function hook_checklistapi_checklist_info() {
  * @return array
  *   An array of arrays representing groups of items, to be presented as
  *   vertical tabs. Each group is keyed by an arbitrary identifier, unique in
- *   the scope of the checklist. The corresponding multimensional array
+ *   the scope of the checklist. The corresponding multidimensional array
  *   describing the group may contain the following key-value pairs:
  *   - #title: The title of the group, used as the vertical tab label.
  *   - #description: (optional) A description of the group.
@@ -90,7 +90,7 @@ function hook_checklistapi_checklist_info() {
  *     groups before being output. Lower numbers appear before higher numbers.
  *   - Any number of arrays representing checklist items. Each item is keyed by
  *     an arbitrary identifier, unique in the scope of the checklist. The
- *     corresponding multimensional array describing the item may contain the
+ *     corresponding multidimensional array describing the item may contain the
  *     following key-value pairs:
  *     - #title: The title of the item.
  *     - #description: (optional) A description of the item, for display beneath
@@ -104,7 +104,7 @@ function hook_checklistapi_checklist_info() {
  *       items before being output. Lower numbers appear before higher
  *       numbers.
  *     - Any number of arrays representing links. Each link is keyed by an
- *       arbitrary unique identifier. The corresponding multimensional array
+ *       arbitrary unique identifier. The corresponding multidimensional array
  *       describing the link may contain the following key-value pairs:
  *       - #text: The link text.
  *       - #url: The link url as a \Drupal\Core\Url object.

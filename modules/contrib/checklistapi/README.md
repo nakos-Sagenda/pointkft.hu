@@ -1,7 +1,5 @@
 # Checklist API
 
-[![Build Status](https://travis-ci.org/TravisCarden/checklistapi.svg?branch=8.x-1.x)](https://travis-ci.org/TravisCarden/checklistapi)
-
 ## Contents of This File
 
 - [Introduction](#introduction)
@@ -11,8 +9,6 @@
 
 
 ## Introduction
-
-Current Maintainer: [TravisCarden](https://www.drupal.org/u/traviscarden)
 
 Checklist API provides a simple interface for modules to create fillable,
 persistent checklists that track progress with completion times and users. See

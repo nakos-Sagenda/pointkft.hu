@@ -29,6 +29,7 @@ use Drupal\backup_migrate\Drupal\Filter\DrupalUtils;
 use Drupal\backup_migrate\Core\Filter\MetadataWriter;
 use Drupal\backup_migrate\Core\File\TempFileManager;
 use Drupal\backup_migrate\Drupal\File\DrupalTempFileAdapter;
+use Drupal\backup_migrate\Core\Filter\Notify;
 
 /**
  * Back up a source to 1 or more destinations.
@@ -60,13 +61,17 @@ function backup_migrate_perform_backup($source_id, $destination_id, array $confi
  * @param array $config
  */
 function backup_migrate_perform_restore($source_id, $destination_id, $file_id = NULL, array $config = []) {
+  $time = \Drupal::time()->getCurrentTime();
+  $currentTime = \Drupal::service('date.formatter')->format($time, 'long');
+
+
   try {
     // Retrieve the service.
     $bam = backup_migrate_get_service_object($config);
 
     // Run the backup.
     $bam->restore($source_id, $destination_id, $file_id);
-    \Drupal::messenger()->addMessage(t('Restore Complete.'));
+    \Drupal::messenger()->addMessage(t('Restore completed at @time', ['@time' => $currentTime]));
   }
   catch (Exception $e) {
     \Drupal::messenger()->addMessage($e->getMessage(), 'error');
@@ -164,6 +169,9 @@ function backup_migrate_backup_migrate_service_object_alter(BackupMigrateInterfa
       'generatorversion' => backup_migrate_module_version(),
     ])
   ));
+
+  // Add the Notify email user
+  $plugins->add('notify', new Notify());
 
   // Add the custom configured sources.
   foreach (Source::loadMultiple() as $source) {
@@ -274,7 +282,7 @@ function backup_migrate_help($route_name, RouteMatchInterface $route_match) {
       ];
       $help['schedules'] = [
         '#markup' => t("<h3>@title</h3><p>Automatically backup up your database on a regular schedule using @cron.</p><p>Each schedule will run a maximum of once per cron run, so they will not run more frequently than your cron is configured to run. If you specify a number of backups to keep for a schedule, old backups will be deleted as new ones created. <strong>If specify a number of files to keep other backup files in that schedule's @destination will get deleted</strong>.<p>", [
-          '@title' => Link::fromTextAndUrl(t('Shedules Tab'), $urls['schedules'])->toString(),
+          '@title' => Link::fromTextAndUrl(t('Schedules Tab'), $urls['schedules'])->toString(),
           '@cron' => Link::fromTextAndUrl(t('cron'), $urls['cron'])->toString(),
           '@destination' => Link::fromTextAndUrl(t('destination'), $urls['destination'])->toString(),
         ]),
@@ -328,4 +336,25 @@ function backup_migrate_module_version() {
   }
 
   return $version;
+}
+
+/**
+ * Implements hook_mail().
+*/
+function backup_migrate_mail($key, &$message, $params) {
+  if (isset($params['subject'])) {
+    $subject = $params['subject'];
+  }
+  elseif ($key == 'backup_success') {
+    $subject = 'The backup succeeded';
+  }
+  elseif ($key == 'backup_failure') {
+    $subject = 'The backup failed';
+  }
+
+  if (!empty($subject)) {
+    $message['from'] = \Drupal::config('system.site')->get('mail');
+    $message['subject'] = $subject;
+    $message['body'][] = $params['message'];
+  }
 }

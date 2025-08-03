@@ -31,6 +31,7 @@ class DrupalDirectoryDestination extends DirectoryDestination {
     $this->checkDirectory();
 
     try {
+      // @phpstan-ignore-next-line as it is deprecated in D10.3 and removed from D12.
       \Drupal::service('file_system')->move($file->realpath(), $this->idToPath($file->getFullName()), FileSystemInterface::EXISTS_REPLACE);
     }
     catch (FileException $e) {

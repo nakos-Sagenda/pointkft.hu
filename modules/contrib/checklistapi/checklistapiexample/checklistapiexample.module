@@ -38,6 +38,7 @@ function checklistapiexample_checklistapi_checklist_items() {
       'install_configure' => [
         '#title' => t('Installation and configuration of Drupal core'),
         '#description' => t('Prepare for installation, run the installation script, and take the steps that should be done after the installation script has completed.'),
+        '#default_value' => TRUE,
         'handbook_page' => [
           '#text' => t('Installation Guide'),
           '#url' => Url::fromUri('https://www.drupal.org/docs/getting-started/installing-drupal'),

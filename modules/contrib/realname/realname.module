@@ -14,8 +14,8 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
@@ -221,7 +221,7 @@ function realname_update(User $account) {
         new BubbleableMetadata()
     );
 
-    // Process TWIG
+    // Process TWIG.
     $twig_service = \Drupal::service('twig');
     $realname = $twig_service->renderInline($realname);
 
@@ -245,7 +245,7 @@ function realname_update(User $account) {
 
   // Save to the database and the static cache.
   \Drupal::database()->merge('realname')
-    ->key(['uid' => $account->id()])
+    ->key('uid', $account->id())
     ->fields([
       'realname' => $realname,
       'created' => \Drupal::time()->getRequestTime(),

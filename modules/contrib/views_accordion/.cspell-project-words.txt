@@ -1,0 +1,5 @@
+disableifone
+maxitems
+rowstartopen
+rsopen
+usegroupheader

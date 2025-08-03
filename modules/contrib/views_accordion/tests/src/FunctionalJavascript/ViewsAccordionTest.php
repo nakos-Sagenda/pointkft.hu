@@ -71,7 +71,7 @@ class ViewsAccordionTest extends WebDriverTestBase {
 
     // Assert our JS settings are available.
     $settings = $this->getDrupalSettings();
-    $this->assertArrayHasKey('views_accordion', $settings, 'Views accordion JS settings avaialable');
+    $this->assertArrayHasKey('views_accordion', $settings, 'Views accordion JS settings available');
 
     // Assert that the first row is visible but not the second.
     $driver->isVisible($this->cssSelectToXpath('#ui-id-2'));

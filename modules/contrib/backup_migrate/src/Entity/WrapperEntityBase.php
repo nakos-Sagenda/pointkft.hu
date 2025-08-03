@@ -44,9 +44,11 @@ abstract class WrapperEntityBase extends ConfigEntityBase implements EntityWithP
    * @throws \Drupal\backup_migrate\Core\Exception\BackupMigrateException
    */
   public function getObject() {
+    $object = NULL;
     if ($plugin = $this->getPlugin()) {
-      return $plugin->getObject();
+      $object = $plugin->getObject();
     }
+    return $object;
   }
 
   /**
