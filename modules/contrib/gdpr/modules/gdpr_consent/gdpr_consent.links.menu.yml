@@ -1,0 +1,7 @@
+# Agreements menu item definition
+entity.gdpr_consent_agreement.collection:
+  title: 'Agreements'
+  route_name: entity.gdpr_consent_agreement.collection
+  description: 'List Agreement Entities'
+  parent: gdpr.admin_config
+  weight: 80

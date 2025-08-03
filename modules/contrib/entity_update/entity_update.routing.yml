@@ -1,0 +1,56 @@
+# Entity update root.
+entity_update:
+  path: '/admin/config/development/entity-update'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Entity Update System'
+  requirements:
+    _permission: 'administer software updates'
+
+# Entity update settings.
+entity_update.settings:
+  path: '/admin/config/development/entity-update/settings'
+  defaults:
+    _form: '\Drupal\entity_update\Form\Settings'
+    _title: 'Entity update settings'
+  requirements:
+    _permission: 'administer software updates'
+
+# Execute entity schema update.
+entity_update.exec:
+  path: '/admin/config/development/entity-update/exec/{action}'
+  defaults:
+    _form: '\Drupal\entity_update\Form\EntityUpdateExec'
+    _title: 'Run Entity update'
+    action: 'default'
+  requirements:
+    _permission: 'administer software updates'
+
+# Show enbtities list.
+entity_update.list:
+  path: '/admin/config/development/entity-update/list/{entity_type_id}/{start}/{length}'
+  defaults:
+    _form: '\Drupal\entity_update\Form\EntityList'
+    _title: 'Show Entities'
+    entity_type_id: ''
+    start: 0
+    length: 10
+  requirements:
+    _permission: 'administer software updates'
+
+# Entity status views.
+entity_update.types:
+  path: '/admin/config/development/entity-update/types'
+  defaults:
+    _controller: '\Drupal\entity_update\Controller\EntityUpdateStatus::entityTypes'
+    _title: 'Entity Types'
+  requirements:
+    _permission: 'administer software updates'
+
+entity_update.status:
+  path: '/admin/config/development/entity-update/status'
+  defaults:
+    _controller: '\Drupal\entity_update\Controller\EntityUpdateStatus::entityStatus'
+    _title: 'Entity Status'
+  requirements:
+    _permission: 'administer software updates'

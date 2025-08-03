@@ -1,0 +1,22 @@
+gdpr_compliance.settings:
+  type: config_object
+  label: 'GDPR settings'
+  mapping:
+    from-morelink:
+      type: text
+      label: 'Url for form [Link to site policy agreement].'
+    popup-morelink:
+      type: text
+      label: 'Url for [More information] button.'
+    popup-text-cookies:
+      type: text
+      label: 'Line 1 (cookies)'
+    popup-text-analytics:
+      type: text
+      label: 'Line 2 (analytics)'
+    popup-btn-agree:
+      type: text
+      label: 'Agree button'
+    popup-btn-findmore:
+      type: text
+      label: 'Find-more button'

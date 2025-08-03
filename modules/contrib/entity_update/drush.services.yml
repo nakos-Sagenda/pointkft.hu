@@ -1,0 +1,6 @@
+services:
+  entity_update.command:
+    class: Drupal\entity_update\Commands\EntityUpdatesCommands
+    arguments: ['@class_resolver', '@entity.definition_update_manager']
+    tags:
+      -  { name: drush.command }

@@ -1,0 +1,31 @@
+# Basic update.
+entity_update.exec:
+  route_name: entity_update.exec
+  base_route: entity_update.exec
+  title: Basic
+  route_parameters:
+    action: 'basic'
+  
+# Update selected type.
+entity_update.exec.type:
+  route_name: entity_update.exec
+  base_route: entity_update.exec
+  title: Selected Type
+  route_parameters:
+    action: 'type'
+  
+# Cleanup.
+entity_update.exec.clean:
+  route_name: entity_update.exec
+  base_route: entity_update.exec
+  title: Cleanup
+  route_parameters:
+    action: 'clean'
+
+# Rescue backuped entities.
+entity_update.exec.rescue:
+  route_name: entity_update.exec
+  base_route: entity_update.exec
+  title: Rescue
+  route_parameters:
+    action: 'rescue'

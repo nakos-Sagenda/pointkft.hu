@@ -1,0 +1,24 @@
+{
+    "name": "drupal/gdpr",
+    "description": "Helps with making a site GDPR-compliant.",
+    "type": "drupal-module",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "mhavelant",
+            "email": "mhavelant@brainsum.com"
+        }
+    ],
+    "require": {
+        "drupal/checklistapi": "^2.1",
+        "drupal/entity": "^1.4",
+        "drupal/entity_reference_revisions": "^1.10",
+        "drupal/message": "^1.4",
+        "drupal/token": "^1.11"
+    },
+    "suggest": {
+        "drush/drush": "GDPR Dump requires Drush ^9 || ^10",
+        "ext-zip": "GDPR Tasks requires the PHP zip extension",
+        "fzaninotto/faker": "Required for the anonymizer submodule (which is required by multiple submodules)."
+    }
+}

@@ -1,0 +1,15 @@
+name: Entity update tests
+type: module
+description: "Examples and Tests for the Entity update module. For the test purpose only."
+package: Development
+tags:
+  - developer
+core_version_requirement: ^9.4 || ^10
+
+dependencies:
+  - entity_update:entity_update
+
+# Information added by Drupal.org packaging script on 2023-07-17
+version: '3.0.0'
+project: 'entity_update'
+datestamp: 1689572949

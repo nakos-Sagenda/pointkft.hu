@@ -1,0 +1,31 @@
+gdpr.collected_user_data:
+  path: '/user/{user}/gdpr'
+  defaults:
+    _title: 'Data stored about you'
+    _controller: '\Drupal\gdpr\Controller\UserController::collectedData'
+  requirements:
+    _custom_access: '\Drupal\gdpr\Controller\UserController::accessCollectedData'
+  options:
+    parameters:
+      user:
+        type: entity:user
+
+gdpr.admin_config:
+  path: '/admin/config/gdpr'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'GDPR'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
+
+gdpr.content_links_form:
+  path: '/admin/config/gdpr/content-links'
+  defaults:
+    _title: 'Content links config'
+    _form: \Drupal\gdpr\Form\ContentLinksForm
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE

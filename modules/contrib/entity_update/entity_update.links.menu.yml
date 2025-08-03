@@ -1,0 +1,41 @@
+# Entity update menu links.
+
+entity_update:
+  title: Entity update
+  description: 'Check Entity update status'
+  parent: system.admin_config_development
+  route_name: entity_update
+
+# Entity update settings.
+entity_update.settings:
+  title: Settings
+  description: 'Entity update settings'
+  parent: entity_update
+  route_name: entity_update.settings
+  weight: -100
+    
+entity_update.exec:
+  title: Run Entity Update
+  description: 'Execute entity update process'
+  parent: entity_update
+  route_name: entity_update.exec
+  route_parameters:
+    action: 'basic'
+
+entity_update.types:
+  title: Entity Types
+  description: 'Get Entity types list'
+  parent: entity_update
+  route_name: entity_update.types
+
+entity_update.status:
+  title: Entity Status
+  description: 'Check Entity update status'
+  parent: entity_update
+  route_name: entity_update.status
+
+entity_update.list:
+  title: Entities List
+  description: 'Show entities list (items list)'
+  parent: entity_update
+  route_name: entity_update.list

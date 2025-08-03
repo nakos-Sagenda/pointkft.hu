@@ -1,0 +1,140 @@
+<?php
+
+/**
+ * @file
+ * Entity update module (entity_update).
+ *
+ * This file provide drupal hooks.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_help().
+ *
+ * Display help page.
+ */
+function entity_update_help($route_name, RouteMatchInterface $route_match) {
+  if ($route_name == 'help.page.entity_update') {
+
+    $current_url = Url::fromRoute('<current>');
+    if (strstr($current_url->toString(), '/admin/help/entity_update') === FALSE) {
+      return TRUE;
+    }
+
+    $doclinks = <<<TEXT
+
+<h3>Documentation</h3>
+  <ul>
+    <li><a href='https://www.drupal.org/docs/8/modules/entity-update'>Entity Update documentation</a></li>
+    <li><a href='https://www.drupal.org/docs/8/modules/entity-update/entity-update-from-drush'>Entity Update from drush</a></li>
+    <li><a href='https://www.drupal.org/docs/8/modules/entity-update/entity-update-usage-from-web-browser'>Entity Update usage from web browser</a></li>
+    <li><a href='https://www.drupal.org/docs/8/modules/entity-update/update-entities-programmatically'>Update entities programmatically</a></li>
+  </ul>
+TEXT;
+
+    $output = <<<TEXT
+<h3>About</h3>
+<p>The main objective of the module Entity Update is to allow module developers and site administrators to update entity types schema even for entities having data.
+The update can be executed by drush command (recommended), from a web browser or Programmatically. </p>
+<p>
+<b>CAUTION !!!</b>
+<br>- The entity update may damage your database, therefore backup the database before taking any action.
+<br>- For production sites, please test twice on a non production site and put the site into maintenance mode before any execution.
+<br>- If you are using this system, you should be conscious of what you are doing.
+<br>- <b>You acknowledge that you are responsible for any issues due to this</b>.
+</p>
+
+$doclinks
+
+<h3>Usage Examples : entity:update (Via drush)</h3>
+<p>
+Drush command : <b>entity:update</b><br>
+Alias : <b>upe</b>
+<br><br>
+1. Show Entities to update<br>
+<code>drush upe --show</code><br>
+<br>
+2. Update All Entities.<br>
+<code>drush upe --all</code><br>
+<br>
+3. Update without automatic database backup (Not recommended for --all, suitable for --basic)<br>
+<code>drush upe --basic --nobackup</code><br>
+<br>
+4. Cleanup entity backup database
+<code>drush upe --clean</code><br>
+</p>
+
+
+<h3>Usage Examples : entity:check (Via drush)</h3>
+<p>
+This command allow to show entities and entity types via drush.<br>
+Drush command : <b>entity:check</b><br>
+Alias : <b>upec</b><br>
+<br><br>
+1. Show The summery of an entity type.<br>
+<code>drush upec node</code><br>
+<br>
+2. Show all entity types contains "block".<br>
+<code>drush upec block --types</code><br>
+<br>
+3. Show 3 entities from 2 of the type 'node'.<br>
+<code>drush upec node --list --start=2 --length=3</code><br>
+</p>
+
+<b><i>Visit the documentation for more examples</i></b>.
+$doclinks
+TEXT;
+
+    return $output;
+  }
+}
+
+/**
+ * Get Entity changes summary.
+ *
+ * @return array
+ *   An associative array keyed by entity type id. Each entry is an array of
+ *   human-readable strings, each describing a change.
+ */
+function entity_update_get_entity_changes() {
+  return \Drupal::entityDefinitionUpdateManager()->getChangeSummary();
+}
+
+/**
+ * Gets the entity type definition.
+ *
+ * @param string $entity_type_id
+ *   The entity type ID.
+ *
+ * @return \Drupal\Core\Entity\EntityTypeInterface
+ *   Entity type definition.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function entity_update_get_entity_type($entity_type_id) {
+  $entity_type = \Drupal::entityTypeManager()->getStorage($entity_type_id);
+  return $entity_type->getEntityType();
+}
+
+/**
+ * Get entity definition update manager implemented by EntityUpdate.
+ *
+ * @return \Drupal\entity_update\CustomEntityDefinitionUpdateManager
+ *   Entity definition update manager.
+ */
+function entity_update_get_entity_definition_update_manager() {
+  return \Drupal::getContainer()->get('entity_update.definition_update_manager');
+}
+
+/**
+ * Get entity definitions.
+ *
+ * @return \Drupal\Core\Entity\EntityTypeInterface[]
+ *   Entity definitions.
+ */
+function entity_update_get_entity_definitions() {
+  return \Drupal::entityTypeManager()->getDefinitions();
+}

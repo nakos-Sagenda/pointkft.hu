@@ -1,0 +1,15 @@
+name: General Data Protection Regulation (GDPR) - Fields
+description: Allow tracking and removing of user data in all fields.
+core_version_requirement: ^9 || ^10
+type: module
+package: General Data Protection Regulation
+
+dependencies:
+  - drupal:system
+  - gdpr:gdpr
+  - gdpr:anonymizer
+
+# Information added by Drupal.org packaging script on 2023-04-13
+version: '3.0.0'
+project: 'gdpr'
+datestamp: 1681377088

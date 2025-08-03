@@ -1,0 +1,36 @@
+# Dynamic fields settings.
+entity_update_tests.settings:
+  type: config_object
+  label: 'Entity update tests config'
+  mapping:
+    fields:
+      type: config_object
+      label: 'Field status'
+      mapping:
+        name:
+          type: boolean
+          label: 'Has field name'
+        description:
+          type: boolean
+          label: 'Has field description'
+        city:
+          type: boolean
+          label: 'Has field city'
+        type:
+          type: string
+          label: 'Type field type'
+
+# The config entity schema (entity_update_tests_cfg).
+entity_update_tests.entity_update_tests_cfg.*:
+  type: config_entity
+  label: 'Test configuration entity'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    uuid:
+      type: string
+      label: 'UUID'
+    label:
+      type: label
+      label: 'Name'

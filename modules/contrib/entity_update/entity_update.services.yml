@@ -1,0 +1,4 @@
+services:
+  entity_update.definition_update_manager:
+    class: Drupal\entity_update\CustomEntityDefinitionUpdateManager
+    arguments: ['@entity.definition_update_manager', '@entity.last_installed_schema.repository', '@entity_type.manager', '@entity_type.listener', '@entity_field.manager', '@field_storage_definition.listener']

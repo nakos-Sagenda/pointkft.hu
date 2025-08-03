@@ -1,0 +1,18 @@
+{
+    "name": "drupal/remove_http_headers",
+    "description": "Removes configured HTTP Response headers.",
+    "type": "drupal-module",
+    "homepage": "https://drupal.org/project/remove_http_headers",
+    "license": "GPL-2.0-or-later",
+    "keywords": ["Drupal", "HTTP headers", "Security"],
+    "authors": [
+        {
+            "name": "Orlando Thöny",
+            "email": "orlando.thoeny@gmail.com",
+            "role": "Maintainer"
+        }
+    ],
+    "require": {
+        "drupal/core": "^9.5 || ^10"
+    }
+}

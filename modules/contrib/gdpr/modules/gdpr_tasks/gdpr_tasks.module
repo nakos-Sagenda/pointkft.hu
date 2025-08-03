@@ -1,0 +1,207 @@
+<?php
+
+/**
+ * @file
+ * Module file for the GDPR Tasks module.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\Display\EntityDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\file\FileInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function gdpr_tasks_theme() {
+  $theme = [];
+  $theme['gdpr_task'] = [
+    'render element' => 'elements',
+    'file' => 'gdpr_tasks.pages.inc',
+    'template' => 'gdpr_task',
+  ];
+  $theme['gdpr_task_content_add_list'] = [
+    'render element' => 'content',
+    'variables' => ['content' => NULL],
+    'file' => 'gdpr_tasks.pages.inc',
+  ];
+  return $theme;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function gdpr_tasks_theme_suggestions_gdpr_task(array $variables) {
+  $suggestions = [];
+  /** @var \Drupal\gdpr_tasks\Entity\TaskInterface $entity */
+  $entity = $variables['elements']['#gdpr_task'];
+  $anonymized_view_mode = str_replace('.', '_', $variables['elements']['#view_mode']);
+
+  $suggestions[] = 'gdpr_task__' . $anonymized_view_mode;
+  $suggestions[] = 'gdpr_task__' . $entity->bundle();
+  $suggestions[] = 'gdpr_task__' . $entity->bundle() . '__' . $anonymized_view_mode;
+  $suggestions[] = 'gdpr_task__' . $entity->id();
+  $suggestions[] = 'gdpr_task__' . $entity->id() . '__' . $anonymized_view_mode;
+  return $suggestions;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function gdpr_tasks_file_access(FileInterface $file, $operation, AccountInterface $account) {
+  if ('download' === $operation && $file->getOwnerId() === $account->id()) {
+    return AccessResult::allowed();
+  }
+
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ *
+ * Update entity definitions of certain entity types to be excluded from entity
+ * traversal.
+ */
+function gdpr_tasks_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  // Excluded entity types.
+  $exlude_entity_types = [
+    'gdpr_tasks',
+  ];
+
+  foreach ($exlude_entity_types as $type) {
+    if (isset($entity_types[$type])) {
+      $entity_types[$type]->set('gdpr_entity_traversal_exclude', TRUE);
+    }
+  }
+}
+
+/**
+ * Saves a file to the specified destination and creates a database entry.
+ *
+ * @param string $data
+ *   A string containing the contents of the file.
+ * @param \Drupal\Core\Session\AccountInterface $user
+ *   The owner of the file.
+ * @param string|null $destination
+ *   (optional) A string containing the destination URI. This must be a stream
+ *   wrapper URI. If no value or NULL is provided, a randomized name will be
+ *   generated and the file will be saved using Drupal's default files scheme,
+ *   usually "public://".
+ * @param int $replace
+ *   (optional) The replace behavior when the destination file already exists.
+ *   Possible values include:
+ *   - FILE_EXISTS_REPLACE: Replace the existing file. If a managed file with
+ *     the destination name exists, then its database entry will be updated. If
+ *     no database entry is found, then a new one will be created.
+ *   - FILE_EXISTS_RENAME: (default) Append _{incrementing number} until the
+ *     filename is unique.
+ *   - FILE_EXISTS_ERROR: Do nothing and return FALSE.
+ *
+ * @return \Drupal\file\FileInterface|false
+ *   A file entity, or FALSE on error.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ *
+ * @NOTE THIS IS NEEDED, DO NOT DELETE THIS.
+ * @NOTE THIS IS NEEDED, DO NOT DELETE THIS.
+ * @NOTE THIS IS NEEDED, DO NOT DELETE THIS.
+ * @NOTE THIS IS NEEDED, DO NOT DELETE THIS.
+ * @NOTE THIS IS NEEDED, DO NOT DELETE THIS.
+ * @NOTE THIS IS NEEDED, DO NOT DELETE THIS.
+ * @NOTE THIS IS NEEDED, DO NOT DELETE THIS.
+ * @NOTE THIS IS NEEDED, DO NOT DELETE THIS.
+ * @NOTE THIS IS NEEDED, DO NOT DELETE THIS.
+ * @NOTE THIS IS NEEDED, DO NOT DELETE THIS.
+ * @NOTE THIS IS NEEDED, DO NOT DELETE THIS.
+ * @NOTE THIS IS NEEDED, DO NOT DELETE THIS.
+ *
+ * @see file_unmanaged_save_data()
+ */
+function gdpr_tasks_file_save_data($data, AccountInterface $user, $destination = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
+  if (!Drupal::service('stream_wrapper_manager')->isValidUri($destination)) {
+    Drupal::logger('file')->notice('The data could not be saved because the destination %destination is invalid. This may be caused by improper use of file_save_data() or a missing stream wrapper.', ['%destination' => $destination]);
+    Drupal::messenger()->addError(t('The data could not be saved because the destination is invalid. More information is available in the system log.'));
+    return FALSE;
+  }
+
+  if ($uri = Drupal::service('file_system')->saveData($data, $destination, $replace)) {
+    /** @var \Drupal\file\FileStorageInterface $fileStorage */
+    $fileStorage = Drupal::entityTypeManager()->getStorage('file');
+    // Create a file entity.
+    /** @var \Drupal\file\FileInterface $file */
+    $file = $fileStorage->create([
+      'uri' => $uri,
+      'uid' => $user->id(),
+      'status' => FileInterface::STATUS_PERMANENT,
+    ]);
+    // If we are replacing an existing file re-use its database record.
+    // @todo Do not create a new entity in order to update it. See
+    //   https://www.drupal.org/node/2241865.
+    if ($replace === FileSystemInterface::EXISTS_REPLACE) {
+      $existing_files = $fileStorage->loadByProperties(['uri' => $uri]);
+      if (count($existing_files)) {
+        $existing = reset($existing_files);
+        $file->fid = $existing->id();
+        $file->setOriginalId($existing->id());
+        $file->setFilename($existing->getFilename());
+      }
+    }
+    // If we are renaming around an existing file (rather than a directory),
+    // use its basename for the filename.
+    elseif ($replace === FileSystemInterface::EXISTS_RENAME && is_file($destination)) {
+      $file->setFilename(Drupal::service('file_system')->basename($destination));
+    }
+
+    $file->save();
+    return $file;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function gdpr_tasks_entity_view_alter(array &$build, EntityInterface $entity, EntityDisplayInterface $display) {
+  if ($entity->bundle() !== 'gdpr_sar') {
+    return;
+  }
+
+  if (in_array($entity->getStatus(), ['reviewing', 'processed'])) {
+    if (isset($build['sar_export'])) {
+      unset($build['sar_export']);
+    }
+  }
+  elseif (isset($build['sar_export_parts'])) {
+    unset($build['sar_export_parts']);
+  }
+
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete().
+ */
+function gdpr_tasks_user_predelete(EntityInterface $entity) {
+  // @todo Consider options for deleting related data if the user has cancelled
+  // their account.
+  $storage = \Drupal::entityTypeManager()->getStorage('gdpr_task');
+  $query = $storage->getQuery()->accessCheck(FALSE);
+  $or = $query->orConditionGroup()
+    ->condition('requested_by', $entity->id())
+    ->condition('user_id', $entity->id());
+  $query->condition($or);
+
+  if ($tasks = $query->execute()) {
+    /** @var \Drupal\gdpr_tasks\Entity\TaskInterface $task */
+    foreach ($storage->loadMultiple($tasks) as $task) {
+
+      // For now, we can safely assume a deleted user can have their
+      // outstanding requests deleted.
+      $task->delete();
+    }
+  }
+}

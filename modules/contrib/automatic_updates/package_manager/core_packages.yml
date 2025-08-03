@@ -1,0 +1,15 @@
+# This file exists so that \Drupal\package_manager\ComposerUtility can discern
+# which installed packages are considered part of Drupal core. There's no way
+# to tell by package type alone, since these packages have varying types, but
+# are all part of Drupal core's repository. This file is for internal use and
+# may be changed or removed at any time. Code external to Package Manager
+# should not use it in any way.
+[
+  drupal/core,
+  drupal/core-composer-scaffold,
+  drupal/core-dev,
+  drupal/core-dev-pinned,
+  drupal/core-project-message,
+  drupal/core-recommended,
+  drupal/core-vendor-hardening
+]

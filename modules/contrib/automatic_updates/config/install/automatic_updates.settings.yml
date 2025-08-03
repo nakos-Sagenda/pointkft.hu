@@ -1,0 +1,3 @@
+cron: disable
+allow_core_minor_updates: false
+status_check_mail: errors_only

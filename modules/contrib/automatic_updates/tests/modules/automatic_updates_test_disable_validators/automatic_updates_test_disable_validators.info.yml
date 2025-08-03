@@ -1,0 +1,9 @@
+name: 'Automatic Updates Test - Disable validators'
+type: module
+description: 'Provides a mechanism to disable specific validators during functional tests'
+package: Testing
+
+# Information added by Drupal.org packaging script on 2023-02-14
+version: '8.x-2.7'
+project: 'automatic_updates'
+datestamp: 1676402297

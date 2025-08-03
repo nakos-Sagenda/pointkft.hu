@@ -1,0 +1,76 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "e9b347834f96b988de85d370a723d3bf",
+    "packages": [
+        {
+            "name": "drupal/core",
+            "version": "9.8.0",
+            "dist": {
+                "type": "path",
+                "url": "../path_repos/drupal--core",
+                "reference": "5aeab06c3087477e20e617328f2fa9f3ed18373d"
+            },
+            "type": "drupal-core",
+            "extra": {
+                "_readme": [
+                    "The 'drupal-scaffold' section below is needed because 'Drupal\\automatic_updates\\Validator\\ScaffoldFilePermissionsValidator'",
+                    "uses this section to determine which files to check. The actual composer.json file for drupal/core will have more files listed",
+                    "but this limited list is used in '\\Drupal\\Tests\\automatic_updates\\Kernel\\StatusCheck\\ScaffoldFilePermissionsValidatorTest'",
+                    "to ensure the section is source of the file list."
+                ],
+                "drupal-scaffold": {
+                    "file-mapping": {
+                        "[web-root]/sites/default/default.settings.php": "",
+                        "[web-root]/sites/default/default.services.yml": ""
+                    }
+                }
+            },
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
+            "name": "drupal/core-recommended",
+            "version": "9.8.0",
+            "dist": {
+                "type": "path",
+                "url": "../path_repos/drupal--core-recommended",
+                "reference": "c9babad9851edc2b7b4b43c778bc30db09f14946"
+            },
+            "type": "project",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "drupal/core-dev",
+            "version": "9.8.0",
+            "dist": {
+                "type": "path",
+                "url": "../path_repos/drupal--core-dev",
+                "reference": "6a8d7df3a5650a5d3bce6e478114064b176f7104"
+            },
+            "type": "package",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}

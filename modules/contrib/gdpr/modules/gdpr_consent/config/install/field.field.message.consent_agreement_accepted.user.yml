@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.user
+    - message.template.consent_agreement_accepted
+id: message.consent_agreement_accepted.user
+field_name: user
+entity_type: message
+bundle: consent_agreement_accepted
+label: User
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings: {  }
+field_type: entity_reference

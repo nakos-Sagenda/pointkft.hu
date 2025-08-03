@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function pdf_theme() {
+	return [
+		'file_pdf' => [
+			'variables' => [
+				'attributes' => NULL
+			],
+		],
+	];
+}

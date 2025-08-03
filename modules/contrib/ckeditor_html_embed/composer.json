@@ -1,0 +1,20 @@
+{
+    "name": "drupal/ckeditor_html_embed",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "description": "The HTML embed feature allows embedding an arbitrary HTML snippet in the editor.",
+    "keywords": ["Drupal"],
+    "homepage": "https://www.drupal.org/project/ckeditor_html_embed",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Chris Snyder",
+            "email": "chris@chrissnyder.org",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/ckeditor_html_embed",
+        "source": "https://cgit.drupalcode.org/ckeditor_html_embed"
+    }
+}

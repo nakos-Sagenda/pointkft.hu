@@ -1,0 +1,11 @@
+# Form Settings
+gdpr_compliance.settings_form:
+  route_name: gdpr_compliance.settings_form
+  title: Form Settings
+  base_route: gdpr_compliance.settings_form
+
+# Pop-up Settings
+gdpr_compliance.settings_popup:
+  route_name: gdpr_compliance.settings_popup
+  title: Pop-up Settings
+  base_route: gdpr_compliance.settings_form

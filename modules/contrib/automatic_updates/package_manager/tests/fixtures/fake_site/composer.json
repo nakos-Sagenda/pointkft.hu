@@ -1,0 +1,64 @@
+{
+  "version": "1.2.4",
+  "require": {
+    "drupal/core-recommended": "9.8.0",
+    "drupal/core": "9.8.0"
+  },
+  "require-dev": {
+    "drupal/core-dev": "^9"
+  },
+  "extra": {
+    "boo": "boo boo",
+    "foo": {
+        "dev": "2.x-dev"
+    },
+    "foo-bar": true,
+    "boo-far": {
+        "foo": 1.23,
+        "bar": 134,
+        "foo-bar": null
+    },
+    "baz": null
+  },
+  "repositories": {
+    "packagist.org": false,
+    "drupal/core-recommended": {
+      "type": "path",
+      "version": "9.8.0",
+      "url": "../path_repos/drupal--core-recommended",
+      "options": {
+        "symlink": false
+      }
+    },
+    "drupal/core-dev": {
+      "type": "path",
+      "version": "9.8.0",
+      "url": "../path_repos/drupal--core-dev",
+      "options": {
+        "symlink": false
+      }
+    },
+    "drupal/core": {
+      "type": "path",
+      "version": "9.8.0",
+      "url": "../path_repos/drupal--core",
+      "options": {
+        "symlink": false
+      }
+    },
+    "cweagans/composer-patches": {
+      "type": "path",
+      "version": "24.12.1999",
+      "url": "../path_repos/cweagans--composer-patches",
+      "options": {
+        "symlink": false
+      }
+    }
+  },
+  "minimum-stability": "stable",
+  "config": {
+    "allow-plugins": {
+      "drupal/core-composer-scaffold": false
+    }
+  }
+}

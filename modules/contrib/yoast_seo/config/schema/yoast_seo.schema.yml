@@ -1,0 +1,21 @@
+field.widget.settings.yoast_seo_widget:
+  type: mapping
+  label: 'Real-Time SEO Analysis widget settings'
+  mapping:
+    edit-title:
+      type: boolean
+      label: 'Title Editing'
+    edit-description:
+      type: boolean
+      label: 'Description Editing'
+
+yoast_seo.settings:
+  type: config_object
+  label: 'Real-Time SEO Settings'
+  mapping:
+    score_rules:
+      type: sequence
+      label: 'Labels for the scores, indexed by the minimum required score for that label'
+      sequence:
+        type: string
+        label: 'Score Label'

@@ -1,0 +1,5 @@
+gdpr_compliance.settings:
+  title: 'Gdpr Compliance Settings'
+  base_route_name: gdpr_compliance.settings_form
+  names:
+    - gdpr_compliance.settings

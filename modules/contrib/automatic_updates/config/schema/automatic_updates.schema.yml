@@ -1,0 +1,16 @@
+automatic_updates.settings:
+  type: config_object
+  label: 'Automatic Updates settings'
+  mapping:
+    cron:
+      type: string
+      label: 'Enable automatic updates during cron'
+    cron_port:
+      type: integer
+      label: 'Port to use for finalization sub-request'
+    allow_core_minor_updates:
+      type: boolean
+      label: 'Allow minor level Drupal core updates'
+    status_check_mail:
+      type: string
+      label: 'Whether to send status check failure e-mail notifications during cron'

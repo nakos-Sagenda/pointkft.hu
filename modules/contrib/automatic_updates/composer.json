@@ -1,0 +1,53 @@
+{
+  "name": "drupal/automatic_updates",
+  "type": "drupal-module",
+  "description": "Drupal Automatic Updates",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0-or-later",
+  "homepage": "https://www.drupal.org/project/automatic_updates",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/automatic_updates",
+    "source": "http://cgit.drupalcode.org/automatic_updates"
+  },
+  "require": {
+    "ext-json": "*",
+    "drupal/core": "^9.3 || ^10",
+    "php-tuf/composer-stager": "^1.2",
+    "composer/composer": "^2.2.12 || ^2.3.5",
+    "composer-runtime-api": "^2.1",
+    "symfony/config": "^4.4 || ^6.1",
+    "php": ">=7.4.0",
+    "symfony/finder": "^4.4 || ^6.1"
+  },
+  "config": {
+    "platform": {
+      "php": "7.4.0"
+    }
+  },
+  "scripts": {
+    "phpcbf": "scripts/phpcbf.sh",
+    "phpcs": "scripts/phpcs.sh",
+    "test": [
+      "Composer\\Config::disableProcessTimeout",
+      "scripts/phpunit.sh"
+    ],
+    "core-convert": "Drupal\\automatic_updates\\Development\\Converter::doConvert",
+    "create-site-fixture": "\\Drupal\\automatic_updates\\Development\\ComposerFixtureCreator::createFixture"
+  },
+  "scripts-descriptions": {
+    "phpcbf": "Automatically fixes standards violations where possible.",
+    "phpcs": "Checks code for standards compliance.",
+    "test": "Runs PHPUnit tests.",
+    "core-convert": "Converts this module to a core merge request. Excepts 2 arguments. 1) The core clone directory. 2) The core merge request branch.",
+    "create-site-fixture": "Recreates the 'fake_site' fixture needed for testing"
+  },
+  "require-dev": {
+    "colinodell/psr-testlogger": "^1"
+  },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\automatic_updates\\Development\\": "scripts/src"
+        }
+    }
+}

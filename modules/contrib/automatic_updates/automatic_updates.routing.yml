@@ -1,0 +1,68 @@
+automatic_updates.status_check:
+  path: '/admin/automatic_updates/status'
+  defaults:
+    _controller: '\Drupal\automatic_updates\Controller\StatusCheckController::run'
+    _title: 'Update readiness checking'
+  requirements:
+    _permission: 'administer software updates'
+  options:
+    _maintenance_access: TRUE
+    _automatic_updates_status_messages: skip
+automatic_updates.confirmation_page:
+  path: '/admin/automatic-update-ready/{stage_id}'
+  defaults:
+    _form: '\Drupal\automatic_updates\Form\UpdateReady'
+    _title: 'Ready to update'
+  requirements:
+    _permission: 'administer software updates'
+  options:
+    _maintenance_access: TRUE
+    _automatic_updates_status_messages: skip
+automatic_updates.finish:
+  path: '/automatic-update/finish'
+  defaults:
+    _controller: '\Drupal\automatic_updates\Controller\UpdateController::onFinish'
+  requirements:
+    _permission: 'administer software updates'
+  options:
+    _maintenance_access: TRUE
+    _automatic_updates_status_messages: skip
+automatic_updates.cron.post_apply:
+  path: '/automatic-update/cron/post-apply/{stage_id}/{installed_version}/{target_version}/{key}'
+  defaults:
+    _controller: 'automatic_updates.cron_updater:handlePostApply'
+  requirements:
+    _access_system_cron: 'TRUE'
+
+# These routes are deprecated and will be removed in the next major version of
+# Automatic Updates. They redirect to existing routes from the core Update
+# module, which are overridden by Automatic Updates.
+# @see \Drupal\automatic_updates\Routing\RouteSubscriber::alterRoutes()
+automatic_updates.report_update:
+  path: '/admin/reports/updates/automatic-update'
+  defaults:
+    _controller: '\Drupal\automatic_updates\Controller\UpdateController::redirectDeprecatedRoute'
+  requirements:
+    _access: 'TRUE'
+automatic_updates.module_update:
+  path: '/admin/modules/automatic-update'
+  defaults:
+    _controller: '\Drupal\automatic_updates\Controller\UpdateController::redirectDeprecatedRoute'
+  requirements:
+    _access: 'TRUE'
+automatic_updates.theme_update:
+  path: '/admin/theme/automatic-update'
+  defaults:
+    _controller: '\Drupal\automatic_updates\Controller\UpdateController::redirectDeprecatedRoute'
+  requirements:
+    _access: 'TRUE'
+automatic_updates.update_readiness:
+  path: '/admin/automatic_updates/readiness'
+  defaults:
+    _controller: '\Drupal\automatic_updates\Controller\StatusCheckController::runReadiness'
+    _title: 'Update readiness checking'
+  requirements:
+    _permission: 'administer software updates'
+  options:
+    _maintenance_access: TRUE
+    _automatic_updates_status_messages: skip

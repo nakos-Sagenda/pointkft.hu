@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Contains Hooks.
+ */
+
+use Drupal\gdpr_compliance\Hook\PageBottom;
+use Drupal\gdpr_compliance\Hook\FormNodeFormAlter;
+use Drupal\gdpr_compliance\Hook\FormContactMessageFormAlter;
+use Drupal\gdpr_compliance\Hook\FormUserRegisterFormAlter;
+use Drupal\gdpr_compliance\Hook\FormUserLoginFormAlter;
+use Drupal\gdpr_compliance\Hook\FormWebformSubmissionFormAlter;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_page_bottom().
+ */
+function gdpr_compliance_page_bottom(array &$page_bottom) {
+  PageBottom::hook($page_bottom);
+}
+
+/**
+ * Implements hook_form_TYPE_alter().
+ */
+function gdpr_compliance_form_node_form_alter(&$form, $form_state, $form_id) {
+  FormNodeFormAlter::hook($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_form_TYPE_alter().
+ */
+function gdpr_compliance_form_contact_message_form_alter(&$form, $form_state, $form_id) {
+  FormContactMessageFormAlter::hook($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_form_TYPE_alter().
+ */
+function gdpr_compliance_form_user_register_form_alter(&$form, $form_state, $form_id) {
+  FormUserRegisterFormAlter::hook($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_form_TYPE_alter().
+ */
+function gdpr_compliance_form_user_login_form_alter(&$form, $form_state, $form_id) {
+  FormUserLoginFormAlter::hook($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_form_TYPE_alter().
+ */
+function gdpr_compliance_webform_submission_form_alter(&$form, $form_state, $form_id) {
+  FormWebformSubmissionFormAlter::hook($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gdpr_compliance_theme() {
+  return [
+    'gdpr-popup' => [
+      'variables' => [
+        'data' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_help().
+ */
+function gdpr_compliance_help($route_name, RouteMatchInterface $route_match) {
+  return NULL;
+}

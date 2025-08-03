@@ -1,0 +1,5 @@
+services:
+  fixture_manipulator.stage_manipulator:
+    class: Drupal\fixture_manipulator\StageFixtureManipulator
+    arguments: ['@state', '@fixture_manipulator.stage_manipulator.inner']
+    decorates: 'package_manager.beginner'

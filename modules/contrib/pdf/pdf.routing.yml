@@ -1,0 +1,9 @@
+pdf.config_form:
+  path: '/admin/config/media/pdfjs'
+  defaults:
+    _form: '\Drupal\pdf\Form\ConfigForm'
+    _title: 'PDF.js Configuration'
+  requirements:
+    _permission: 'administer pdfjs'
+  options:
+    _admin_route: TRUE

@@ -1,0 +1,9 @@
+popup:
+  js:
+    assets/js/popup.js: {}
+  css:
+    layout:
+      assets/css/gdpr-popup.css: {}
+  dependencies:
+    - core/jquery
+    - core/js-cookie

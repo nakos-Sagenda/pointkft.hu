@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Package Manager.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\package_manager\Exception\ApplyFailedException;
+
+/**
+ * Implements hook_requirements().
+ */
+function package_manager_requirements(string $phase) {
+  $requirements = [];
+
+  if (!class_exists('\PhpTuf\ComposerStager\Domain\Core\Beginner\Beginner')) {
+    $requirements['package_manager_composer_dependencies'] = [
+      'title' => t('Missing dependency'),
+      'description' => t('External dependencies for Package Manager are not available. Composer must be used to download the module with dependencies.'),
+      'severity' => REQUIREMENT_ERROR,
+    ];
+  }
+
+  // If we're able to check for the presence of the failure marker at all, do it
+  // irrespective of the current run phase. If the failure marker is there, the
+  // site is in an indeterminate state and should be restored from backup ASAP.
+  $service_id = 'package_manager.failure_marker';
+  if (\Drupal::hasService($service_id)) {
+    try {
+      \Drupal::service($service_id)->assertNotExists();
+    }
+    catch (ApplyFailedException $exception) {
+      $requirements['package_manager_failure_marker'] = [
+        'title' => t('Failed update detected'),
+        'description' => $exception->getMessage(),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+  return $requirements;
+}
+
+/**
+ * Sets default value for new additional_trusted_composer_plugins configuration.
+ *
+ * @see https://www.drupal.org/project/automatic_updates/issues/3331168
+ */
+function package_manager_update_9001(): void {
+  /** @var \Drupal\Core\Config\Config $config */
+  $config = \Drupal::service('config.factory')->getEditable('package_manager.settings');
+  $config->set('additional_trusted_composer_plugins', [])->save();
+}

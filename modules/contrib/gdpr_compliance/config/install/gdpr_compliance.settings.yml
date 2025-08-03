@@ -1,0 +1,22 @@
+from-morelink: /gdpr-compliance/policy
+user-register: 1
+user-login: 0
+contact_message-mode: all
+contact_message-bundles: { }
+node-mode: disable
+node-bundles: { }
+webform-mode: disable
+webform-bundles: { }
+popup-guests: 1
+popup-users: 1
+popup-position: bottom
+popup-morelink: /gdpr-compliance/policy
+popup-custom-color: 0
+popup-color: '#1157cc'
+popup-text: white
+button-color: '#fde143'
+button-text: black
+popup-text-cookies: ''
+popup-text-analytics: ''
+popup-btn-agree: ''
+popup-btn-findmore: ''

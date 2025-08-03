@@ -1,0 +1,19 @@
+services:
+  automatic_updates_extensions.updater:
+    class: Drupal\automatic_updates_extensions\ExtensionUpdater
+    arguments:
+      - '@config.factory'
+      - '@package_manager.path_locator'
+      - '@package_manager.beginner'
+      - '@package_manager.stager'
+      - '@package_manager.committer'
+      - '@file_system'
+      - '@event_dispatcher'
+      - '@tempstore.shared'
+      - '@datetime.time'
+      - '@PhpTuf\ComposerStager\Infrastructure\Factory\Path\PathFactoryInterface'
+      - '@package_manager.failure_marker'
+  automatic_updates_extensions.validator.target_release:
+    class: Drupal\automatic_updates_extensions\Validator\UpdateReleaseValidator
+    tags:
+      - { name: event_subscriber }

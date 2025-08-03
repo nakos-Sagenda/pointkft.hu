@@ -1,0 +1,16 @@
+# Drupal standard ignore
+/sites/*/settings.php
+/sites/*/services.yml
+/sites/*/files
+/vendor/
+/node_modules/
+core/
+/config/sync/
+/.ddev/.global_config.yaml
+.ddev/db_dumps/
+.idea/
+*.sql
+*.sqlite
+*.tar.gz
+*.zip
+*.log

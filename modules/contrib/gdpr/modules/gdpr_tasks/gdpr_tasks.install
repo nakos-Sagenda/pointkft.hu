@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * Install file for gdpr_tasks.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function gdpr_tasks_requirements() {
+  $requirements = [];
+
+  $requirements['gdpr_tasks_ext_zip']['title'] = t('GDPR Tasks: Zip extension');
+  $requirements['gdpr_tasks_ext_zip']['description'] = t('The zip extension is installed.');
+  $requirements['gdpr_tasks_ext_zip']['severity'] = REQUIREMENT_OK;
+
+  if (!extension_loaded('zip')) {
+    $requirements['gdpr_tasks_ext_zip']['description'] = t('The zip extension is required.');
+    $requirements['gdpr_tasks_ext_zip']['severity'] = REQUIREMENT_ERROR;
+  }
+
+  /* @todo:
+   * https://www.drupal.org/project/gdpr/issues/3121544 is about s3fs compat,
+   * we should keep that in mind and not necessarily hardcode private://.
+   */
+
+  if (
+    FALSE === Drupal::hasService('stream_wrapper.private')
+    && FALSE === Drupal::service('stream_wrapper_manager')->isValidScheme('private')
+  ) {
+    $requirements['gdpr_tasks_private_files_setup']['title'] = t('GDPR Tasks: Private Files');
+    $requirements['gdpr_tasks_private_files_setup']['description'] = t('The private files folder is not set up.');
+    $requirements['gdpr_tasks_private_files_setup']['severity'] = REQUIREMENT_ERROR;
+  }
+  else {
+    $destination = 'private://';
+
+    if (!is_dir($destination)) {
+      $requirements['gdpr_tasks_private_files_exists']['title'] = t('GDPR Tasks: Private Files');
+      $requirements['gdpr_tasks_private_files_exists']['description'] = t('The private files folder does not exist.');
+      $requirements['gdpr_tasks_private_files_exists']['severity'] = REQUIREMENT_ERROR;
+    }
+
+    if (!is_writable($destination)) {
+      $requirements['gdpr_tasks_private_files_writable']['title'] = t('GDPR Tasks: Private Files');
+      $requirements['gdpr_tasks_private_files_writable']['description'] = t('The private files is not writable.');
+      $requirements['gdpr_tasks_private_files_writable']['severity'] = REQUIREMENT_ERROR;
+    }
+  }
+
+  return $requirements;
+}

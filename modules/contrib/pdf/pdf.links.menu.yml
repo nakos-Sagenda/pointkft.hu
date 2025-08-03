@@ -1,0 +1,6 @@
+pdf.config_form:
+  title: 'PDF.js'
+  route_name: pdf.config_form
+  description: 'Configuration for the PDF module.'
+  parent: system.admin_config_media
+  weight: 99

@@ -1,0 +1,45 @@
+
+
+1. Review help page and
+2. documentation links: DONE
+3. Write new tests for Version > Drupal8.5 advance test cases.
+
+2. Write documentation for complex upe Like :
+Link : 
+drupal.org/docs/8/modules/entity-update/advanced-use-for-complex-updates
+
+------------------- Advanced use --------------------
+Update entity structure update or multiple operations
+-----Developers Only - Not for Production sites.-----
+-----------------------------------------------------
+If you want to change the structure of an entity type (Example : make non
+translatable entity to a translatable) and your entity has data, you can try
+the following steps.
+CAUTION :
+- You must structure the entity before starting the developments.
+- This type of operations must not produce on production sites.
+
+1. Cleanup the backup data table.
+drush upe --clean
+2. Backup data of your entity.
+drush upe ENTITY_TYPE_ID --bkpdel
+3. Update the code (Entity type definitions for example).
+UPDATE YOUR ENTITY TYPE STEP BY STEP (See the doc).
+4. Update the entity type (No need to backup full database again).
+drush upe ENTITY_TYPE_ID --nobackup
+-> Note : You can use 'gunzip < backup_XXX.sql.gz | drush sqlc' if necessary.
+5. Create entities from entity backup database once every things are success.
+drush upe --rescue
+6. Cleanup the backup data table once every things are success.
+drush upe --clean
+
+User case 1. make translatable entity to a non translatable
+1. Remove 'translatable = TRUE,'
+2. update entity
+3. Remove language key Ex : '"langcode" = "langcode",'
+4. Update entity
+
+User case 2. make non translatable entity to a translatable
+1. Add 'translatable = TRUE,'
+2. Add language key Ex : '"langcode" = "langcode",'
+3. Update entity

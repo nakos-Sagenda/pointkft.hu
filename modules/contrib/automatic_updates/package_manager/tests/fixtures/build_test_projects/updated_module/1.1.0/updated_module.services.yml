@@ -1,0 +1,7 @@
+services:
+  updated_module.post_apply_subscriber:
+    class: Drupal\updated_module\PostApplySubscriber
+    arguments:
+      - '@package_manager.path_locator'
+    tags:
+      - { name: event_subscriber }

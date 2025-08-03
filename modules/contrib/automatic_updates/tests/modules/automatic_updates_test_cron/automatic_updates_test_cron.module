@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations to enable automatic updates during cron.
+ *
+ * @todo Move into automatic_updates when TUF integration is stable.
+ */
+
+declare(strict_types=1);
+
+use Drupal\package_manager\ProjectInfo;
+use Drupal\automatic_updates\CronUpdater;
+use Drupal\Core\Extension\ExtensionVersion;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\update\ProjectSecurityData;
+
+/**
+ * Implements hook_form_FORM_ID_alter() for 'update_settings' form.
+ *
+ * @todo Move to automatic_updates in https://www.drupal.org/i/3322361
+ */
+function automatic_updates_test_cron_form_update_settings_alter(array &$form, FormStateInterface $form_state, string $form_id) {
+  $project_info = new ProjectInfo('drupal');
+  $version = ExtensionVersion::createFromVersionString($project_info->getInstalledVersion());
+  $current_minor = $version->getMajorVersion() . '.' . $version->getMinorVersion();
+  // @todo In https://www.drupal.org/node/2998285 use the update XML to
+  //   determine when the installed of core will become unsupported.
+  $supported_until_version = $version->getMajorVersion() . '.'
+    . ((int) $version->getMinorVersion() + ProjectSecurityData::CORE_MINORS_WITH_SECURITY_COVERAGE)
+    . '.0';
+
+  $form['automatic_updates_cron'] = [
+    '#type' => 'radios',
+    '#title' => t('Automatically update Drupal core'),
+    '#options' => [
+      CronUpdater::DISABLED => t('Disabled'),
+      CronUpdater::ALL => t('All supported updates'),
+      CronUpdater::SECURITY => t('Security updates only'),
+    ],
+    '#default_value' => \Drupal::config('automatic_updates.settings')->get('cron'),
+    '#description' => t(
+      'If enabled, Drupal core will be automatically updated when an update is available. Automatic updates are only supported for @current_minor.x versions of Drupal core. Drupal @current_minor will receive security updates until @supported_until_version is released.',
+      [
+        '@current_minor' => $current_minor,
+        '@supported_until_version' => $supported_until_version,
+      ]
+    ),
+  ];
+  $form += [
+    '#submit' => ['::submitForm'],
+  ];
+  $form['#submit'][] = '_automatic_updates_test_cron_update_settings_form_submit';
+}
+
+/**
+ * Submit function for the 'update_settings' form.
+ */
+function _automatic_updates_test_cron_update_settings_form_submit(array &$form, FormStateInterface $form_state) {
+  \Drupal::configFactory()
+    ->getEditable('automatic_updates.settings')
+    ->set('cron', $form_state->getValue('automatic_updates_cron'))
+    ->save();
+}

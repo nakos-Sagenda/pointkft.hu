@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * @file
+ * Entity update test module (entity_update_tests).
+ *
+ * This file provide install/uninstall/update tasks.
+ */
+
+use Drupal\Core\Utility\UpdateException;
+use Drupal\entity_update\EntityUpdate;
+
+/**
+ * Update 01 - Example for update an entity type 'entity_update_tests_cnt'.
+ */
+function entity_update_tests_update_8001() {
+
+  // Entity checking process : Get current entities list.
+  $ids_old = \Drupal::entityQuery('entity_update_tests_cnt')->accessCheck(FALSE)->execute();
+
+  // Get entity type.
+  $entity_type = \Drupal::entityTypeManager()->getStorage('entity_update_tests_cnt');
+  // Make Update Using safeUpdateMain methode.
+  if (!EntityUpdate::safeUpdateMain($entity_type->getEntityType())) {
+    // Your codes if update failed.
+    throw new UpdateException('Entity update failed.');
+  }
+
+  // Entity checking process : Compare with new list entities list.
+  $ids_new = \Drupal::entityQuery('entity_update_tests_cnt')->accessCheck(FALSE)->execute();
+
+  // Compare two lists.
+  $result = array_diff($ids_old, $ids_new);
+  if (!empty($result)) {
+    // Your codes if update checking failed.
+    throw new UpdateException('Entity update checking failed.');
+  }
+
+  return "Entity update success";
+}
+
+/**
+ * Update 02 - Example for Add fields (Not recomended, do one by one).
+ */
+function entity_update_tests_update_8002() {
+
+  // Entity checking process : Get current entities list.
+  $ids_old = \Drupal::entityQuery('entity_update_tests_cnt')->accessCheck(FALSE)->execute();
+
+  // Make Update Using full methode.
+  if (!EntityUpdate::safeUpdateMain()) {
+    // Your codes if update failed.
+    throw new UpdateException('Entity update failed.');
+  }
+
+  // Entity checking process : Compare with new list entities list.
+  $ids_new = \Drupal::entityQuery('entity_update_tests_cnt')->accessCheck(FALSE)->execute();
+
+  // Compare two lists.
+  $result = array_diff($ids_old, $ids_new);
+  if (!empty($result)) {
+    // Your codes if update checking failed.
+    throw new UpdateException('Entity update checking failed.');
+  }
+
+  return "Entity update success";
+}
+
+/**
+ * Update 03 - Example for Remove fields (Not recomended, do one by one).
+ */
+function entity_update_tests_update_8003() {
+
+  // Entity checking process : Get current entities list.
+  $ids_old = \Drupal::entityQuery('entity_update_tests_cnt')->accessCheck(FALSE)->execute();
+
+  // Make Update Using full methode.
+  if (!EntityUpdate::safeUpdateMain()) {
+    // Your codes if update failed.
+    throw new UpdateException('Entity update failed.');
+  }
+
+  // Entity checking process : Compare with new list entities list.
+  $ids_new = \Drupal::entityQuery('entity_update_tests_cnt')->accessCheck(FALSE)->execute();
+
+  // Compare two lists.
+  $result = array_diff($ids_old, $ids_new);
+  if (!empty($result)) {
+    // Your codes if update checking failed.
+    throw new UpdateException('Entity update checking failed.');
+  }
+  else {
+    // Your codes if update checking process success. here Cleanup DB.
+    EntityUpdate::cleanupEntityBackup();
+  }
+
+  return "Entity update success";
+}

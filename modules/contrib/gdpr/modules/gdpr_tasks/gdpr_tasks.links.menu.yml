@@ -1,0 +1,28 @@
+# Task menu items definition
+entity.gdpr_task.collection:
+  title: 'Task list'
+  route_name: entity.gdpr_task.collection
+  description: 'List Task entities'
+  parent: gdpr.admin_config
+  weight: 100
+
+# Task type menu items definition
+entity.gdpr_task_type.collection:
+  title: 'Task types'
+  route_name: entity.gdpr_task_type.collection
+  description: 'List Task type (bundles)'
+  parent: entity.gdpr_task.collection
+  weight: 99
+
+gdpr_tasks.remove_settings:
+  title: 'Right to be Forgotten'
+  description: 'GDPR Right to be Forgotten Settings'
+  parent: gdpr.admin_config
+  route_name: gdpr_tasks.remove_settings
+
+gdpr_tasks.summary:
+  title: 'Summary'
+  route_name: gdpr_tasks.summary
+  description: 'GDPR Summary'
+  parent: gdpr.admin_config
+  weight: 70

@@ -1,0 +1,26 @@
+# Action links.
+entity_update.types:
+  route_name: entity_update.types
+  title: 'Entity Types'
+  appears_on:
+    - entity_update.status
+
+entity_update.status:
+  route_name: entity_update.status
+  title: 'Entity Status'
+  appears_on:
+    - entity_update.types
+    - entity_update.exec
+    - entity_update.list
+
+entity_update.exec:
+  route_name: entity_update.exec
+  title: 'Run Entity Update'
+  appears_on:
+    - entity_update.status
+
+entity_update.list:
+  route_name: entity_update.list
+  title: 'Entities List'
+  appears_on:
+    - entity_update.status

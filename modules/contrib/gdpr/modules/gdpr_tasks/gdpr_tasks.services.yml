@@ -1,0 +1,28 @@
+services:
+  gdpr_tasks.manager:
+    class: Drupal\gdpr_tasks\TaskManager
+    arguments:
+      - '@entity_type.manager'
+      - '@current_user'
+      - '@file_system'
+  gdpr_tasks.anonymizer:
+    class: Drupal\gdpr_tasks\Anonymizer
+    arguments:
+      - '@database'
+      - '@entity_type.manager'
+      - '@current_user'
+      - '@config.factory'
+      - '@gdpr_tasks.rtf_traversal'
+      - '@file_system'
+  gdpr_tasks.rta_traversal:
+    class: Drupal\gdpr_fields\EntityTraversalFactory
+    arguments: ['@service_container', 'Drupal\gdpr_tasks\Traversal\RightToAccessEntityTraversal']
+  gdpr_tasks.rta_display_traversal:
+    class: Drupal\gdpr_fields\EntityTraversalFactory
+    arguments: ['@service_container', '\Drupal\gdpr_tasks\Traversal\RightToAccessDisplayTraversal']
+  gdpr_tasks.rtf_traversal:
+    class: Drupal\gdpr_fields\EntityTraversalFactory
+    arguments: ['@service_container', '\Drupal\gdpr_tasks\Traversal\RightToBeForgottenEntityTraversal']
+  gdpr_tasks.rtf_display_traversal:
+    class: Drupal\gdpr_fields\EntityTraversalFactory
+    arguments: ['@service_container', '\Drupal\gdpr_tasks\Traversal\RightToBeForgottenDisplayTraversal']

@@ -1,0 +1,4 @@
+# Excluded entity types.
+excludes:
+  user: user
+  user_role: user_role

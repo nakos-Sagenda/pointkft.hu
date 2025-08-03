@@ -1,0 +1,5 @@
+gdpr_fields.fields_list:
+  route_name: gdpr_fields.fields_list
+  title: 'GDPR field list'
+  base_route: entity.field_storage_config.collection
+  weight: 99

@@ -1,0 +1,5 @@
+services:
+  composer_deploy.twig_extension:
+    class: Drupal\composer_deploy\ComposerDeployTwigExtension
+    tags:
+      - { name: twig.extension }

@@ -1,0 +1,13 @@
+# Entity update schema.
+entity_update.settings:
+  type: config_object
+  label: 'Entity update config'
+  mapping:
+    excludes:
+      type: mapping
+      label: 'Excluded entity types'
+      mapping:
+        user:
+          type: string
+        user_role:
+          type: string

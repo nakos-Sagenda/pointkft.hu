@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file
+ * This file contains mock function to avoid function not found errors.
+ */
+
+/**
+ * Simulate drush_log.
+ */
+if (!function_exists('drush_log')) {
+
+  /**
+   * Mock function drush_log.
+   */
+  function entity_update_tests_drush_log($a0 = 0, $a1 = 1, $a2 = 2) {
+
+  }
+
+}
+
+/**
+ * This file contains mock function to avoid errors.
+ */
+if (!function_exists('drush_print')) {
+
+  /**
+   * Mock function drush_print.
+   */
+  function entity_update_tests_drush_print($a0 = 0, $a1 = 1, $a2 = 2) {
+
+  }
+
+}

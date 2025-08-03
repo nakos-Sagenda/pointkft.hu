@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Entity update module (entity_update).
+ *
+ * This file provide install/uninstall/update tasks.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function entity_update_schema() {
+
+  $schema['entity_update'] = [
+    'description' => 'Entity data backup table',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+      ],
+      'entity_type' => [
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+      ],
+      'entity_id' => [
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+      ],
+      'entity_class' => [
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ],
+      'status' => [
+        'type' => 'int',
+        'size' => 'small',
+        'default' => 0,
+      ],
+      'data' => [
+        'type' => 'blob',
+        'size' => 'big',
+      ],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'entity' => ['entity_type', 'entity_id'],
+    ],
+  ];
+
+  return $schema;
+}

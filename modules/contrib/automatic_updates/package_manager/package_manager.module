@@ -1,0 +1,106 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for Package Manager.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\package_manager\Validator\ComposerExecutableValidator;
+
+// cspell:ignore grasmash
+
+/**
+ * Implements hook_help().
+ */
+function package_manager_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.package_manager':
+      $output = '<h3 id="package-manager-about">' . t('About') . '</h3>';
+      $output .= '<p>' . t('Package Manager is a framework for updating Drupal core and installing contributed modules and themes via Composer. It has no user interface, but it provides an API for creating a temporary copy of the current site, making changes to the copy, and then syncing those changes back into the live site.') . '</p>';
+      $output .= '<p>' . t('Package Manager dispatches events before and after various operations, and external code can integrate with it by subscribing to those events. For more information, see <code>package_manager.api.php</code>.') . '</p>';
+
+      $output .= '<h3 id="package-manager-requirements">' . t('Requirements') . '</h3>';
+      $output .= '<ul>';
+      $output .= '  <li>' . t("The Drupal application's codebase must be writable in order to use Automatic Updates. This includes Drupal core, modules, themes and the Composer dependencies in the <code>vendor</code> directory. This makes Automatic Updates incompatible with some hosting platforms.") . '</li>';
+      $output .= '  <li>' . t('Package Manager requires a Composer executable whose version satisfies <code>@version</code>, and PHP must have permission to run it. The path to the executable may be stored in config, or it will be automatically detected. To set the path to Composer, you can add the following line to settings.php:', ['@version' => ComposerExecutableValidator::MINIMUM_COMPOSER_VERSION_CONSTRAINT]) . '</li>';
+      $output .= '</ul>';
+
+      $output .= '<h3 id="package-manager-limitations">' . t('Limitations') . '</h3>';
+      $output .= '<p>' . t("Because Package Manager modifies the current site's code base, it is intentionally limited in certain ways to prevent unexpected changes to the live site:") . '</p>';
+      $output .= '<ul>';
+      $output .= '  <li>' . t('It does not support Drupal multi-site installations.') . '</li>';
+      $output .= '  <li>' . t('It does not support symlinks. If you have any, see <a href="#package-manager-faq-composer-not-found">What if it says I have symlinks in my codebase?</a>.') . '</li>';
+      $output .= '  <li>' . t('It only allows supported Composer plugins. If you have any, see <a href="#package-manager-faq-unsupported-composer-plugin">What if it says I have unsupported Composer plugins in my codebase?</a>.') . '</li>';
+      $output .= '  <li>' . t('It does not automatically perform version control operations, e.g., with Git. Site administrators are responsible for committing updates.') . '</li>';
+      $output .= '  <li>' . t('It can only maintain one copy of the site at any given time. If a copy of the site already exists, another one cannot be created until the existing copy is destroyed.') . '</li>';
+      $output .= '  <li>' . t('It associates the temporary copy of the site with the user or session that originally created it, and only that user or session can make changes to it.') . '</li>';
+      $output .= '  <li>' . t('It does not allow modules to be uninstalled while syncing changes into live site.') . '</li>';
+      $output .= '</ul>';
+      $output .= '<p>' . t('For more information, see the <a href=":package-manager-documentation">online documentation for the Package Manager module</a>.', [':package-manager-documentation' => 'https://www.drupal.org/docs/8/core/modules/package-manager']) . '</p>';
+
+      $output .= '<h3 id="package-manager-faq">' . t('FAQ') . '</h3>';
+
+      $output .= '<h4 id="package-manager-faq-composer-not-found">' . t('What if it says the "composer" executable cannot be found?') . '</h4>';
+      $output .= '<p>' . t('If the <code>composer</code> executable path cannot be automatically determined, it can be explicitly set in by adding the following line to <code>settings.php</code>:') . '</p>';
+      $output .= "<pre><code>\$config['package_manager.settings']['executables']['composer'] = '/full/path/to/composer.phar';</code></pre>";
+      // BEGIN: DELETE FROM CORE MERGE REQUEST
+      $output .= '<p>' . t('Alternatively, you can use the following Drush command:') . '</p>';
+      $output .= '<pre><code>drush config:set package_manager.settings executables.composer /full/path/to/composer.phar</code></pre>';
+      // END: DELETE FROM CORE MERGE REQUEST
+
+      $output .= '<h4 id="package-manager-faq-symlinks-found">' . t('What if it says I have symlinks in my codebase?') . '</h4>';
+      $output .= '<p>' . t('A fresh Drupal installation should not have any symlinks, but third party libraries and custom code can add them. If Automatic Updates says you have some, run the following command in your terminal to find them:') . '</p>';
+      $output .= '<pre><code>';
+      $output .= 'cd /var/www # Wherever your active directory is located.' . PHP_EOL;
+      $output .= 'find . -type l';
+      $output .= '</code></pre>';
+      $output .= '<p>' . t("You might see output like the below, indicating symlinks in Drush's <code>docs</code> directory, as an example:") . '</p>';
+      $output .= '<pre><code>';
+      $output .= './vendor/drush/drush/docs/misc/icon_PhpStorm.png' . PHP_EOL;
+      $output .= './vendor/drush/drush/docs/img/favicon.ico' . PHP_EOL;
+      $output .= './vendor/drush/drush/docs/contribute/CONTRIBUTING.md' . PHP_EOL;
+      $output .= './vendor/drush/drush/docs/drush_logo-black.png' . PHP_EOL;
+      $output .= '</code></pre>';
+
+      $output .= '<h5>' . t('Composer libraries') . '</h5>';
+      $output .= '<p>' . t('Symlinks in Composer libraries can be addressed with <a href=":vendor-hardening-composer-plugin-documentation">Drupal\'s Vendor Hardening Composer Plugin</a>, which "removes extraneous directories from the project\'s vendor directory". Use it as follows.', [':vendor-hardening-composer-plugin-documentation' => 'https://www.drupal.org/docs/develop/using-composer/using-drupals-vendor-hardening-composer-plugin']) . '</p>';
+      $output .= '<p>' . t('First, add `drupal/core-vendor-hardening` to your Composer project:') . '</p>';
+      $output .= '<pre><code>composer require drupal/core-vendor-hardening</code></pre>';
+      $output .= '<p>' . t('Then, add the following to the `composer.json` in your site root to handle the most common, known culprits. Add your own as necessary.') . '</p>';
+      $output .= '<pre><code>';
+      $output .= '"extra": {' . PHP_EOL;
+      $output .= '  "drupal-core-vendor-hardening": {' . PHP_EOL;
+      $output .= '    "drush/drush": ["docs"],' . PHP_EOL;
+      $output .= '    "grasmash/yaml-expander": ["scenarios"]' . PHP_EOL;
+      $output .= '  }' . PHP_EOL;
+      $output .= '}' . PHP_EOL;
+      $output .= '</code></pre>';
+      $output .= '<p>' . t('The new configuration will take effect on the next Composer install or update event. Do this to apply it immediately:') . '</p>';
+      $output .= '<pre><code>composer install</code></pre>';
+
+      $output .= '<h4 id="package-manager-faq-unsupported-composer-plugin">' . t('What if it says I have unsupported Composer plugins in my codebase?') . '</h4>';
+      $output .= '<p>' . t('A fresh Drupal installation only uses supported Composer plugins, but some modules or themes may depend on additional Composer plugins. Please <a href=":new-issue">create a new issue</a> when you encounter this.', [
+        ':new-issue' => 'https://www.drupal.org/node/add/project-issue/automatic_updates',
+      ]) . '</p>';
+      $output .= '<p>' . t('It is possible to <em>trust</em> additional Composer plugins, but this requires significant expertise: understanding the code of that Composer plugin, what the effects on the file system are and how it affects the Package Manager module. Some Composer plugins could result in a broken site!') . '</p>';
+
+      $output .= '<h4 id="package-manager-faq-composer-patches-installed-or-removed">' . t('What if it says <code>cweagans/composer-patches</code> cannot be installed/removed?') . '</h4>';
+      $output .= '<p>' . t('Installation or removal of <code>cweagans/composer-patches</code> via Package Manager is not support it. You can install or remove it manually by running Composer commands in your site root.') . '</p>';
+      $output .= '<p>' . t('To install it:') . '</p>';
+      $output .= '<pre><code>composer require cweagans/composer-patches</code></pre>';
+      $output .= '<p>' . t('To remove it:') . '</p>';
+      $output .= '<pre><code>composer remove cweagans/composer-patches</code></pre>';
+
+      $output .= '<h4 id="package-manager-faq-composer-patches-not-a-root-dependency">' . t('What if it says <code>cweagans/composer-patches</code> must be a root dependency?') . '</h4>';
+      $output .= '<p>' . t('If <code>cweagans/composer-patches</code> is installed, it must be defined as a dependency of the main project (i.e., it must be listed in the <code>require</code> or <code>require-dev</code> section of <code>composer.json</code>). You can run the following command in your site root to add it as a dependency of the main project:') . '</p>';
+      $output .= "<pre><code>composer require cweagans/composer-patches</code></pre>";
+
+      $output .= '<h5>' . t('Custom code') . '</h5>';
+      $output .= '<p>' . t('Symlinks are seldom truly necessary and should be avoided in your own code. No solution currently exists to get around them--they must be removed in order to use Automatic Updates.') . '</p>';
+
+      return $output;
+  }
+}

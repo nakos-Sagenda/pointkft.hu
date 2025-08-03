@@ -1,0 +1,10 @@
+gdpr_compliance.settings_form:
+  title: 'GDPR Form Settings'
+  description: 'General Data Protection Regulation Compliance'
+  parent: system.admin_config_system
+  route_name: gdpr_compliance.settings_form
+
+gdpr_compliance.settings_popup:
+  title: 'GDPR Pop-up Settings'
+  parent: gdpr_compliance.settings_form
+  route_name: gdpr_compliance.settings_popup

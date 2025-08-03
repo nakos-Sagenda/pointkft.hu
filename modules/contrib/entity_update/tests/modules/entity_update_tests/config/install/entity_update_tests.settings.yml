@@ -1,0 +1,7 @@
+# Settings for entity_update_tests module.
+
+fields:
+  name: FALSE
+  description: FALSE
+  city: FALSE
+  type: booblean

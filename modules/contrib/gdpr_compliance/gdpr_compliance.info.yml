@@ -1,0 +1,10 @@
+name: GDPR Compliance
+description: 'The General Data Protection Regulation Compliance module provides basic GDPR Compliance use cases.'
+type: module
+core_version_requirement: ^8.8 || ^9 || ^10
+configure: gdpr_compliance.settings_form
+
+# Information added by Drupal.org packaging script on 2023-05-29
+version: '8.x-1.22'
+project: 'gdpr_compliance'
+datestamp: 1685368994

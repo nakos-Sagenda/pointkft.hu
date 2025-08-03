@@ -1,0 +1,12 @@
+package_manager_test_api:
+  path: '/package-manager-test-api'
+  defaults:
+    _controller: 'Drupal\package_manager_test_api\ApiController::run'
+  requirements:
+    _access: 'TRUE'
+package_manager_test_api.finish:
+  path: '/package-manager-test-api/finish/{id}'
+  defaults:
+    _controller: 'Drupal\package_manager_test_api\ApiController::finish'
+  requirements:
+    _access: 'TRUE'

@@ -1,0 +1,9 @@
+{
+    "packages": [
+        {
+            "name": "the-org/the-package",
+            "version": "9.8.0"
+        }
+    ],
+    "dev-package-names": []
+}

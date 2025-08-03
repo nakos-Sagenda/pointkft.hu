@@ -1,0 +1,21 @@
+mozilla.pdf.js:
+  remote: https://github.com/mozilla/pdf.js
+  license:
+    name: Apache
+    url: https://raw.githubusercontent.com/mozilla/pdf.js/master/LICENSE
+    gpl-compatible: true
+  js:
+    /libraries/pdf.js/build/pdf.js: {}
+    #//mozilla.github.io/pdf.js/build/pdf.js: { type: external, minified: false }
+drupal.pdf:
+  dependencies:
+    - pdf/mozilla.pdf.js
+  js:
+    js/pdf.js: {}
+  css:
+    theme:
+      css/pdf.css: {}
+default:
+  js:
+    js/acrobat_detection.js: {}
+    js/default.js: {}

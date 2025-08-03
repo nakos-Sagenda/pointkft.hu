@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Automatic Updates.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\automatic_updates\CronUpdater;
+use Drupal\automatic_updates\Validation\StatusCheckRequirements;
+use Drupal\system\SystemManager;
+
+/**
+ * Implements hook_uninstall().
+ */
+function automatic_updates_uninstall() {
+  \Drupal::service('automatic_updates.updater')->destroy(TRUE);
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function automatic_updates_requirements($phase) {
+  if ($phase === 'runtime') {
+    // Check that site is ready to perform automatic updates.
+    /** @var \Drupal\automatic_updates\Validation\StatusCheckRequirements $status_check_requirement */
+    $status_check_requirement = \Drupal::classResolver(StatusCheckRequirements::class);
+    $requirements = $status_check_requirement->getRequirements();
+
+    // Check that site has cron updates enabled or not.
+    // @todo Remove in https://www.drupal.org/project/automatic_updates/issues/3284443
+    if (\Drupal::configFactory()->get('automatic_updates.settings')->get('cron') !== CronUpdater::DISABLED) {
+      $requirements['automatic_updates_cron'] = [
+        'title' => t('Cron installs updates automatically'),
+        'severity' => SystemManager::REQUIREMENT_WARNING,
+        'value' => t('Enabled. This is NOT an officially supported feature of the Automatic Updates module at this time. Use at your own risk.'),
+      ];
+    }
+
+    return $requirements;
+  }
+}
+
+/**
+ * Stores cached readiness check results under a new key.
+ */
+function automatic_updates_update_9001(): void {
+  /** @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value */
+  $key_value = \Drupal::service('keyvalue.expirable')
+    ->get('automatic_updates');
+  $key_value->rename('readiness_validation_last_run', 'status_check_last_run');
+  $key_value->rename('readiness_check_timestamp', 'status_check_timestamp');
+}
+
+/**
+ * Sets cron setting to \Drupal\automatic_updates\CronUpdater::DISABLED.
+ *
+ * This is necessary until TUF support is available on drupal.org. This used to
+ * be hardcoded, but that caused complex race conditions in tests. Hence, it is
+ * now just configured.
+ *
+ * @see automatic_updates_requirements()
+ * @see https://www.drupal.org/project/automatic_updates/issues/3284443
+ */
+function automatic_updates_update_9002(): void {
+  /** @var \Drupal\Core\Config\Config $config */
+  $config = \Drupal::service('config.factory')->getEditable('automatic_updates.settings');
+  $config->set('cron', CronUpdater::DISABLED)->save();
+}

@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Update and installation code for the gdpr_consent module.
+ */
+
+use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
+
+/**
+ * Update revision log message field to match entity definition.
+ */
+function gdpr_consent_update_8301() {
+  $entityTypeManager = \Drupal::entityTypeManager();
+  $entityTypeId = 'gdpr_consent_agreement';
+  $oldFieldName = 'revision_log_message';
+  $newFieldName = 'revision_log';
+  $entityType = $entityTypeManager->getDefinition($entityTypeId);
+
+  /** @var \Drupal\gdpr_consent\ConsentAgreementStorage $storage */
+  $storage = $entityTypeManager->getStorage($entityTypeId);
+  $bundleDefinition = $entityTypeManager->getDefinition($entityTypeId);
+  // Sometimes the primary key isn't 'id'. e.g. 'eid' or 'item_id'.
+  $revisionKey = $bundleDefinition->getKey('revision');
+  // If there is no data table defined then use the base table.
+  $tableName = $storage->getRevisionTable();
+  $database = \Drupal::database();
+  $entityDefinitionUpdateManager = \Drupal::entityDefinitionUpdateManager();
+  $changes = $entityDefinitionUpdateManager->getChangeList();
+
+  if (!is_array($changes[$entityTypeId]) || !is_array($changes[$entityTypeId]['field_storage_definitions'])) {
+    // If our entity type has no changes there is nothing to do.
+    return;
+  }
+
+  $fieldChanges = $changes[$entityTypeId]['field_storage_definitions'];
+
+  $oldFieldDeleted = $fieldChanges[$oldFieldName] == EntityDefinitionUpdateManagerInterface::DEFINITION_DELETED;
+  $newFieldAdded = $fieldChanges[$newFieldName] == EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED;
+  if (!($oldFieldDeleted && $newFieldAdded)) {
+    // If the changes are not what we expect to process, bail out too.
+    return;
+  }
+
+  // Store the existing values.
+  $revisionLogValues = $database->select($tableName)
+    ->fields($tableName, [$revisionKey, $oldFieldName])
+    ->execute()
+    ->fetchAllKeyed();
+
+  // Update the entity type.
+  $entityFieldManager = \Drupal::service('entity_field.manager');
+  $entityLastInstalledSchemaRepository = \Drupal::service('entity.last_installed_schema.repository');
+  $entityTypeListener = \Drupal::service('entity_type.listener');
+
+  $original = $entityLastInstalledSchemaRepository->getLastInstalledDefinition($entityTypeId);
+  $fieldStorageDefinitions = $entityFieldManager->getFieldStorageDefinitions($entityTypeId);
+  $lastInstalledFieldStorageDefinitions = $entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entityTypeId);
+  $entityTypeListener->onFieldableEntityTypeUpdate($entityType, $original, $fieldStorageDefinitions, $lastInstalledFieldStorageDefinitions);
+
+  // Restore the values.
+  foreach ($revisionLogValues as $id => $value) {
+    $database->update($tableName)
+      ->fields([$newFieldName => $value])
+      ->condition($revisionKey, $id)
+      ->execute();
+  }
+}

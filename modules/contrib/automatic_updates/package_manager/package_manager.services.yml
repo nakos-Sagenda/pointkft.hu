@@ -1,0 +1,263 @@
+services:
+  # Underlying Symfony utilities for Composer Stager.
+  Symfony\Component\Filesystem\Filesystem:
+    public: false
+  Symfony\Component\Process\ExecutableFinder:
+    public: false
+
+  # Basic infrastructure services for Composer Stager, overridden by us to
+  # provide additional functionality.
+  Drupal\package_manager\ProcessFactory:
+    arguments:
+      - '@file_system'
+      - '@config.factory'
+    public: false
+  Drupal\package_manager\ExecutableFinder:
+    arguments:
+      $config_factory: '@config.factory'
+    autowire: true
+    public: false
+  Drupal\package_manager\FileSyncerFactory:
+    arguments:
+      $config_factory: '@config.factory'
+    autowire: true
+    public: false
+  PhpTuf\ComposerStager\Infrastructure\Service\Finder\ExecutableFinderInterface:
+    alias: 'Drupal\package_manager\ExecutableFinder'
+  PhpTuf\ComposerStager\Infrastructure\Factory\Process\ProcessFactoryInterface:
+    alias: 'Drupal\package_manager\ProcessFactory'
+  PhpTuf\ComposerStager\Domain\Service\FileSyncer\FileSyncerInterface:
+    factory: ['@Drupal\package_manager\FileSyncerFactory', 'create']
+
+  # Services provided to Drupal by Package Manager.
+  package_manager.beginner:
+    class: PhpTuf\ComposerStager\Domain\Core\Beginner\Beginner
+    autowire: true
+  package_manager.stager:
+    class: PhpTuf\ComposerStager\Domain\Core\Stager\Stager
+    autowire: true
+  package_manager.committer:
+    class: PhpTuf\ComposerStager\Domain\Core\Committer\Committer
+    autowire: true
+  package_manager.path_locator:
+    class: Drupal\package_manager\PathLocator
+    arguments:
+      - '%app.root%'
+      - '@config.factory'
+      - '@file_system'
+  package_manager.failure_marker:
+    class: Drupal\package_manager\FailureMarker
+    arguments:
+      - '@package_manager.path_locator'
+  package_manager.update_data_subscriber:
+    class: Drupal\package_manager\EventSubscriber\UpdateDataSubscriber
+    arguments:
+      - '@update.manager'
+    tags:
+      - { name: event_subscriber }
+  package_manager.composer_inspector:
+    class: Drupal\package_manager\ComposerInspector
+    autowire: true
+    public: false
+
+  # Validators.
+  package_manager.validator.environment_support:
+    class: Drupal\package_manager\Validator\EnvironmentSupportValidator
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.composer_executable:
+    class: Drupal\package_manager\Validator\ComposerExecutableValidator
+    arguments:
+      - '@PhpTuf\ComposerStager\Domain\Service\ProcessRunner\ComposerRunnerInterface'
+      - '@module_handler'
+      - '@string_translation'
+      - '@PhpTuf\ComposerStager\Domain\Service\Precondition\ComposerIsAvailableInterface'
+      - '@PhpTuf\ComposerStager\Infrastructure\Factory\Path\PathFactoryInterface'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.disk_space:
+    class: Drupal\package_manager\Validator\DiskSpaceValidator
+    arguments:
+      - '@package_manager.path_locator'
+      - '@string_translation'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.pending_updates:
+    class: Drupal\package_manager\Validator\PendingUpdatesValidator
+    arguments:
+      - '%app.root%'
+      - '@update.post_update_registry'
+      - '@string_translation'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.lock_file:
+    class: Drupal\package_manager\Validator\LockFileValidator
+    arguments:
+      - '@state'
+      - '@package_manager.path_locator'
+      - '@string_translation'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.file_system:
+    class: Drupal\package_manager\Validator\WritableFileSystemValidator
+    arguments:
+      - '@package_manager.path_locator'
+      - '@string_translation'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.composer_settings:
+    class: Drupal\package_manager\Validator\ComposerSettingsValidator
+    arguments:
+      - '@string_translation'
+      - '@package_manager.composer_inspector'
+      - '@package_manager.path_locator'
+    tags:
+      - { name: event_subscriber }
+  package_manger.validator.composer_minimum_stability:
+    class: Drupal\package_manager\Validator\ComposerMinimumStabilityValidator
+    arguments:
+      - '@package_manager.path_locator'
+      - '@package_manager.composer_inspector'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.multisite:
+    class: Drupal\package_manager\Validator\MultisiteValidator
+    arguments:
+      - '@package_manager.path_locator'
+      - '@string_translation'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.symlink:
+    class: Drupal\package_manager\Validator\SymlinkValidator
+    arguments:
+      - '@package_manager.path_locator'
+      - '@PhpTuf\ComposerStager\Domain\Service\Precondition\CodebaseContainsNoSymlinksInterface'
+      - '@PhpTuf\ComposerStager\Infrastructure\Factory\Path\PathFactoryInterface'
+      - '@module_handler'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.duplicate_info_file:
+    class: Drupal\package_manager\Validator\DuplicateInfoFileValidator
+    arguments:
+      - '@package_manager.path_locator'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.overwrite_existing_packages:
+    class: Drupal\package_manager\Validator\OverwriteExistingPackagesValidator
+    arguments:
+      - '@package_manager.path_locator'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.staged_database_updates:
+    class: Drupal\package_manager\Validator\StagedDBUpdateValidator
+    arguments:
+      - '@package_manager.path_locator'
+      - '@extension.list.module'
+      - '@extension.list.theme'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.composer_json_exists:
+    class: Drupal\package_manager\Validator\ComposerJsonExistsValidator
+    arguments:
+      - '@package_manager.path_locator'
+      - '@string_translation'
+    tags:
+      - { name: event_subscriber }
+  package_manager.test_site_excluder:
+    class: Drupal\package_manager\PathExcluder\TestSiteExcluder
+    arguments:
+      - '@package_manager.path_locator'
+    tags:
+      - { name: event_subscriber }
+  package_manager.vendor_hardening_excluder:
+    class: Drupal\package_manager\PathExcluder\VendorHardeningExcluder
+    arguments:
+      - '@package_manager.path_locator'
+    tags:
+      - { name: event_subscriber }
+  package_manager.site_files_excluder:
+    class: Drupal\package_manager\PathExcluder\SiteFilesExcluder
+    arguments:
+      $path_locator: '@package_manager.path_locator'
+      $stream_wrapper_manager: '@stream_wrapper_manager'
+    tags:
+      - { name: event_subscriber }
+    autowire: true
+  package_manager.sqlite_excluder:
+    class: Drupal\package_manager\PathExcluder\SqliteDatabaseExcluder
+    arguments:
+      - '@package_manager.path_locator'
+      - '@database'
+    tags:
+      - { name: event_subscriber }
+  package_manager.git_excluder:
+    class: Drupal\package_manager\PathExcluder\GitExcluder
+    arguments:
+      - '@package_manager.path_locator'
+      - '@file_system'
+    tags:
+      - { name: event_subscriber }
+  package_manager.unknown_path_excluder:
+    class: Drupal\package_manager\PathExcluder\UnknownPathExcluder
+    arguments:
+      - '@package_manager.path_locator'
+    tags:
+      - { name: event_subscriber }
+  package_manager.site_configuration_excluder:
+    class: Drupal\package_manager\PathExcluder\SiteConfigurationExcluder
+    arguments:
+      - '%site.path%'
+      - '@package_manager.path_locator'
+    tags:
+      - { name: event_subscriber }
+  package_manager.node_modules_excluder:
+    class: Drupal\package_manager\PathExcluder\NodeModulesExcluder
+    arguments:
+      - '@package_manager.path_locator'
+    tags:
+      - { name: event_subscriber }
+  package_manager.uninstall_validator:
+    class: Drupal\package_manager\PackageManagerUninstallValidator
+    tags:
+      - { name: module_install.uninstall_validator }
+    parent: container.trait
+    calls:
+      - ['setContainer', ['@service_container']]
+    lazy: true
+  package_manager.validator.settings:
+    class: Drupal\package_manager\Validator\SettingsValidator
+    arguments:
+      - '@string_translation'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.composer_plugins:
+    class: Drupal\package_manager\Validator\ComposerPluginsValidator
+    arguments:
+      - '@config.factory'
+      - '@package_manager.composer_inspector'
+      - '@package_manager.path_locator'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.patches:
+    class: Drupal\package_manager\Validator\ComposerPatchesValidator
+    arguments:
+      - '@module_handler'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.supported_releases:
+    class: Drupal\package_manager\Validator\SupportedReleaseValidator
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.stage_not_in_active:
+    class: Drupal\package_manager\Validator\StageNotInActiveValidator
+    arguments:
+      - '@package_manager.path_locator'
+    tags:
+      - { name: event_subscriber }
+  package_manager.validator.xdebug:
+    class: Drupal\package_manager\Validator\XdebugValidator
+    tags:
+      - { name: event_subscriber }
+  package_manager.update_processor:
+    class: Drupal\package_manager\PackageManagerUpdateProcessor
+    arguments: [ '@config.factory', '@queue', '@update.fetcher', '@state', '@private_key', '@keyvalue', '@keyvalue.expirable' ]

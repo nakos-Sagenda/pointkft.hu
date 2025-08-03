@@ -1,0 +1,12 @@
+name: 'Automatic Updates'
+type: module
+description: 'Automatically updates Drupal core.'
+core_version_requirement: ^9.3 || ^10
+dependencies:
+  - drupal:package_manager
+  - drupal:update
+
+# Information added by Drupal.org packaging script on 2023-02-14
+version: '8.x-2.7'
+project: 'automatic_updates'
+datestamp: 1676402297

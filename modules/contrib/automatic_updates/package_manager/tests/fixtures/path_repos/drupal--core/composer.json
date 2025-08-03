@@ -1,0 +1,19 @@
+{
+    "name":"drupal/core",
+    "type":"drupal-core",
+    "version":"9.8.0",
+    "extra": {
+        "_readme": [
+            "The 'drupal-scaffold' section below is needed because 'Drupal\\automatic_updates\\Validator\\ScaffoldFilePermissionsValidator'",
+            "uses this section to determine which files to check. The actual composer.json file for drupal/core will have more files listed",
+            "but this limited list is used in '\\Drupal\\Tests\\automatic_updates\\Kernel\\StatusCheck\\ScaffoldFilePermissionsValidatorTest'",
+            "to ensure this section determines the file list."
+        ],
+        "drupal-scaffold": {
+            "file-mapping": {
+                "[web-root]/sites/default/default.settings.php": "",
+                "[web-root]/sites/default/default.services.yml": ""
+            }
+        }
+    }
+}

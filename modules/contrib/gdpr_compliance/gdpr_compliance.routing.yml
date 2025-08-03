@@ -1,0 +1,23 @@
+gdpr_compliance.settings_form:
+  path: 'admin/config/gdpr/compliance'
+  defaults:
+    _form: '\Drupal\gdpr_compliance\Form\SettingsFormWarning'
+    _title: 'GDPR Form Settings'
+  requirements:
+    _permission: 'administer gdpr compliance'
+
+gdpr_compliance.settings_popup:
+  path: 'admin/config/gdpr/compliance/popup'
+  defaults:
+    _form: '\Drupal\gdpr_compliance\Form\SettingsPopup'
+    _title: 'GDPR Pop-up Settings'
+  requirements:
+    _permission: 'administer gdpr compliance'
+
+gdpr_compliance.policy:
+  path: 'gdpr-compliance/policy'
+  defaults:
+    _controller: '\Drupal\gdpr_compliance\Controller\PagePolicy::page'
+    _title_callback: '\Drupal\gdpr_compliance\Controller\PagePolicy::title'
+  requirements:
+    _permission: 'access content'

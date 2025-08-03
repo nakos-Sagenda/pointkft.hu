@@ -1,0 +1,13 @@
+includes:
+  - phpstan-baseline.neon
+parameters:
+    level: 0
+    fileExtensions:
+        - php
+        - module
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        # @see https://www.drupal.org/docs/develop/development-tools/phpstan/handling-unsafe-usage-of-new-static
+        - "#^Unsafe usage of new static#"
+        # @todo once minimum support is 10.3
+        - "#^Fetching deprecated class constant EXISTS_.*#"

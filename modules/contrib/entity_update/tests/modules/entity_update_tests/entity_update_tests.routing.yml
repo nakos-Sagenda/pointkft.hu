@@ -1,0 +1,8 @@
+# Settings of entity update tests
+entity_update_tests:
+  path: '/admin/config/development/entity-update/tests'
+  defaults:
+    _form: '\Drupal\entity_update_tests\Form\EntityUpdateTestSettings'
+    _title: 'Test Entity Settings'
+  requirements:
+    _permission: 'administer software updates'

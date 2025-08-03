@@ -1,0 +1,82 @@
+# https://www.drupal.org/drupalorg/docs/drupal-ci/customizing-drupalci-testing
+# Copied from https://git.drupalcode.org/project/ckeditor5/-/blob/c68be57fbc2c29969e9726ec932af3f0e80c3dd9/drupalci.yml
+# cspell:disable
+build:
+  assessment:
+    # validate_codebase:
+    # automatic_updates code quality checking matches that of Drupal core: it is checked by container_command.commit_checks.
+    testing:
+      # Run code quality checks.
+      container_command.commit-checks:
+        commands:
+          # Copy core's checking script into this contrib module.
+          - "cp /var/www/html/core/scripts/dev/commit-code-check.sh modules/contrib/automatic_updates/"
+          # Comply with core's checking script file permissions expectations.
+          - chmod 644 modules/contrib/automatic_updates/
+          # Rewrite $TOP_LEVEL/core since $TOP_LEVEL now refers to the contrib module.
+          - sed -i "s/\$TOP_LEVEL\/core/\/var\/www\/html\/core/" modules/contrib/automatic_updates/commit-code-check.sh
+          # Ensure the remainder of the script runs from the script's directory and not the current working directory.
+          - sed -i "s/# Gets list of files to check./cd \"\$\(dirname \"\$0\"\)\";/" modules/contrib/automatic_updates/commit-code-check.sh
+          # When constructing $FILES, ignore the `commit-code-check.sh` file we just copied.
+          - sed -i "s/--exclude=vendor/--exclude=vendor --exclude=commit-code-check.sh/" modules/contrib/automatic_updates/commit-code-check.sh
+          # vendor/bin/phpcs now needs to be prefixed. And $TOP_LEVEL/vendor needs to be rewritten. And add verbose output.
+          - sed -i "s/vendor\/bin\/phpcs/\/var\/www\/html\/vendor\/bin\/phpcs/" modules/contrib/automatic_updates/commit-code-check.sh
+          - sed -i "s/\$TOP_LEVEL\/vendor/\/var\/www\/html\/vendor/" modules/contrib/automatic_updates/commit-code-check.sh
+          - sed -i "s/phpcs -ps/phpcs \$TOP_LEVEL -ps/" modules/contrib/automatic_updates/commit-code-check.sh
+          # Disable all JS compile checks until we've matched core's build process.
+          # @todo Remove this in https://www.drupal.org/project/automatic_updates/issues/3221082.
+          - sed -i "s/COMPILE_CHECK=1/COMPILE_CHECK=0/" modules/contrib/automatic_updates/commit-code-check.sh
+          - sed -i "s/core\/scripts\/js/js/" modules/contrib/automatic_updates/commit-code-check.sh
+          # Uncomment to Check all files
+          #- sed -i "s/git diff --name-only HEAD~1 HEAD/find \* -type f -not -path \"\.\/\.git\*\"/" modules/contrib/automatic_updates/commit-code-check.sh
+          # Make cspell examine our files.
+          - sed -i "s/yarn run -s spellcheck/yarn run -s spellcheck --root \$TOP_LEVEL/" modules/contrib/automatic_updates/commit-code-check.sh
+          # Add our words to the dictionary.
+          - cat modules/contrib/automatic_updates/dictionary.txt >> core/misc/cspell/dictionary.txt
+          # Ensure we have the full path to PHPStan.
+          - sed -i "s/vendor\/bin\/phpstan/\/var\/www\/html\/vendor\/bin\/phpstan/" modules/contrib/automatic_updates/commit-code-check.sh
+          # After all of the shenanigans above, we're finally ready to run core's `commit-code-check.sh`! :)
+          - "modules/contrib/automatic_updates/commit-code-check.sh --drupalci"
+          # Restore the original permissions.
+          - chmod 777 modules/contrib/automatic_updates/
+          # Disable the PCRE engine's JIT, since it causes Composer to die during the
+          # update process, but only on Drupal CI, and for reasons that are essentially
+          # impossible to trace into. The PCRE JIT is not necessary for Automatic Updates
+          # to work correctly, and disabling it is a known workaround.
+          # @see pcre.ini
+          - sudo cp modules/contrib/automatic_updates/pcre.ini /usr/local/etc/php/conf.d
+        halt-on-fail: true
+      # run_tests task is executed several times in order of performance speeds.
+      # halt-on-fail can be set on the run_tests tasks in order to fail fast.
+      # suppress-deprecations is false in order to be alerted to usages of
+      # deprecated code.
+      run_tests.phpunit:
+        types: 'PHPUnit-Unit'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
+      run_tests.kernel:
+        types: 'PHPUnit-Kernel'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
+      run_tests.build:
+        # Limit concurrency due to disk space concerns.
+        concurrency: 15
+        types: 'PHPUnit-Build'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
+      run_tests.functional:
+        types: 'PHPUnit-Functional'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
+      # Functional JavaScript tests require a concurrency of 1 because there is
+      # only one instance of PhantomJS on the testbot machine.
+      #run_tests.javascript:
+      #  concurrency: 1
+      #  types: 'PHPUnit-FunctionalJavascript'
+      #  testgroups: '--all'
+      #  suppress-deprecations: false
+      #  halt-on-fail: false

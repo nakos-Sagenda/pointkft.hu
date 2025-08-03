@@ -1,0 +1,7 @@
+# Entity update test menu links.
+entity_update_tests:
+  title: Test Fields settings
+  description: 'Field setting of the test entities (entity_update_tests_*)'
+  parent: entity_update
+  route_name: entity_update_tests
+  weight: -99
