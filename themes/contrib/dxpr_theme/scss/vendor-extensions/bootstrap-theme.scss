@@ -13,10 +13,12 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(359deg); }
 }
+
 .glyphicon-spin {
-  display: inline-block;
   animation: glyphicon-spin 1s infinite linear;
+  display: inline-block;
 }
+
 a .glyphicon-spin {
   display: inline-block;
   text-decoration: none;
@@ -39,13 +41,15 @@ html.js {
       color: $gray-light;
       opacity: .5;
       transition: 150ms color, 150ms opacity;
+
       &.glyphicon-spin {
         color: $primary;
         opacity: 1;
       }
     }
+
     .input-group-addon {
-      background-color: rgb(255, 255, 255);
+      background-color: rgb(255 255 255);
     }
   }
 
@@ -75,16 +79,19 @@ html.js {
 .field--label-inline .field--items {
   float: left; /* LTR */
 }
+
 .field--label-inline .field--label,
 .field--label-inline > .field--item,
 .field--label-inline .field--items {
   padding-right: 0.5em;
 }
+
 [dir="rtl"] .field--label-inline .field--label,
 [dir="rtl"] .field--label-inline .field--items {
   padding-left: 0.5em;
   padding-right: 0;
 }
+
 .field--label-inline .field--label::after {
   content: ':';
 }
@@ -92,27 +99,33 @@ html.js {
 /**
  * Accordion item styling.
  */
+
 /**
  * Panel styling.
  */
 .accordion-item {
-  background-color: $header-color;
-  color: $header-text-color;
+  background-color: dxpr-color('header');
+  color: dxpr-color('headertext');
+
   .accordion-button {
-    background: $header-color;
-    color: $header-text-color;
+    background: dxpr-color('header');
+    color: dxpr-color('headertext');
+
     &:not(.collapsed) {
-      background: $card;
-      color: $primary;
+      background: dxpr-color('card');
+      color: dxpr-color('base');
     }
   }
+
   .accordion-body { 
     background-color: transparent;
-    color: $header-text-color;
+    color: dxpr-color('headertext');
+
     h1,h2,h3,h4,h5,h6,label,.field--label {
-      color: $header-text-color;
+      color: dxpr-color('headertext');
     }
   }
+
   // .panel-title {
   //   display: block;
   //   margin: -10px -15px;
@@ -133,28 +146,33 @@ html.js {
   float: right;
   margin: 1px 2px 1px 10px;
 }
+
 .tabledrag-changed-warning {
   margin: 0;
   overflow: hidden;
 }
+
 .tabledrag-handle {
-  color: $gray-light;
+  color: dxpr-color('graylight');
   cursor: move;
   float: left;
   font-size: 125%;
   line-height: 1;
   margin: -10px 0 0 -10px;
   padding: 10px;
+
   &:hover, &:focus {
-    color: $primary;
+    color: dxpr-color('base');
   }
 }
+
 .indentation {
   float: left; /* LTR */
   height: 1.7em;
   margin: -0.4em 0.2em -0.4em -0.4em; /* LTR */
   padding: 0.42em 0 0.42em 0.6em; /* LTR */
   width: 20px;
+
   [dir="rtl"] & {
     float: right;
     margin: -0.4em -0.4em -0.4em 0.2em;
@@ -163,13 +181,15 @@ html.js {
 }
 
 .table.table-striped>tbody>tr:nth-of-type(odd) > * {
-  background: $card;
-  --bs-table-accent-bg: #eeeeee; // variable does not work after this custom property
-  color: $card-text;
+  background: dxpr-color('card');
+  color: dxpr-color('cardtext');
+
+  --bs-table-accent-bg: #eee; // variable does not work after this custom property
 }
+
 .table.table-hover {
   > tbody > tr:hover {
-    background-color: $page-title-color;
+    background-color: dxpr-color('pagetitle');
   }
 }
 
@@ -179,26 +199,30 @@ html.js {
 .local-actions {
   margin: 10px 0 10px -5px;
 }
+
 .tabs--secondary {
   margin: 10px 0 5px;
 }
 
 /**
  * Missing Bootstrap 2 tab styling.
- * $see http://stackoverflow.com/questions/18432577/stacked-tabs-in-bootstrap-3
+ * $see http://stackoverflow.com/questions/18432577/stacked-tabs-in-bootstrap-5
  * $see http://bootply.com/74926
  */
 .tabbable {
   margin-bottom: 20px;
 }
+
 .tabs-below, .tabs-left, .tabs-right {
   > .nav-tabs {
     border-bottom: 0;
   }
 }
+
 .tab-pane > .panel-heading {
   display: none;
 }
+
 .tab-content > .active {
   display: block;
 }
@@ -207,23 +231,27 @@ html.js {
 .tabs-below {
   > .nav-tabs {
     border-top: 1px solid $nav-tabs-border-color;
+
     > li {
-      margin-top: -1px;
       margin-bottom: 0;
+      margin-top: -1px;
+
       > a {
         border-radius: 0 0 $border-radius-base $border-radius-base;
+
         &:hover,
         &:focus {
-          border-top-color: $nav-tabs-border-color;
           border-bottom-color: transparent;
+          border-top-color: $nav-tabs-border-color;
         }
       }
     }
+
     > .active {
       > a,
       > a:hover,
       > a:focus {
-        border-color: transparent $nav-tabs-border-color $nav-tabs-border-color $nav-tabs-border-color;
+        border-color: transparent $nav-tabs-border-color $nav-tabs-border-color;
       }
     }
   }
@@ -235,24 +263,29 @@ html.js {
   > .nav-tabs {
     padding-bottom: 20px;
     width: 220px;
+
     > li {
       float: none;
+
       &:focus {
         outline: 0;
       }
+
       > a {
-        margin-right: 0;
         margin-bottom: 3px;
+        margin-right: 0;
+
         &:focus {
           outline: 0;
         }
       }
     }
   }
+
   > .tab-content {
-    border-radius: 0 $border-radius-base $border-radius-base $border-radius-base;
     border: 1px solid $nav-tabs-border-color;
-    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    border-radius: 0 $border-radius-base $border-radius-base;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
     overflow: hidden;
     padding: 10px 15px;
   }
@@ -263,6 +296,7 @@ html.js {
   > .nav-tabs {
     float: left;
     margin-right: -1px;
+
     > li > a {
       border-radius: $border-radius-base 0 0 $border-radius-base;
     }
@@ -274,6 +308,7 @@ html.js {
   > .nav-tabs {
     float: right;
     margin-left: -1px;
+
     > li > a {
       border-radius: 0 $border-radius-base $border-radius-base 0;
     }

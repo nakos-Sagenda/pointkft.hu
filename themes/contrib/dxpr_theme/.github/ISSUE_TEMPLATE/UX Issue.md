@@ -2,7 +2,7 @@
 name: UX Issue
 about: Use this template to report UX problems.
 title: "UX PROBLEM STATEMENT"
-labels: 2.x,UX
+labels: 6.x,UX
 ---
 
 <!-- This issue template can be used as a starting point for a UX Issue. This is not a feature request, rather an issue that is being created for a product designer to solve a problem.

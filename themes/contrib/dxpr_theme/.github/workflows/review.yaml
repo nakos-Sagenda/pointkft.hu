@@ -34,6 +34,22 @@ jobs:
         name: eslint-report
         path: out/eslint-report.html
 
+  stylelint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Lint with stylelint
+        run: |
+          REPORT_ENABLED=true docker compose run --rm stylelint
+      - name: Archive stylelint html report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: stylelint-report
+          path: out/stylelint-report.html
+
   # review by commenting on code (experimental)
   # eslint-review:
   #   runs-on: ubuntu-latest

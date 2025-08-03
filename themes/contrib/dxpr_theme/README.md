@@ -42,19 +42,19 @@ we just use docker to run our scripts.
 ### How to watch and build files
 
 ```bash
-$ DEV_WATCH=true docker compose up dev
+DEV_WATCH=true docker compose up dev
 ```
 
 ### How to run eslint check
 
 ```bash
-$ docker compose up dev eslint
+docker compose up dev eslint
 ```
 
 ### How to run eslint check with html report
 
 ```bash
-$ REPORT_ENABLED=true docker compose up dev eslint
+REPORT_ENABLED=true docker compose up dev eslint
 ```
 
 After it finishes, open `out/eslint-report.html` file to see report in details.
@@ -63,26 +63,44 @@ After it finishes, open `out/eslint-report.html` file to see report in details.
 ### How to run eslint auto fix
 
 ```bash
-$ docker compose up dev eslint-auto-fix
+docker compose up dev eslint-auto-fix
 ```
 
 ### How to run Drupal lint check
 
 ```bash
-$ docker compose up drupal-lint
+docker compose up drupal-lint
 ```
 
 ### How to run Drupal lint auto fix
 
 ```bash
-$ docker compose up drupal-lint-auto-fix
+docker compose up drupal-lint-auto-fix
 
 ### How to run drupal-check
 
 ```bash
-$ docker compose up drupal-check
+docker compose up drupal-check
 # or
-$ docker compose run --rm drupal-check
+docker compose run --rm drupal-check
+```
+
+### Stylelint check for SCSS files
+
+```bash
+$ docker compose run --rm stylelint
+```
+
+### Stylelint check for SCSS files with HTML report.
+
+```bash
+$ REPORT_ENABLED=true docker compose run --rm stylelint
+```
+
+### Stylelint auto fix for SCSS files
+
+```bash
+$ docker compose run --rm stylelint-auto-fix
 ```
 
 ### Using our Demo sites for local development

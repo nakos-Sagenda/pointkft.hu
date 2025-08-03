@@ -6,65 +6,78 @@
 @import "../includes/variables";
 
 body, .toooltip {
-  font-family: "Source Sans Pro", "Source Sans Pro";
-  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-style: normal;
+  font-weight: 400;
 }
 
 h1,h2,h3,h4,h5,h6,label,.field--label {
-  font-family: "Source Sans Pro Light", "Source Sans Pro";
-  font-weight: 300;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-style: normal;
+  font-weight: 700;
 }
 
-nav,nav ul li,nav a {
-  font-family: "Source Sans Pro", "Source Sans Pro";
-  font-weight: 300;
+.dxpr-theme-header .nav {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-style: normal;
+  font-weight: 400;
 }
 
 .site-name, .navbar-brand {
-  font-family: "Source Sans Pro Light", "Source Sans Pro";
-  font-weight: 300;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-style: normal;
+  font-weight: 400;
 }
 
 blockquote, blockquote p {
-  font-family: "Source Sans Pro Light Italic", "Source Sans Pro";
-  font-weight: 300;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: var(--dxt-setting-blockquote-font-size);
   font-style: italic;
+  font-weight: 400;
+  line-height: var(--dxt-setting-blockquote-line-height);
 }
 
 // Typography
 
-body, html {
-  color: $text;
-  font-size: $font-size-base;
+body {
+  color: dxpr-color('text');
+  font-size: var(--dxt-setting-body-font-size);
 }
 
 body, p, .lead {
-  line-height: 1.6;
+  line-height:  var(--dxt-setting-body-line-height);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  margin-top: 0;
+  // Use !important to override default font-family weight.
+  font-weight: var(--dxt-setting-headings-bold) !important;
+  letter-spacing: var(--dxt-setting-headings-letter-spacing);
+  line-height: var(--dxt-setting-headings-line-height);
   margin-bottom: 10px;
+  margin-top: 0;
+  text-transform: var(--dxt-setting-headings-uppercase);
 }
+
 h1 {
-  font-size: $font-size-h1;
+  font-size: var(--dxt-setting-h1-font-size)
 }
+
 h2 {
-  font-size: $font-size-h2;
+  font-size: var(--dxt-setting-h2-font-size)
 }
+
 h3, .block-title {
-  font-size: $font-size-h3;
+  font-size: var(--dxt-setting-h3-font-size)
 }
+
 h4 {
-  font-size: $font-size-h4;
+  font-size: var(--dxt-setting-h4-font-size)
 }
+
 h5 {
   font-size: $font-size-h5;
 }
+
 h6 {
   font-size: $font-size-h6;
 }
@@ -73,6 +86,7 @@ h3.field--label {
   font-size: $font-size-h4;
   margin-bottom: 0;
 }
+
 h3.field--label + div,
 h3.field--label + ul {
   margin-bottom: 10px;
@@ -88,27 +102,31 @@ h3.field--label + ul {
     //   content: '';
     // }
   }
+
   a {
-    color: $text;
+    color: dxpr-color('text');
   }
 }
 
 a,
 .btn-link,
 .nav-link {
-  color: $primary;
+  color: dxpr-color('base');
+
   svg {
-    fill: $primary;
+    fill: dxpr-color('base');
   }
 }
 
 a {
-  transition: color 200ms;
   text-decoration: none;
+  transition: color 200ms;
+
   &:hover,
   &:focus {
     outline: none;
   }
+
   svg {
     transition: fill 200ms;
   }
@@ -116,21 +134,24 @@ a {
 
 a:hover, a:focus,
 .btn-link:hover, .btn-link:focus  {
+  color: dxpr-color('headings');
   text-decoration: underline;
-  color: $accent1;
+
   svg {
-    fill: $accent1;
+    fill: dxpr-color('accent1');
   }
 }
 
 h1, h2, h3, h4, h5, h6, .navbar-brand, th, .nav-tabs > li > a {
-  color: $text-headings;
+  color: dxpr-color('headings');
+
   a {
-    color: $text-headings;
+    color: dxpr-color('headings');
+
     &:hover,
     &:focus {
+      color: dxpr-color('base');
       text-decoration: none;
-      color: $primary;
     }
   }
 }
@@ -139,30 +160,36 @@ h1, h2, h3, h4, h5, h6, .navbar-brand, th, .nav-tabs > li > a {
   max-width: 100%;
 }
 
-hr {
+hr, .card hr {
+  border-top: 4px solid dxpr-color('card');
+  border-top-color: var(--dxt-setting-divider-color);
+  border-top-width: var(--dxt-setting-divider-thickness);
   height: 0;
-  border-top: 4px solid $card;
-  margin-bottom: 20px;
-  margin-top: 20px;
+  margin: 20px auto 20px var(--dxt-setting-divider-position);
+  width: var(--dxt-setting-divider-length);
 }
+
 .region-sidebar-first hr,
 .region-sidebar-second hr {
-  margin-top: 10px;
   margin-bottom: 10px;
+  margin-top: 10px;
 }
+
 .dxpr-theme-footer hr {
-  border-top-color: $footer-text;
+  border-top-color: dxpr-color('footertext');
 }
-.card hr,
+
 .jumbotron hr {
-  border-top-color: $card-text; // card text color
+  border-top-color: dxpr-color('cardtext'); // card text color
 }
 
 .submitted {
-  color: $gray-light;
+  color: dxpr-color('graylight');
+
   a {
-    color: $gray-light;
+    color: dxpr-color('graylight');
     text-decoration: underline;
+
     &:hover, &:focus {
       text-decoration: none;
     }
@@ -176,19 +203,43 @@ hr {
 .main-container .block-menu-block .nav {
   > li {
     float: none;
-    > a {
-      &:hover,
-      &:focus,
-      &.active {
-      }
-    }
   }
 }
 
 .region-sidebar-first,
 .region-sidebar-second {
-  color: $gray-light;
+  color: dxpr-color('graylight');
+
   a {
-    color: $text;
+    color: dxpr-color('text');
+  }
+}
+
+@media screen and (width <= 768px) {
+  body, p {
+    font-size:  var(--dxt-setting-body-mobile-font-size);
+  }
+  h1 { font-size: var(--dxt-setting-h1-mobile-font-size) }
+  h2 { font-size: var(--dxt-setting-h2-mobile-font-size) }
+  h3 { font-size: var(--dxt-setting-h3-mobile-font-size) }
+  h4 { font-size: var(--dxt-setting-h4-mobile-font-size) }
+
+  blockquote, .blockquote p {
+    font-size: var(--dxt-setting-blockquote-mobile-font-size);
+  }
+}
+
+#system-theme-settings #edit-typography .details-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#system-theme-settings #edit-typography .details-wrapper > details {
+  width: 100%;
+}
+
+@media (width <= 976px) {
+  #system-theme-settings #edit-typography .details-wrapper > .js-form-item.form-item.js-form-type-range.form-type-range {
+    width: 300px;
   }
 }

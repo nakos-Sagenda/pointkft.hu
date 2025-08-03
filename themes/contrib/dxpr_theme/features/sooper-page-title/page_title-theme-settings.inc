@@ -85,12 +85,17 @@ function page_title_theme_settings(array &$form, $theme) {
   ];
 
   $form['dxpr_theme_settings']['page_title']['page_title_height'] = [
-    '#type' => 'textfield',
+    '#type' => 'range',
     '#title' => t('Height'),
     '#default_value' => ((theme_get_setting('page_title_height') !== NULL)) ? theme_get_setting('page_title_height') : '120',
-    '#size' => 9,
-    '#maxlength' => 9,
+    '#min' => 50,
+    '#max' => 500,
+    '#step' => 5,
     '#description' => t('height of the header. 50px - 500px. Default is 120px.'),
+    '#attributes' => [
+      'class' => ['dxb-slider', 'page-title-height-range'],
+      'data-dxb-slider' => TRUE,
+    ],
   ];
 
   $form['dxpr_theme_settings']['page_title']['page_title_animate'] = [
@@ -99,17 +104,17 @@ function page_title_theme_settings(array &$form, $theme) {
     '#default_value' => ((theme_get_setting('page_title_animate') !== NULL)) ? theme_get_setting('page_title_animate') : '0',
     '#options' => [
       '0' => t('No Animation'),
-      'bounce' => t('Bounce'),
-      'flash' => t('Flash'),
-      'pulse' => t('Pulse'),
-      'fadeIn' => t('Fade in'),
-      'bounceInDown' => t('Bounce in down'),
-      'bounceInUp' => t('Bounce in up'),
-      'fadeInDown' => t('Fade in down'),
-      'fadeInUp' => t('Fade in up'),
+      'bounce-dxpr' => t('Bounce'),
+      'flash-dxpr' => t('Flash'),
+      'pulse-dxpr' => t('Pulse'),
+      'fade-in-dxpr' => t('Fade in'),
+      'bounce-in-down-dxpr' => t('Bounce in down'),
+      'bounce-in-up-dxpr' => t('Bounce in up'),
+      'fade-in-down-dxpr' => t('Fade in down'),
+      'fade-in-up-dxpr' => t('Fade in up'),
     ],
     '#prefix' => '<br class="clear-both"><br class="clear-both">',
-    '#description' => t('Choose <a target="_blank" href="@animatecss">animate.css</a> appear animation', ['@drupal-handbook' => 'https://daneden.github.io/animate.css/']),
+    '#description' => t('Choose an animation.'),
   ];
 
   $form['dxpr_theme_settings']['page_title']['background'] = [
@@ -133,12 +138,17 @@ function page_title_theme_settings(array &$form, $theme) {
   ];
 
   $form['dxpr_theme_settings']['page_title']['background']['page_title_image_opacity'] = [
-    '#type' => 'textfield',
-    '#title' => t('Backound Image Opacity'),
+    '#type' => 'range',
+    '#title' => t('Background Image Opacity'),
     '#default_value' => ((theme_get_setting('page_title_image_opacity') !== NULL)) ? theme_get_setting('page_title_image_opacity') : 1,
-    '#size' => 9,
-    '#maxlength' => 9,
+    '#min' => 0,
+    '#max' => 1,
+    '#step' => 0.01,
     '#description' => t('Use this to blend the background image with a color. 0 is fully transparent and 1 is fully opaque.'),
+    '#attributes' => [
+      'class' => ['dxb-slider', 'page-title-image-opacity-range'],
+      'data-dxb-slider' => TRUE,
+    ],
   ];
 
   $form['dxpr_theme_settings']['page_title']['background']['page_title_image_style'] = [

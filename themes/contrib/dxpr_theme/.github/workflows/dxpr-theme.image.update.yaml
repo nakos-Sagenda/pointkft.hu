@@ -3,7 +3,7 @@ name: Update dxpr/dxpr_theme docker image
 on:
   push:
     branches:
-      - '5.x'
+      - '6.x'
 
 jobs:
   docker:
@@ -27,4 +27,4 @@ jobs:
             PHP_TAG=8.1-dev-4.53.0
             DXPR_THEME_CONTAINER=/usr/src/dxpr_theme
           push: true
-          tags: dxpr/dxpr_theme:5.x
+          tags: dxpr/dxpr_theme:6.x

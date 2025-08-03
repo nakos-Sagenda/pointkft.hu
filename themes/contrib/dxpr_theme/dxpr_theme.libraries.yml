@@ -1,28 +1,20 @@
 global-styling:
   js:
-    vendor/classie.js: {}
-    js/minified/dxpr-theme-multilevel-mobile-nav.min.js: { minified: true }
-    js/minified/dxpr-theme-header.min.js: { minified: true }
+    js/minified/dxpr-theme-header.bundle.min.js: { minified: true }
+    js/minified/dxpr-theme-multilevel-mobile-nav.bundle.min.js: { minified: true }
   dependencies:
     - core/drupal
-    - core/jquery
     - core/once
-    - core/modernizr
 
-bootstrap-3:
+bootstrap-5:
   css:
     theme:
-      css/vendor-extensions/bootstrap-3.css: { minified: true }
+      css/vendor-extensions/bootstrap-5.css: { minified: true }
 
 bootstrap-theme:
   css:
     theme:
       css/vendor-extensions/bootstrap-theme.css: { minified: true }
-
-jquery-ui:
-  css:
-    theme:
-      css/vendor-extensions/jquery-ui.css: { minified: true }
 
 footer-menu:
   css:
@@ -33,6 +25,11 @@ forms:
   css:
     theme:
       css/base/forms.css: { minified: true }
+
+variables:
+  css:
+    theme:
+      css/base/variables.css: { minified: true, weight: -30 }
 
 layout:
   css:
@@ -58,7 +55,6 @@ dxpr-theme-full-screen-search-js:
   js:
     js/minified/dxpr-theme-full-screen-search.min.js: { minified: true }
   dependencies:
-    - core/jquery
     - core/once
 
 dxpr-theme-header:
@@ -99,9 +95,15 @@ drupal-breadcrumbs:
     - core/drupal
     - core/once
 
-drupal-breadcrumbs-js:
+drupal-tabs:
   js:
-    js/minified/dxpr-theme-breadcrumbs.min.js: { minified: true }
+    js/minified/dxpr-theme-tabs.min.js: { minified: true }
+  css:
+    theme:
+      css/components/tabs.css: { minified: true }
+  dependencies:
+    - core/drupal
+    - core/once
 
 drupal-comments:
   css:
@@ -145,7 +147,6 @@ bootstrap3:
   js:
     vendor/bootstrap3/js/bootstrap.min.js: { minified: true, weight: -20 }
   dependencies:
-    - core/jquery
 
 # Admin interface , styling theme settings form
 # Depends on DXPR Theme Helper module being installed
@@ -156,26 +157,33 @@ admin:
 
 admin.themesettings:
   js:
-    vendor/bootstrap-switch/bootstrap-switch.min.js: {}
-    vendor/bootstrap-slider/bootstrap-slider.min.js: {}
-    js/minified/dxpr-theme-settings.admin.min.js: {}
+    vendor/color-wheel/reinvented-color-wheel.min.js: { minified: true }
+    js/minified/dxpr-theme-settings-admin.bundle.min.js: { minified: true }
+    vendor/dxb_slider/dxb-slider.min.js: { minified: true }
   css:
     component:
-      vendor/bootstrap-switch/bootstrap-switch.min.css: {}
-      vendor/bootstrap-slider/bootstrap-slider.min.css: {}
+      vendor/color-wheel/reinvented-color-wheel.min.css: { minified: true}
       css/dxpr-theme.admin.themesettings.css: {}
+      vendor/dxb_slider/dxb-slider.min.css: { minified: true }
   dependencies:
     - core/drupal
-    - core/jquery
     - core/once
-
-dxpr-theme-animatecss-custom:
-  css:
-    component:
-      vendor/animate.css/animate.min.css: { minified: true }
 
 gin_toolbar:
   version: 1.x
   css:
     theme:
       css/vendor-extensions/gin-toolbar.css: {}
+
+dxb_slider:
+  version: 1.x
+  js:
+    vendor/dxb_slider/dxb-slider.js: {}
+  css:
+    theme:
+      vendor/dxb_slider/dxb-slider.css: {}
+
+custom_animations:
+  css:
+    theme:
+      css/animations-dxpr.css: {}

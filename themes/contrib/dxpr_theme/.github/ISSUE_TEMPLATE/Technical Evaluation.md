@@ -2,7 +2,7 @@
 name: Technical Evaluation
 about: Use this template for research and deep technical evaluation.
 title: "DESCRIBE WHAT IS EVALUATED"
-labels: 2.x,technical evaluation
+labels: 6.x,technical evaluation
 ---
 
 <!-- Instructions: Use this template for a proof of concept or when a deeper technical evaluation is required. Please weigh tech evaluation issues and follow the instructions below accordingly. --> 

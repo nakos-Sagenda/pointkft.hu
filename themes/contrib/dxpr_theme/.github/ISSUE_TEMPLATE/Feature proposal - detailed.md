@@ -2,7 +2,7 @@
 name: Feature proposal - detailed
 about: Use this template create a detailed feature proposal.
 title: "FEATURE DESCRIPTION"
-labels: 2.x,feature proposal
+labels: 6.x,feature proposal
 ---
 
 <!-- The first section "Release notes" is required if you want to have your release post blog PR generated. The next four sections: "Problem to solve", "Intended users", "User experience goal", and "Proposal", are strongly recommended in your first draft, while the rest of the sections can be filled out during the problem validation or breakdown phase. However, keep in mind that providing complete and relevant information early helps our product team validate the problem and start working on a solution. -->

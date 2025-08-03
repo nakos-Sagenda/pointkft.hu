@@ -2,7 +2,7 @@
 name: Feature Flag Roll Out
 about: Use this template to roll out a feature flag.
 title: "Feature flag rollout: Enable {FEATURE ISSUE ID AND TITLE}"
-labels: 2.x,feature flag,feature flag rollout
+labels: 6.x,feature flag,feature flag rollout
 ---
 
 ## Summary

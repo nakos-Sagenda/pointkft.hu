@@ -15,6 +15,7 @@
       <li {{ item.attributes }}>
         {% if item.url and item.text %}
           <a href="{{ item.url }}">{{ item.text }}</a>
+          <span class="dxpr-theme-breadcrumb-spacer"></span>
         {% else %}
           {{ item.text }}
         {% endif %}

@@ -66,7 +66,7 @@ function fonts_theme_settings(array &$form, $theme) {
   $form['dxpr_theme_settings']['fonts']['nav_font_face_selector'] = [
     '#type' => 'textfield',
     '#title' => '&nbsp;',
-    '#default_value' => ((theme_get_setting('nav_font_face_selector') !== NULL)) ? theme_get_setting('nav_font_face_selector') : 'nav,nav ul li,nav a',
+    '#default_value' => ((theme_get_setting('nav_font_face_selector') !== NULL)) ? theme_get_setting('nav_font_face_selector') : '.dxpr-theme-header .nav',
   ];
 
   $form['dxpr_theme_settings']['fonts']['sitename_font_face'] = [

@@ -2,7 +2,7 @@
 name: Experiment Successful Cleanup
 about: Use this template to clean up an experiment.
 title: "Experiment Cleanup: {EXPERIMENT IDEA ISSUE NUMBER AND TITLE}"
-labels: 2.x,feature flag, experiment,experiment cleanup
+labels: 6.x,feature flag, experiment,experiment cleanup
 ---
 
 <!-- Title suggestion: [Experiment Name] Successful Cleanup -->

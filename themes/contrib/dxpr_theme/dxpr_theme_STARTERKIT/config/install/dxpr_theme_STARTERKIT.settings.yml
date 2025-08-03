@@ -64,7 +64,7 @@ body_font_face_selector: body
 headings_font_face: '0Source+Sans+Pro:300'
 headings_font_face_selector: 'h1,h2,h3,h4,h5,h6,label,.field--label,.page-title, .html .tp-caption'
 nav_font_face: '0Source+Sans+Pro:'
-nav_font_face_selector: 'nav,nav ul li,nav a'
+nav_font_face_selector: '.dxpr-theme-header .nav'
 sitename_font_face: '0Source+Sans+Pro:300'
 sitename_font_face_selector: '.site-name, .navbar-brand'
 blockquote_font_face: '0Source+Sans+Pro:300italic'
@@ -210,5 +210,4 @@ hidden_regions:
 popover_placement: top
 tooltip_placement: 'auto top'
 modal_enabled: 0
-modal_jquery_ui_bridge: 0
 cdn_provider: ''

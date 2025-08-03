@@ -7,12 +7,12 @@
  * Place your custom PHP code in this file.
  */
 
-use Drupal\block\Entity\Block;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
+use Drupal\block\Entity\Block;
 use Drupal\node\NodeInterface;
 
 /**
@@ -70,6 +70,11 @@ function dxpr_theme_preprocess_html(&$variables) {
     }
   }
 
+  // Include CSS variables and set color scheme class.
+  $variables['#attached']['library'][] = 'dxpr_theme/variables';
+  $variables['html_attributes']
+    ->setAttribute('class', 'dxpr-scheme-' . (theme_get_setting('color_scheme') ?? 'default'));
+
   // Body background image.
   if (array_key_exists('node', $variables)) {
     $node = $variables['node'];
@@ -107,10 +112,6 @@ function dxpr_theme_preprocess_html(&$variables) {
   $variables['page_bottom']['custom_javascript'] = [
     '#markup' => '<div class="hidden" id="dxpr-theme-js-seed">sfy39587stp18</div>',
   ];
-
-  if ($breadcrumbs_separator = theme_get_setting('page_title_breadcrumbs_separator')) {
-    $variables['#attached']['drupalSettings']['dxpr_themeSettings']['breadcrumbsSeparator'] = $breadcrumbs_separator;
-  }
 
   if ($header_height = theme_get_setting('header_top_height')) {
     $variables['#attached']['drupalSettings']['dxpr_themeSettings']['headerHeight'] = $header_height;
@@ -198,19 +199,20 @@ function dxpr_theme_preprocess_page(&$variables) {
   // CSS to load on every page.
   $dxpr_theme_libraries = [
     // Bootstrap TAILORING.
-    'dxpr_theme/bootstrap-3',
+    'dxpr_theme/bootstrap-5',
     'dxpr_theme/bootstrap-theme',
-  // @todo include only if needed.
-    'dxpr_theme/jquery-ui',
+    // @todo Include only if needed.
     // DXPR THEME BASE.
     'dxpr_theme/forms',
     'dxpr_theme/layout',
     'dxpr_theme/page-title',
     'dxpr_theme/typography',
-    // DXPR THEME Components  //@todo: include only if needed.
+    // DXPR THEME Components.
+    // @todo Include only if needed.
     'dxpr_theme/dxpr-theme-header--side',
     'dxpr_theme/admin',
-    // Overrides   //@todo: include only if needed.
+    // Overrides.
+    // @todo Include only if needed.
     'dxpr_theme/drupal-webform',
     'dxpr_theme/dxpr-theme-builder',
     // HELPERS.
@@ -239,6 +241,14 @@ function dxpr_theme_preprocess_block(&$variables) {
     $block = Block::load($variables['elements']['#id']);
     if ($block) {
       $variables['region'] = $block->getRegion();
+
+      // If it exists, add the 'content_class' from the block's settings to
+      // the content's CSS classes.
+      if ($block_classes = $block->getThirdPartySettings('block_classes')) {
+        if (!empty($block_classes['content_class'])) {
+          $variables['content']['#attributes']['class'][] = $block_classes['content_class'];
+        }
+      }
     }
   }
   // Include DXPR Theme full search block css library.
@@ -274,6 +284,13 @@ function dxpr_theme_preprocess_region(&$variables) {
       $variables['#attached']['library'][] = 'dxpr_theme/footer-menu';
       break;
   }
+
+  // Apply class to block design regions.
+  if ($block_design_regions = array_keys(array_filter(theme_get_setting('block_design_regions')))) {
+    if (in_array($variables['region'], $block_design_regions)) {
+      $variables['attributes']['class'][] = 'region-block-design';
+    }
+  }
 }
 
 /**
@@ -296,7 +313,11 @@ function dxpr_theme_preprocess_breadcrumb(&$variables) {
       ];
     }
     $variables['#attached']['library'][] = 'dxpr_theme/drupal-breadcrumbs';
-    $variables['#attached']['library'][] = 'dxpr_theme/drupal-breadcrumbs-js';
+
+    // Always load breadcrumb on settings page.
+    if ($route_match->getRouteName() === 'dxpr_theme_helper.settings') {
+      $variables['theme']['settings']['page_title_breadcrumbs'] = TRUE;
+    }
   }
 }
 

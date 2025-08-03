@@ -4,6 +4,7 @@
 .body--dxpr-theme-header-side.body--dxpr-theme-nav-desktop .dxpr-theme-header--side {
   padding: 20px;
   z-index: 100;
+
   .navbar-container {
     padding-left: 0;
     padding-right: 0;
@@ -12,142 +13,156 @@
 
 .dxpr-theme-header--side {
   h1, h2, h3, h4, h5, h6 {
-    color: $header-side-text-color;
+    color: dxpr-color(headertext);
   }
+
   a {
-    color: $header-side-text-color;
+    color: dxpr-color('headersidetext');
+
     &:hover,
     &:focus {
-      color: $header-side-text-color;
+      color: dxpr-color('headersidetext');
     }
   }
+
   .dxpr-theme-main-menu {
-    background: $header-side-color;
-    color: $header-side-text-color;
-    overflow-x: hidden;
-    overflow-y: auto;
+    background: dxpr-color('headerside');
+    color: dxpr-color('headersidetext');
     height: 100%;
+    overflow: hidden auto;
+    padding-right: 20px;
+    width: calc(var(--dxt-setting-header-side-width) - 20px);
+
     a {
-      color: $header-side-text-color;
+      color: dxpr-color('headersidetext');
       padding-left: 0; // undo bs5 base theme styles
       padding-right: 0;
+
       &:hover,
       &:focus {
-        color: $header-side-text-color;
+        color: dxpr-color('headersidetext');
       }
     }
+
     .full-screen-search-button {
       padding-left: 0;
     }
   }
+
   .dxpr-theme-main-menu.dxpr-theme-main-menu--to-left {
     left: auto;
     right: 0;
+
     .menu__level {
       left: auto;
       right: 0;
     }
   }
+
   .block {
-    margin-bottom: 20px;
     float: none !important;
+    margin-bottom: 20px;
     width: 100%;
   }
+
   .navbar-collapse {
-    padding: 70px 0 0 0;
+    padding: 70px 0 0;
   }
+
   .menu__level {
+    background: dxpr-color('headerside');
+    border: none;
     box-shadow: none;
-    background: $header-side-color;
-    position: fixed;
     display: block;
-    z-index: 406;
-    top: 80px;
-    height: 100%;
-    height: calc(100vh - 80px);
+    float:none;
     left: 0;
-    visibility: hidden;
+    margin: 60px 0 0 ;
     overflow: hidden;
     overflow-y: auto;
-    width: 300px;
-    margin: 0;
     padding:  0;
-    float:none;
-    border: none;
+    position: fixed;
+    top: var(--dxt-setting-header-side-logo-height);
+    visibility: hidden;
+    width: var(--dxt-setting-header-side-width);
+    z-index: 406;
   }
+
   .menu__level--current {
     visibility: visible;
   }
+
   .menu__item {
     display: block;
-    width: 100%;
     float: none;
+    width: 100%;
+
     span {
-      padding: 7px 20px;
-      pointer-events: none;
-      color: $header-side-text-color;
+      color: dxpr-color('headersidetext');
       display: block;
       line-height: 25px;
+      padding: 7px 20px;
+      pointer-events: none;
     }
   }
+
   #dxpr-theme-main-menu .menu__link {
-    position: relative;
     cursor: pointer;
     display: block;
-    padding: 7px 20px;
     line-height: 25px;
+    padding: 7px 20px;
+    position: relative;
     transition: color .5s;
     white-space: normal;
   }
+
   .menu__link[data-submenu]::after {
     content: '…';
-    position: absolute;
-    right: 20px;
     font-size: 1.4em;
     line-height: 1.4em;
-    top: 0;
     opacity: 0.7;
+    position: absolute;
+    right: 20px;
+    top: 0;
   }
+
   .animate-outToRight,
   .animate-outToLeft,
   .animate-inFromLeft,
   .animate-inFromRight {
     visibility: visible;
   }
-  .open > .dropdown-menu {
 
-  }
   // TB Mega Menu
   .tb-megamenu-column {
     width: 100%!important;
   }
+
   .mega-dropdown-menu {
     padding: 0;
   }
+
   .menu__breadcrumbs {
     font-size: 0.65em;
+    left: 0;
     line-height: 1;
-    position: fixed;
-    top: 60px;
+    margin-top: 40px;
     padding-left: 20px;
     padding-right: 20px;
-    left: 0;
+    position: fixed;
+    top: var(--dxt-setting-header-side-logo-height);
   }
 
   .menu__breadcrumbs a {
-    font-weight: bold;
-    display: inline-block;
     cursor: pointer;
-    vertical-align: middle;
+    display: inline-block;
+    font-weight: bold;
     letter-spacing: 1px;
     text-transform: uppercase;
+    vertical-align: middle;
   }
 
   .menu__breadcrumbs a:last-child {
     pointer-events: none;
-  }
-
-  .menu__breadcrumbs a:hover {
   }
 
   .menu__breadcrumbs a:not(:last-child)::after {
@@ -156,20 +171,17 @@
     padding: 0 0.5em;
   }
 
-  .menu__breadcrumbs a:not(:last-child):hover::after {
-  }
-
   .menu__back {
+    background: none;
+    border: none;
+    cursor: pointer;
     font-size: 1.05em;
-    position: absolute;
-    z-index: 406;
-    top: 0;
-    right: 2.25em;
     margin: 0;
     padding: 1.365em 0.65em 0 0;
-    cursor: pointer;
-    border: none;
-    background: none;
+    position: absolute;
+    right: 2.25em;
+    top: 0;
+    z-index: 406;
   }
 
   .menu__back--hidden {
@@ -186,39 +198,53 @@
 .body--dxpr-theme-nav-desktop {
   &.body--dxpr-theme-header-side {
     padding-left:300px;
+
+    html.js & {
+      padding-left: calc(var(--dxt-setting-header-side-width) + var(--gin-toolbar-x-offset, 0px));
+    }
+
+    #navbar.dxpr-theme-header {
+      text-align: var(--dxt-setting-header-side-align);
+    }
   }
+
   .dxpr-theme-header--side {
-    width: 300px;
-    background: $header-side-color;
-    position: fixed;
-    left: 0;
-    top: 0;
+    background: dxpr-color('headerside');
     height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: var(--dxt-setting-header-side-width);
+
     .navbar-header {
       float: none;
-      z-index: 4065;
       position: relative;
+      z-index: 4065;
+
       .logo,
       .navbar-brand {
         display: block;
       }
+
       #logo {
-        max-height: 30px;
+        height: var(--dxt-setting-header-side-logo-height);
+        max-height: 100%;
       }
     }
+
     .menu__breadcrumbs {
-      top: 160px;
+      width: var(--dxt-setting-header-side-width);
     }
+
     .menu__level {
-      top: 180px;
-      height: 100%;
-      height: calc(100vh - 180px);
-      // overflow: auto;
+      height: calc(100vh - var(--dxt-setting-header-side-logo-height));
     }
   }
+
   &.body--dxpr-theme-header-side.body--full-screen-search .dxpr-theme-header--side .navbar-header {
     z-index: 406;
   }
+
   // Gin vertical toolbar compatibility
   &.gin--vertical-toolbar {
     .dxpr-theme-header--side,
@@ -240,17 +266,20 @@
     left: -100%;
     transition: left 0.3s;
   }
+
   #dxpr-theme-main-menu.dxpr-theme-main-menu--to-left.menu--open,
   #dxpr-theme-main-menu.dxpr-theme-main-menu--to-left.menu--open .menu__breadcrumbs,
   #dxpr-theme-main-menu.dxpr-theme-main-menu--to-left.menu--open .menu__level {
     left: auto;
     right: 0;
   }
+
   #dxpr-theme-main-menu.menu--open,
   #dxpr-theme-main-menu.menu--open .menu__breadcrumbs,
   #dxpr-theme-main-menu.menu--open .menu__level {
     left: 0;
   }
+
   #dxpr-theme-main-menu.dxpr-theme-main-menu--to-left,
   #dxpr-theme-main-menu.dxpr-theme-main-menu--to-left .menu__breadcrumbs,
   #dxpr-theme-main-menu.dxpr-theme-main-menu--to-left .menu__level {
@@ -258,40 +287,45 @@
     right: -100%;
     transition: right 0.3s;
   }
+
+  .dxpr-theme-header--side {
+    #dxpr-theme-main-menu {
+      width: var(--dxt-setting-header-side-width);
+    }
+  }
 }
 
 // Animations
 .animate-outToRight .menu__item {
-  animation: outToRight 0.1s both cubic-bezier(0.7, 0, 0.3, 1);
+  animation: out-to-right 0.1s both cubic-bezier(0.7, 0, 0.3, 1);
 }
 
-@keyframes outToRight {
+@keyframes out-to-right {
   to {
     margin-left: 100%;
   }
 }
 
 .animate-outToLeft .menu__item {
-  -webkit-animation: outToLeft 0.6s both cubic-bezier(0.7, 0, 0.3, 1);
-  animation: outToLeft 0.6s both cubic-bezier(0.7, 0, 0.3, 1);
+  animation: out-to-left 0.6s both cubic-bezier(0.7, 0, 0.3, 1);
 }
 
-@keyframes outToLeft {
+@keyframes out-to-left {
   to {
     margin-left: -100%;
   }
 }
 
 .animate-inFromLeft .menu__item {
-  -webkit-animation: inFromLeft 0.6s both cubic-bezier(0.7, 0, 0.3, 1);
-  animation: inFromLeft 0.1s both cubic-bezier(0.7, 0, 0.3, 1);
+  animation: in-from-left 0.1s both cubic-bezier(0.7, 0, 0.3, 1);
 }
 
-@keyframes inFromLeft {
+@keyframes in-from-left {
   from {
     margin-left: -100%;
     opacity: 0;
   }
+
   to {
     margin-left: 0;
     opacity: 1;
@@ -299,15 +333,15 @@
 }
 
 .animate-inFromRight .menu__item {
-  -webkit-animation: inFromRight 0.6s both cubic-bezier(0.7, 0, 0.3, 1);
-  animation: inFromRight 0.6s both cubic-bezier(0.7, 0, 0.3, 1);
+  animation: in-from-right 0.6s both cubic-bezier(0.7, 0, 0.3, 1);
 }
 
-@keyframes inFromRight {
+@keyframes in-from-right {
   from {
     margin-left: 100%;
     opacity: 0;
   }
+
   to {
     margin-left: 0;
     opacity: 1;

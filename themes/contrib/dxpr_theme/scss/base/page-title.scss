@@ -2,29 +2,34 @@
 @import "../includes/variables";
 
 .page-title-full-width-container {
-  background: $page-title-color;
+  background: dxpr-color('pagetitle');
+  margin-bottom: var(--dxt-setting-gutter-vertical);
+  position: relative;
+
   &#page-title-full-width-container {
-    color: $page-title-text-color;
+    color: dxpr-color('pagetitletext');
+
     li, a, h1, h2, h3, h4, h5, h6 {
-      color: $page-title-text-color;
+      color: dxpr-color('pagetitletext');
     }
   }
-  position: relative;
-  margin-bottom: 30px;
+
   &.dxpr-theme-no-margin {
     margin-bottom: 0;
   }
-  &:after {
+
+  &::after {
+    background-position: center center;
+    background-size: cover;
     content: ' ';
-    z-index: 0;
+    height: 100%;
+    left: 0;
     position: absolute;
     top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center center;
+    z-index: 0;
   }
+
   .page-title-container {
     position: relative;
   }
@@ -32,15 +37,21 @@
 
 #page-title {
   display: table;
+  text-align: var(--dxt-setting-page-title-align);
   width: 100%;
   z-index: 1;
+
   .page-title {
     border: none;
     display: table-cell;
-    height: 180px;
-    vertical-align: middle;
-    padding-top: 0;
+    font-size: var(--dxt-setting-h1-font-size);
+    font-style: var(--dxt-setting-title-type-italic);
+    font-weight: var(--dxt-setting-title-type-bold);
+    height: var(--dxt-setting-page-title-height);
     padding-bottom: 0;
+    padding-top: 0;
+    text-transform: var(--dxt-setting-title-type-uppercase);
+    vertical-align: middle;
   }
 }
 
@@ -48,18 +59,18 @@
   margin-bottom: 0;
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (width >= 1200px) {
   .body--dxpr-theme-header-overlay .page-title-full-width-container {
     padding-top: 130px;
   }
 }
 
 
-@media screen and (max-width: 768px) {
+@media screen and (width <= 768px) {
   .html #page-title .page-title {
+    font-size: var(--dxt-setting-h1-mobile-font-size);
     height: auto;
-    padding-top: 3%;
     padding-bottom: 3%;
-    font-size: 35px;
+    padding-top: 3%
   }
 }

@@ -1,5 +1,5 @@
 type: theme
-core_version_requirement: '>=9.3'
+core_version_requirement: ^9.3 || ^10 || ^11
 base theme: bootstrap5
 
 name: 'DXPR Theme'
@@ -7,8 +7,8 @@ description: 'Low code framework theme by DXPR.'
 package: DXPR
 
 dependencies:
+  - drupal:file
   - dxpr_theme_helper:dxpr_theme_helper
-  - drupal:color
 
 regions:
   secondary_header: 'Secondary Header'
@@ -30,9 +30,6 @@ libraries:
   - 'dxpr_theme/global-styling'
 
 libraries-override:
-  core/modernizr:
-    js:
-      assets/vendor/modernizr/modernizr.min.js: vendor/modernizr-custom-d8-dxpr-theme.js
   classy/base:
     css:
       component:
@@ -99,7 +96,7 @@ dxpr_builder_classes:
   dxpr-theme-util-text-uppercase: 'Text Uppercase'
   dxpr-theme-util-vcenter: 'Vertical centering'
 
-# Information added by Drupal.org packaging script on 2024-01-25
-version: '5.2.1'
+# Information added by Drupal.org packaging script on 2024-12-11
+version: '6.0.0'
 project: 'dxpr_theme'
-datestamp: 1706167335
+datestamp: 1733920375

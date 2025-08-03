@@ -2,7 +2,7 @@
 name: Feature-Addition Proposal
 about: Use this template to propose an addition to an existing feature.
 title: "FEATURE DESCRIPTION"
-labels: 2.x,feature addition proposal
+labels: 6.x,feature addition proposal
 ---
 
 <!-- This template is a great use for issues that are feature::additions or technical tasks for larger issues.-->

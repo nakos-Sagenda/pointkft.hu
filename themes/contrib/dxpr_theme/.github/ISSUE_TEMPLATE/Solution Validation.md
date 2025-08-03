@@ -2,7 +2,7 @@
 name: Solution Validation
 about: Use this template to research and validate solutions.
 title: "SOLUTION STATEMENT"
-labels: 2.x,solutuion validation
+labels: 6.x,solutuion validation
 ---
 
 <!--Please answer the below questions to the best of your ability.-->

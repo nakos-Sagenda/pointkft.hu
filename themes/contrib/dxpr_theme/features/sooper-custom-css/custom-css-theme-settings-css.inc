@@ -17,6 +17,8 @@
  */
 function custom_css_theme_settings_css($theme, &$css, array $palette) {
   if (theme_get_setting('custom_css_site', $theme)) {
-    $css .= theme_get_setting('custom_css_site', $theme);
+    $css .= "/* Custom CSS */\n";
+    $css .= trim(theme_get_setting('custom_css_site', $theme));
+    $css .= "\n\n";
   }
 }

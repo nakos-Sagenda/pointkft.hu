@@ -29,8 +29,10 @@
     {% if menu_level == 0 %}
       <ul{{ attributes.addClass('menu', 'nav', 'navbar-nav') }}>
     {% elseif menu_level == 1  %}
+      {% set attributes = create_attribute() %}
       <ul{{ attributes.addClass('dropdown-menu') }}>
     {% else  %}
+      {% set attributes = create_attribute() %}
       <ul{{ attributes.addClass('dxpr-theme-megamenu') }}>
     {% endif %}
     {% for item in items %}

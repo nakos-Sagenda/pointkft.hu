@@ -14,6 +14,15 @@
  * @see template_preprocess_menu_local_task()
  */
 #}
-<li{{ attributes.addClass(is_active ? 'active', 'page-item') }}>
-    <a href="{{ link['#url'] }}" class="page-link {{ is_active ? 'active' }}">{{ link['#title'] }}</a>
+<li{{ attributes.addClass('tabs__tab', is_active ? 'active', 'page-item') }}>
+  <a href="{{ link['#url'] }}" class="tabs__link page-link {{ is_active ? 'active' }}">{{ link['#title'] }}</a>
+  {% if is_active and level == 'primary' %}
+    <button class="tabs__trigger" aria-label="{{ 'Tabs display toggle'|t }}" aria-expanded="false">
+      <span class="tabs__trigger-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+  {% endif %}
 </li>

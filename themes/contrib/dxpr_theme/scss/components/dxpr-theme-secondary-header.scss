@@ -2,38 +2,46 @@
 @import "../includes/variables";
 
 #secondary-header {
-  z-index: 405;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  background: dxpr-color('secheader');
+  color: dxpr-color('secheadertext');
   line-height: 1.2em;
-  background: $secondary-header;
-  color: $secondary-header-text;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  z-index: 405;
+
   a {
-    color: $secondary-header-text;
+    color: dxpr-color('secheadertext');
+
     &:hover,
     &:focus {
-      color: $secondary-header-text;
+      color: dxpr-color('secheadertext');
     }
   }
+
   .block,
   p {
     margin-bottom: 0;
   }
+
   .secondary-header-container {
     margin-bottom: 0;
   }
+
   ul.menu {
     float:right;
-    margin-top: 0;
     margin-bottom: 0;
+    margin-top: 0;
+
     a {
-      padding: 0 15px;
       line-height: 1.2em;
+      padding: 0 15px;
+
       &:hover,
       &:focus {
         background: transparent;
       }
     }
+
     li {
       float:left;
     }

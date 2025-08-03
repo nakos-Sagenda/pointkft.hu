@@ -2,7 +2,7 @@
 name: Problem Validation
 about: Use this template to research customer problems.
 title: "PROBLEM VALIDATION GOAL"
-labels: 2.x,problem validation
+labels: 6.x,problem validation
 ---
 
 <!-- This template is used as a starting point for understanding and articulating a customer problem.

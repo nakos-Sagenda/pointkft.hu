@@ -1,80 +1,112 @@
-module.exports = function(grunt) {
-  const sass = require('sass');
+const sass = require("sass");
+const autoprefixer = require("autoprefixer");
+const postcssPxtorem = require("postcss-pxtorem");
+const webpackConfig = require('./webpack.config.js');
 
+module.exports = function (grunt) {
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: grunt.file.readJSON("package.json"),
+    webpack: {
+      myConfig: webpackConfig,
+    },
     babel: {
       options: {
-        sourceMap: false
+        sourceMap: false,
       },
       dist: {
-        files: {
-          'js/minified/color.min.js': 'js/dist/color.js',
-          'js/minified/dxpr-theme-breadcrumbs.min.js': 'js/dist/dxpr-theme-breadcrumbs.js',
-          'js/minified/dxpr-theme-full-screen-search.min.js': 'js/dist/dxpr-theme-full-screen-search.js',
-          'js/minified/dxpr-theme-header.min.js': 'js/dist/dxpr-theme-header.js',
-          'js/minified/dxpr-theme-multilevel-mobile-nav.min.js': 'js/dist/dxpr-theme-multilevel-mobile-nav.js',
-          'js/minified/dxpr-theme-settings.admin.min.js': 'js/dist/dxpr-theme-settings.admin.js'
-        }
-      }
+        files: [
+          {
+            expand: true,
+            cwd: 'js/dist/',
+            src: ['*.js', '!dxpr-theme-header.js',
+                          '!dxpr-theme-multilevel-mobile-nav.js',
+                          '!dxpr-theme-full-screen-search.js',
+                          '!dxpr-theme-settings-admin.js',
+                          '!dxpr-theme-tabs.js',
+
+            ],
+            dest: 'js/minified/',
+            ext: '.min.js',
+          },
+        ],
+      },
     },
     terser: {
       options: {
-        ecma: 2015
+        ecma: 2022,
       },
       main: {
-        files: {
-          'js/minified/classie.min.js': ['vendor/classie.js'],
-          'js/minified/color.min.js': ['js/minified/color.min.js'],
-          'js/minified/dxpr-theme-breadcrumbs.min.js': ['js/minified/dxpr-theme-breadcrumbs.min.js'],
-          'js/minified/dxpr-theme-full-screen-search.min.js': ['js/minified/dxpr-theme-full-screen-search.min.js'],
-          'js/minified/dxpr-theme-header.min.js': ['js/minified/dxpr-theme-header.min.js'],
-          'js/minified/dxpr-theme-multilevel-mobile-nav.min.js': ['js/minified/dxpr-theme-multilevel-mobile-nav.min.js'],
-          'js/minified/dxpr-theme-settings.admin.min.js': ['js/minified/dxpr-theme-settings.admin.min.js']
-        },
-      }
+        files: [
+          {
+            expand: true,
+            cwd: 'js/minified/',
+            src: ['*.min.js', '!dxpr-theme-header.bundle.min.js',
+                              '!dxpr-theme-multilevel-mobile-nav.bundle.min.js',
+                              '!dxpr-theme-full-screen-search.bundle.min.js',
+                              '!dxpr-theme-settings-admin.bundle.min.js',
+                              '!dxpr-theme-tabs.bundle.min.js'],
+            dest: 'js/minified/',
+            ext: '.min.js',
+          },
+        ],
+      },
     },
     sass: {
       options: {
         implementation: sass,
         sourceMap: false,
-        outputStyle:'compressed'
+        outputStyle: "compressed",
       },
       dist: {
-        files: [{
-          expand: true,
-          cwd: 'scss/',
-          src: '**/*.scss',
-          dest: 'css/',
-          ext: '.css',
-          extDot: 'last'
-        }]
-      }
+        files: [
+          {
+            expand: true,
+            cwd: "scss/",
+            src: "**/*.scss",
+            dest: "css/",
+            ext: ".css",
+            extDot: "last",
+          },
+        ],
+      },
     },
     postcss: {
-        options: {
-            processors: require('autoprefixer'),
-        },
-        dist: {
-            src: 'css/*.css',
-        },
+      options: {
+        processors: [
+          autoprefixer(),
+          postcssPxtorem({
+            rootValue: 16,
+            unitPrecision: 5,
+            propList: ["*"],
+            selectorBlackList: [],
+            replace: true,
+            mediaQuery: true,
+            minPixelValue: 0,
+          }),
+        ],
+      },
+      dist: {
+        src: "css/**/*.css",
+      },
     },
     watch: {
       css: {
-        files: ['scss/*.scss', 'scss/**/*.scss'],
-        tasks: ['sass', 'postcss']
+        files: ["scss/**/*.scss"],
+        tasks: ["sass", "postcss"],
       },
       js: {
-        files: ['js/dist/*.js'],
-        tasks: ['babel', 'terser']
-      }
-    }
+        files: ["js/dist/**/*.js", "!js/minified/**/*.js"],
+        tasks: ["webpack", "babel", "terser"],
+      },
+    },
   });
 
-  grunt.loadNpmTasks('grunt-babel');
-  grunt.loadNpmTasks('grunt-terser');
-  grunt.loadNpmTasks('grunt-sass');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-postcss');
-  grunt.registerTask('default',['watch']);
-}
+  grunt.loadNpmTasks("grunt-webpack");
+  grunt.loadNpmTasks("grunt-babel");
+  grunt.loadNpmTasks("grunt-terser");
+  grunt.loadNpmTasks("grunt-sass");
+  grunt.loadNpmTasks("grunt-contrib-watch");
+  grunt.loadNpmTasks("@lodder/grunt-postcss");
+
+  grunt.registerTask("default", ["watch"]);
+};

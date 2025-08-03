@@ -6,71 +6,86 @@
 @import "../includes/variables";
 
 .comment {
+  border: 3px solid dxpr-color('graylighter');
   clear: both;
-  border: 3px solid $gray-lighter;
+  margin-bottom: 25px * 1.618;
   padding: 25px;
-  margin-bottom: 25px*1.618;
+
   .user-picture a {
     display: block;
-    width: 64px;
     height: 64px;
+    width: 64px;
   }
+
   img {
     width: 100%;
   }
+
   .float-start {
     margin-right: 25px;
   }
+
   .media-body {
     display: table-cell;
-    vertical-align: top;
     overflow: hidden;
+    vertical-align: top;
     width: 10000px;
   }
+
   .indented {
-    padding-left: 74px;
-    border-left: 1px solid $gray-lighter;
+    border-left: 1px solid dxpr-color('graylighter');
     margin-top: -25px;
+    padding-left: 74px;
   }
+
   h3 {
-    margin: 0.3em 0;
     font-size: 25px;
+    margin: 0.3em 0;
   }
+
   .content,
   p {
     line-height: 1.4;
   }
+
   footer {
     padding: 0;
   }
+
   .post-date {
+    font-size: $font-size-small;
     font-style: italic;
-    font-size: $font-size-small;
   }
+
   .links {
-    float: right;
-    margin: 15px 0;
     clear: both;
+    float: right;
     font-size: $font-size-small;
+    margin: 15px 0;
   }
+
   .comment,
   #comment-form {
-    border: 3px solid $gray-lighter;
+    border: 3px solid dxpr-color('graylighter');
+    margin-bottom: 25px * 1.618;
     padding: 25px;
-    margin-bottom: 25px*1.618;
   }
+
   .title.comment-form {
     margin-top: 30px;
   }
+
   .inline {
     li {
       padding-left: 0;
       padding-right: 5px;
     }
+
     a {
-      color: $text;
+      color: dxpr-color('text');
+
       &:hover {
-        color: $text;
+        color: dxpr-color('text');
       }
     }
   }

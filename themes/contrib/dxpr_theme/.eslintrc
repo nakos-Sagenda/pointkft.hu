@@ -1,45 +1,16 @@
 {
   "parser": "@babel/eslint-parser",
   "plugins": [
-    "jquery",
     "prettier",
     "spellcheck"
   ],
   "extends": [
     "airbnb",
-    "plugin:jquery/deprecated",
     "prettier"
   ],
-  "globals": {
-    "_": true,
-    "analytics": true,
-    "Backbone": true,
-    "bootstrapVersion": true,
-    "CKEDITOR": true,
-    "classie": true,
-    "document": true,
-    "domready": true,
-    "Drupal": true,
-    "drupalSettings": true,
-    "drupalTranslations": true,
-    "DXPRBuilder": true,
-    "dxprTemplates": true,
-    "DXPRTextEditor": true,
-    "fetch": true,
-    "getBootstrapBreakPoints": true,
-    "jQuery": true,
-    "liveEditingManager": true,
-    "matchMedia": true,
-    "Modernizr": true,
-    "MLMenu": true,
-    "once": true,
-    "preview": true,
-    "Twig": true,
-    "window": true,
-    "WOW": true
-  },
   "rules": {
     "camelcase": 0,
+    "max-lines": ["error", { "max": 300, "skipBlankLines": true, "skipComments": true }],
     "capitalized-comments": ["error", "always", {
       "ignorePattern": "",
       "ignoreInlineComments": true,
@@ -56,7 +27,7 @@
     "no-constant-condition": 2,
     "no-new": 0,
     "no-param-reassign": 0,
-    "no-shadow" : 2,
+    "no-shadow": 2,
     "no-undef": 2,
     "no-underscore-dangle": 0,
     "no-unused-vars": [2, {"vars": "local", "args": "none"}],
@@ -84,20 +55,25 @@
         "identifiers": false,
         "lang": "en_US",
         "skipWords": [
-          "accessor", 
-          "checkbox", 
-          "dom", 
-          "dropdown", 
-          "Drupal", 
-          "DXPR", 
-          "Glyphicons", 
+          "accessor",
+          "checkbox",
+          "dom",
+          "dropdown",
+          "Drupal",
+          "DXPR",
+          "Glyphicons",
           "jslint",
-          "Jur", 
+          "Jur",
           "multivar",
-          "namespace", 
-          "Pixeden", 
+          "namespace",
+          "Pixeden",
           "plusplus",
-          "undef"
+          "undef",
+          "touchstart",
+          "Rect",
+          "Breakpoint",
+          "keyup",
+          "calc"
         ],
         "skipIfMatch": [
           "{\\w+}", // E.g. "{paramName}"
@@ -107,5 +83,31 @@
         "minLength": 3
       }
     ]
+  },
+  "globals": {
+    "_": true,
+    "analytics": true,
+    "Backbone": true,
+    "bootstrapVersion": true,
+    "CKEDITOR": true,
+    "document": true,
+    "domready": true,
+    "Drupal": true,
+    "drupalSettings": true,
+    "drupalTranslations": true,
+    "DXPRtheme": true,
+    "dxprTemplates": true,
+    "DXPRTextEditor": true,
+    "fetch": true,
+    "getBootstrapBreakPoints": true,
+    "liveEditingManager": true,
+    "matchMedia": true,
+    "MLMenu": true,
+    "once": true,
+    "preview": true,
+    "Twig": true,
+    "window": true,
+    "WOW": true,
+    "ReinventedColorWheel": true
   }
 }

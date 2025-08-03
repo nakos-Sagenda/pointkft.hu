@@ -2,7 +2,7 @@
 name: Experiment Rollout
 about: Use this template to track the rollout and status of an experiment.
 title: "Experiment Rollout: {EXPERIMENT IDEA ISSUE NUMBER AND TITLE}"
-labels: 2.x,bug,experiment,experiment rollout,feature flag
+labels: 6.x,bug,experiment,experiment rollout,feature flag
 ---
 
 

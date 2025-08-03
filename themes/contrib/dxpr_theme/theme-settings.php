@@ -22,26 +22,6 @@ function dxpr_theme_form_system_theme_settings_alter(&$form, &$form_state, $form
   // form_id is only present the second time around.
   if (!isset($form_id)) {
     return;
-  };
-  if (theme_get_setting('boxed_layout') === 1) {
-    if (theme_get_setting('box_max_width') < '1200') {
-      \Drupal::messenger()->addStatus('You set a Boxed Container Max Width of less than 1200px. To preserve the layout of the settings form we are overriding this setting specifically for this page. Your setting is applied on other pages.');
-
-      $form['dxpr_theme_boxed_container_styles'] = [
-        '#type' => 'html_tag',
-        '#tag' => 'style',
-        '#value' => '.dxpr-theme-boxed-container { max-width: 1300px !important; }',
-      ];
-    }
-  }
-  elseif (theme_get_setting('layout_max_width') < '1200') {
-    \Drupal::messenger()->addStatus('You set a Content Max Width of less than 1200px. To preserve the layout of the settings form we are overriding this setting specifically for this page. Your setting is applied on other pages.');
-
-    $form['dxpr_theme_container_styles'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'style',
-      '#value' => '.container { max-width: 1300px !important; }',
-    ];
   }
 
   $build_info = $form_state->getBuildInfo();
@@ -49,32 +29,66 @@ function dxpr_theme_form_system_theme_settings_alter(&$form, &$form_state, $form
   $dxpr_theme_theme_path = \Drupal::service('extension.list.theme')->getPath('dxpr_theme') . '/';
   $themes = \Drupal::service('theme_handler')->listInfo();
 
-  $img = '<img width="40" height="15" src="' . $base_path . $dxpr_theme_theme_path . 'images/dxpr-logo-dark.svg" />';
   if (!empty($themes[$subject_theme]->info['version'])) {
     $version = $themes[$subject_theme]->info['version'];
   }
-  else {
-    $version = 'dev';
-  }
+
+  $form['dxpr_theme_settings_header'] = [
+    '#type' => 'inline_template',
+    '#template' => '
+      <div class="form-header">
+        <h2>
+          {{ image|raw }} {{ name }} {{ version }}
+          <span class="small">({{ bs5_name }} base theme {{ bs5_version }})</span>
+        </h2>
+        <div class="no-preview-info small">
+          <span class="no-preview">&nbsp;</span>{{ preview_text }}
+        </div>
+      </div>
+    ',
+    '#context' => [
+      'image' => '<img width="40" height="15" src="' . $base_path . $dxpr_theme_theme_path . 'images/dxpr-logo-dark.svg" />',
+      'name' => $themes[$subject_theme]->info['name'],
+      'version' => $version ?? 'dev',
+      'bs5_name' => $themes['bootstrap5']->info['name'],
+      'bs5_version' => $themes['bootstrap5']->info['version'],
+      'preview_text' => t('No preview. Save to view changes.'),
+    ],
+    '#weight' => -100,
+  ];
+
   $form['dxpr_theme_settings'] = [
     // SETTING TYPE TO DETAILS OR VERTICAL_TABS
     // STOPS RENDERING OF ALL ELEMENTS INSIDE.
     '#type' => 'vertical_tabs',
     '#weight' => -20,
-    '#prefix' => '<h2><small>' . $img . ' ' . $themes[$subject_theme]->info['name'] . ' ' . $version . ' <span class="small">(' . $themes['bootstrap5']->info['name'] . ' base theme ' . $themes['bootstrap5']->info['version'] . ')</span>' . '</small></h2>',
   ];
-  // $form['color']['#group'] = 'dxpr_theme_settings';
+
   if (!empty($form['update'])) {
     $form['update']['#group'] = 'global';
   }
-  if (!empty($form['color'])) {
-    $form['color']['#group'] = 'dxpr_theme_settings';
-    $form['color']['#title'] = t('Colors');
-  }
+
+  $form['core_theme_settings_header'] = [
+    '#type' => 'inline_template',
+    '#template' => '
+      <div class="form-header">
+        <h2>{{ title }}</h2>
+      </div>
+    ',
+    '#context' => [
+      'title' => t('Core theme settings'),
+    ],
+    '#weight' => -10,
+  ];
+
   $form['core_theme_settings'] = [
     '#type' => 'vertical_tabs',
-    '#weight' => -20,
-    '#prefix' => '<h2><small>' . t('Core theme settings') . '</small></h2>',
+    '#weight' => 0,
+    '#attributes' => [
+      'class' => [
+        'core-theme-settings',
+      ],
+    ],
   ];
   $form['theme_settings']['#group'] = 'core_theme_settings';
   $form['logo']['#group'] = 'core_theme_settings';
@@ -112,12 +126,6 @@ function dxpr_theme_form_system_theme_settings_alter(&$form, &$form_state, $form
     }
   }
   $form['#attached']['library'][] = 'dxpr_theme/admin.themesettings';
-
-  if ((\Drupal::moduleHandler()->moduleExists('color')) && ($palette = color_get_palette($subject_theme))) {
-    // dxpr_themeSetting vs dxpr_theme namespace otherwise
-    // if deletes other .dxpr_theme data.
-    $form['#attached']['drupalSettings']['dxpr_themeSettings'] = ['palette' => $palette];
-  }
 
   array_unshift($form['#submit'], 'dxpr_theme_form_system_theme_settings_submit');
   array_unshift($form['#validate'], 'dxpr_theme_form_system_theme_settings_validate');
@@ -195,6 +203,20 @@ function dxpr_theme_form_system_theme_settings_validate(&$form, &$form_state) {
       }
     }
   }
+
+  // Handle custom color validation.
+  // Only accepts valid hex color values.
+  foreach ($form_state->getValues() as $key => $value) {
+    if (strpos($key, 'color_palette_') === 0) {
+      if (!preg_match('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/', $value)) {
+        $color_names = _dxpr_theme_get_color_names();
+        $form_state->setErrorByName($key, t('The %name field contains an invalid color value.', [
+          '%name' => $color_names[str_replace('color_palette_', '', $key)] ?? t('Unknown'),
+        ]));
+      }
+    }
+  }
+
 }
 
 /**
@@ -254,53 +276,17 @@ function dxpr_theme_form_system_theme_settings_submit(&$form, &$form_state) {
     $path = _dxpr_theme_validate_path($form_state->getValue('background_image_path'));
     $form_state->setValue('background_image_path', $path);
   }
-}
 
-/**
- * Retrieves the Color module information for a particular theme.
- */
-function _dxpr_theme_get_color_names($theme = NULL) {
-  static $theme_info = [];
-  if (!isset($theme)) {
-    $theme = \Drupal::config('system.theme');
+  // Handle color palette values.
+  $color_palette = [];
+  foreach ($form_state->getValues() as $key => $value) {
+    if (strpos($key, 'color_palette_') === 0) {
+      $hex = preg_match('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/', $value) ? $value : '';
+      $color_palette[str_replace('color_palette_', '', $key)] = $hex;
+    }
   }
 
-  if (isset($theme_info[$theme])) {
-    return $theme_info[$theme];
-  }
-
-  $path = \Drupal::service('extension.list.theme')->getPath($theme);
-  $file = DRUPAL_ROOT . '/' . $path . '/color/color.inc';
-  if ($path && file_exists($file)) {
-    include $file;
-    // phpcs:disable
-    $theme_info[$theme] = $info['fields']; // @phpstan-ignore-line
-    return $info['fields']; // @phpstan-ignore-line
-    // phpcs:enable
-  }
-  else {
-    return [];
-  }
-}
-
-/**
- * Color options for theme settings.
- *
- * @param string $theme
- *   Theme machine name.
- *
- * @return array
- *   Color options.
- */
-function _dxpr_theme_color_options($theme) {
-  $colors = [
-    '' => t('None (Theme Default)'),
-    'white' => t('White'),
-    'custom' => t('Custom Color'),
-  ];
-  $theme_colors = _dxpr_theme_get_color_names($theme);
-  $colors = array_merge($colors, $theme_colors);
-  return $colors;
+  $form_state->setValue('color_palette', serialize($color_palette));
 }
 
 /**

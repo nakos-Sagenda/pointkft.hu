@@ -15,6 +15,7 @@ Thumbs.db
 
 .build-done
 out
+stylelint-results.json
 
 .npm.installed
 .env

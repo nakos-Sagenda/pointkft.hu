@@ -26,10 +26,17 @@
  * @see search_preprocess_block()
  */
 #}
+{% set designRegions = [] %}
+{% for name in theme.settings.block_design_regions %}
+  {% if name %}
+    {% set designRegions = designRegions|merge([name]) %}
+  {% endif %}
+{% endfor %}
 {%
     set classes = [
     'block',
     'block-search',
+    theme.settings.block_card and region in designRegions ? theme.settings.block_card,
 ]
 %}
 <div{{ attributes.addClass(classes) }}>

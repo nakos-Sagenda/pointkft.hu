@@ -2,7 +2,7 @@
 name: Refactoring
 about: Use this template to propose refactoring.
 title: "Refactoring {DESCRIBE WHAT NEEDS TO BE REFACTORED}"
-labels: 2.x,refactoring
+labels: 6.x,refactoring
 ---
 
 ## Summary

@@ -3,4 +3,4 @@
 source scripts/run_eslint_wait.sh
 
 
-npx eslint js/dist --fix
+npx eslint js/dist --fix --format stylish

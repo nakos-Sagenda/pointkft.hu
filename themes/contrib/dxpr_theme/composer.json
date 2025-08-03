@@ -23,7 +23,6 @@
         }
     ],
     "require": {
-        "drupal/bootstrap5": "^3",
-        "drupal/color": "^1.0.3"
+        "drupal/bootstrap5": "^3 || ^4"
     }
 }

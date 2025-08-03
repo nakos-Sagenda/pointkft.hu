@@ -5,6 +5,7 @@
 .html .navbar.container {
   max-width: 1600px;
 }
+
 .body--dxpr-theme-nav-desktop {
   // extra z-indexing for pull-down header that needs to cover slider
   // this should not be active in mobile mode due to owl carousel layout bugs
@@ -12,160 +13,198 @@
     position: relative;
     z-index: 405;
   }
+
+  .nav-child-fixed-width {
+    top: var(--dxt-setting-header-top-height);
+  }
 }
+
 .navbar.container, .navbar.container-fluid {
   margin-top: 0;
 }
+
   // DXPR Theme Header Defaults across all layouts
 .dxpr-theme-header {
-  display: block;
-  z-index: 405;
+  // override bootstrap styling
+  background: dxpr-color('header');
   border: none;
   border-radius: 0;
-  min-height: 0;
+  color: dxpr-color('headertext');
+  display: block;
   padding: 0;
+  z-index: 405;
+
   a {
+    color: dxpr-color('headertext');
     cursor: pointer; // for "nolink" <a> tags
     outline: none;
+
+    &.active,
+    &:hover,
+    &:focus {
+      color: dxpr-color('headertext');
+    }
   }
+
   .navbar-container {
     display: block;
+    margin-bottom: 0;
     padding-bottom: 0;
     padding-top: 0;
-    margin-bottom: 0;
     position: relative;
+
     &.container-fluid {
       position: static;
     }
   }
+
   .navbar-collapse {
     padding-left: 0;
     padding-right: 0;
   }
+
   .nav {
+    display: block;
     margin-left: 0;
     margin-right: 0;
-    display: block;
   }
-  // override bootstrap styling
-  background: $header-color;
-  color: $header-text-color;
-  a {
-    color: $header-text-color;
-    &.active,
-    &:hover,
-    &:focus {
-      color: $header-text-color;
-    }
-  }
+
   .dxpr-theme-main-menu {
     a {
-      color: $header-text-color;
+      color: dxpr-color('headertext');
       text-decoration: none;
+
       &.active,
       &:hover,
       &:focus {
-        color: $header-text-color;
+        color: dxpr-color('headertext');
       }
     }
+
     .menu a {
       background: transparent;
+
       &:hover,
       &:focus {
         background: transparent;
       }
     }
-    a.dropdown-toggle:after {
-      margin: 0;
+
+    a.dropdown-toggle::after {
       border: none;
+      margin: 0;
       vertical-align: baseline;
     }
   }
+
   .navbar-header {
     .logo {
       padding-left: 0;
     }
+
     .navbar-brand {
+      float: none;
       font-size: $font-size-h3;
       height: auto;
       letter-spacing: 1px;
-      padding: 0;
-      float: none;
       margin-left: 0;
+      padding: 0;
     }
   }
+
   .menu {
     h1, h2, h3, h4, h5 h6 {
       opacity: 0.75;
     }
   }
+
   .dropdown-menu {
-    background: $header-color;
+    background: dxpr-color('header');
+    border: none;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    margin-top: 0;
-    border: none;
-    position: absolute;
+    box-shadow: 0 6px 12px rgb(0 0 0 / 17.5%);
     left: 0;
-    top: 100%;
+    margin-top: 0;
     padding: 5px 0;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    position: absolute;
+    top: 100%;
     ul { padding-left: 0; }
+
     li {
       list-style: none;
       list-style-type: none;
+
       a {
-        display: block;
         background: transparent;
+        display: block;
       }
     }
   }
+
   .dxpr-theme-megamenu {
-    position: static;
-    display: block;
     border: none;
     box-shadow: none;
+    display: block;
+    position: static;
+
     li {
       float: none;
     }
   }
+
   .row,
   .block {
     margin-bottom: 0;
   }
+
   .mega-dropdown-menu {
     padding-top: 15px;
+
     .block {
       padding-left: 20px;
       padding-right: 0;
     }
+
     .row {
       margin-left: 0;
       margin-right: 0;
     }
   }
+
   .nav-child-fixed-width {
     width: 100%!important;
   }
+
   &.affix .nav-child-fixed-width {
     top: 60px;
   }
 }
+
 .body--dxpr-theme-nav-mobile {
   .dxpr-theme-header {
     position: static;
+
     li {
       clear: both;
     }
+
     .dropdown-menu {
+      border: none;
+      box-shadow: none;
+
       // position: static;
       display: block;
-      box-shadow: none;
-      border: none;
     }
   }
 }
 
+/* Header Styles */
+#dxpr-theme-main-menu, /* N/A */
+#dxpr-theme-main-menu .menu__breadcrumbs,
+#dxpr-theme-main-menu .menu__level {
+  text-align: var(--dxt-setting-header-side-align);
+}
 
 // MENU BORDER HOVER EFFECT
 #navbar.dxpr-theme-header--hover-background .menu {
@@ -173,8 +212,8 @@
   a:hover,
   a:hover .menu a:focus,
   a.is-active {
-    color: white;
-    background-color: $primary;
+    background-color: var(--dxt-setting-menu-hover-background, dxpr-color('base')) !important;
+    color: var(--dxt-setting-menu-hover-text-color, var(--dxt-setting-menu-text-color));
   }
 }
 
@@ -183,7 +222,7 @@
   a:hover,
   a:focus,
   a.is-active {
-    color: $primary;
+    color: dxpr-color('base') !important;
   }
 }
 
@@ -196,26 +235,56 @@
   }
 }
 
-.body--dxpr-theme-header-side .dxpr-theme-header--side.dxpr-theme-header--hover-border .menu a:before,
-.dxpr-theme-header--top.dxpr-theme-header--hover-border .nav > li > a:before {
+.body--dxpr-theme-header-side .dxpr-theme-header--side.dxpr-theme-header--hover-border .menu a::before,
+.dxpr-theme-header--top.dxpr-theme-header--hover-border .nav > li > a::before {
+  background: #eee;
+  background: dxpr-color('base');
+  bottom: 0;
   content: ' ';
   display: block;
-  width: 100%;
-  width: calc(100% - 20px);
-  transform: scale(0, 1) translate(10px, 0);
-  position: absolute;
-  left: 0;
-  background: #eeeeee;
+
   // Default settings
   height: 2px;
-  bottom: 0;
-  background: $primary;
+  left: 0;
+  position: absolute;
+  transform: scale(0, 1) translate(10px, 0);
+  width: 100%;
+  width: calc(100% - 20px);
 }
-.body--dxpr-theme-header-side .dxpr-theme-header--side.dxpr-theme-header--hover-border .nav > li.active > a:before,
-.body--dxpr-theme-header-side .dxpr-theme-header--side.dxpr-theme-header--hover-border .nav > li > a:hover:before,
-.body--dxpr-theme-header-side .dxpr-theme-header--side.dxpr-theme-header--hover-border .nav > li > a.is-active:before,
-.dxpr-theme-header--top.dxpr-theme-header--hover-border .menu li.active > a:before,
-.dxpr-theme-header--top.dxpr-theme-header--hover-border .menu a:hover:before,
-.dxpr-theme-header--top.dxpr-theme-header--hover-border .menu a.is-active:before {
+
+.body--dxpr-theme-header-side .dxpr-theme-header--side.dxpr-theme-header--hover-border .nav > li.active > a::before,
+.body--dxpr-theme-header-side .dxpr-theme-header--side.dxpr-theme-header--hover-border .nav > li > a:hover::before,
+.body--dxpr-theme-header-side .dxpr-theme-header--side.dxpr-theme-header--hover-border .nav > li > a.is-active::before,
+.dxpr-theme-header--top.dxpr-theme-header--hover-border .menu li.active > a::before,
+.dxpr-theme-header--top.dxpr-theme-header--hover-border .menu a:hover::before,
+.dxpr-theme-header--top.dxpr-theme-header--hover-border .menu a.is-active::before {
   transform: scale(1, 1) translate(10px, 0);
+}
+
+//
+// Skip to content link
+//
+.skip-link {
+  background: #ff0;
+  border: 1px solid #333;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 0 10px rgba(0 0 0 / 25%);
+  color: #333 !important;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: bold;
+  left: 16px;
+  opacity: 0;
+  padding: 12px 15px;
+  position: absolute;
+  text-decoration: none !important;
+  top: 0;
+  transform: translateY(-110%);
+  transition: all 0.3s;
+  z-index: 10000;
+
+  &:focus {
+    opacity: 1;
+    transform: translateY(0%);
+  }
 }

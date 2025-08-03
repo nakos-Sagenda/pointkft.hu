@@ -895,7 +895,7 @@ msgstr ""
 "gewijzigd, met behulp van het veld Koptekstafbeelding in het "
 "knooppuntformulier."
 #: features/sooper-page-title/page_title-theme-settings.inc:137,117
-msgid "Backound Image Opacity"
+msgid "Background Image Opacity"
 msgstr "Dekking van de achtergrondafbeelding"
 #: features/sooper-page-title/page_title-theme-settings.inc:141,121
 msgid ""

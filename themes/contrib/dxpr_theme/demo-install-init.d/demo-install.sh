@@ -13,7 +13,7 @@ fi
 composer config -g bearer.packages.dxpr.com $DXPR_ACCESS_TOKEN
 
 # Creating a new project
-composer create-project dxpr/lightning-dxpr-project:2.x-dev .
+composer create-project dxpr/lightning-dxpr-project:3.x-dev .
 
 # Updating packages if using PHP ^8.0
 if [[ "$PHP_TAG" =~ .*"8.0".* ]]; then

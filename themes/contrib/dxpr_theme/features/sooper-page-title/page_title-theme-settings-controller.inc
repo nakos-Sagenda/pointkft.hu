@@ -14,6 +14,6 @@
 function page_title_theme_settings_controller(array &$variables) {
   $page_title_animate = theme_get_setting('page_title_animate');
   if ($page_title_animate) {
-    $variables['#attached']['library'][] = 'dxpr_theme/dxpr-theme-animatecss-custom';
+    $variables['#attached']['library'][] = 'dxpr_theme/custom_animations';
   }
 }

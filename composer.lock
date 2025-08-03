@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cc3a515aa150f30ca6d8d5926c49b2da",
+    "content-hash": "955d41972ad08d62a6dfb75d108c73ca",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2875,29 +2875,28 @@
         },
         {
             "name": "drupal/dxpr_theme",
-            "version": "5.2.1",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/dxpr_theme.git",
-                "reference": "5.2.1"
+                "reference": "6.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/dxpr_theme-5.2.1.zip",
-                "reference": "5.2.1",
-                "shasum": "3c6e563f52ee0fc09e6e3900756b974346c641c3"
+                "url": "https://ftp.drupal.org/files/projects/dxpr_theme-6.0.0.zip",
+                "reference": "6.0.0",
+                "shasum": "8f422f076c831c470e640512fba88a66e52fd4e2"
             },
             "require": {
-                "drupal/bootstrap5": "^3",
-                "drupal/color": "^1.0.3",
-                "drupal/core": ">=9.3",
+                "drupal/bootstrap5": "^3 || ^4",
+                "drupal/core": "^9.3 || ^10 || ^11",
                 "drupal/dxpr_theme_helper": "*"
             },
             "type": "drupal-theme",
             "extra": {
                 "drupal": {
-                    "version": "5.2.1",
-                    "datestamp": "1706167329",
+                    "version": "6.0.0",
+                    "datestamp": "1733920540",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -3918,6 +3917,124 @@
             "homepage": "https://www.drupal.org/project/jquery_ui_autocomplete",
             "support": {
                 "source": "https://git.drupalcode.org/project/jquery_ui_autocomplete"
+            }
+        },
+        {
+            "name": "drupal/jquery_ui_checkboxradio",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/jquery_ui_checkboxradio.git",
+                "reference": "2.1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/jquery_ui_checkboxradio-2.1.0.zip",
+                "reference": "2.1.0",
+                "shasum": "d4842fe5447132e57403294a0b9927d14671d41e"
+            },
+            "require": {
+                "drupal/core": "^9.2 || ^10 || ^11",
+                "drupal/jquery_ui": "^1.7"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.1.0",
+                    "datestamp": "1717015524",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "bnjmnm",
+                    "homepage": "https://www.drupal.org/user/2369194"
+                },
+                {
+                    "name": "lauriii",
+                    "homepage": "https://www.drupal.org/user/1078742"
+                },
+                {
+                    "name": "zrpnr",
+                    "homepage": "https://www.drupal.org/user/1448368"
+                }
+            ],
+            "description": "Provides jQuery UI Checkboxradio library.",
+            "homepage": "https://www.drupal.org/project/jquery_ui_checkboxradio",
+            "support": {
+                "source": "https://git.drupalcode.org/project/jquery_ui_checkboxradio"
+            }
+        },
+        {
+            "name": "drupal/jquery_ui_datepicker",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/jquery_ui_datepicker.git",
+                "reference": "2.1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/jquery_ui_datepicker-2.1.1.zip",
+                "reference": "2.1.1",
+                "shasum": "29e56e8fa351fefd34e80529768ddc69a460149d"
+            },
+            "require": {
+                "drupal/core": "^9.2 || ^10 || ^11",
+                "drupal/jquery_ui": "^1.7"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.1.1",
+                    "datestamp": "1730932612",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "bnjmnm",
+                    "homepage": "https://www.drupal.org/user/2369194"
+                },
+                {
+                    "name": "jrockowitz",
+                    "homepage": "https://www.drupal.org/user/371407"
+                },
+                {
+                    "name": "lauriii",
+                    "homepage": "https://www.drupal.org/user/1078742"
+                },
+                {
+                    "name": "nod_",
+                    "homepage": "https://www.drupal.org/user/598310"
+                },
+                {
+                    "name": "phenaproxima",
+                    "homepage": "https://www.drupal.org/user/205645"
+                },
+                {
+                    "name": "zrpnr",
+                    "homepage": "https://www.drupal.org/user/1448368"
+                }
+            ],
+            "description": "Provides jQuery UI Datepicker library.",
+            "homepage": "https://www.drupal.org/project/jquery_ui_datepicker",
+            "support": {
+                "source": "https://git.drupalcode.org/project/jquery_ui_datepicker"
             }
         },
         {

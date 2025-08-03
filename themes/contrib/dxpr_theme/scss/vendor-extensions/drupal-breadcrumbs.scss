@@ -8,37 +8,48 @@
     position: relative;
     z-index: 2;
   }
+
   .breadcrumb {
     background: transparent;
-    position: absolute;
     bottom: 0;
-    right: 60px;
-    text-align: right;
-    font-style: italic;
-    opacity: 0.85;
-    margin: 0;
-    padding: 10px 0;
     display: block;
+    font-style: italic;
+    left: 0;
+    margin: 0;
+    opacity: 0.85;
+    padding: 10px var(--dxt-setting-gutter-container);
+    position: absolute;
+    right: 0;
+    text-align: var(--dxt-setting-page-title-breadcrumbs-align);
+
     a {
       font-style: normal;
       text-decoration: none;
+
       &:hover,
       &:focus {
-        color: $primary;
+        color: dxpr-color('base');
       }
+
       // Hide UUID Redirector breadcrumb
       &[href$="/uuid"],
       &[href$="/uuid"] + .dxpr-theme-breadcrumb-spacer {
         display: none;
       }
     }
-    li + li:before {
-      display: none;
+
+    li + li::before {
       content: '';
+      display: none;
     }
+
     span {
-      padding: 0 5px;
       font-size: 12px;
+      padding: 0 5px;
+
+      &::before {
+        content: var(--dxt-setting-page-title-breadcrumbs-separator);
+      }
     }
   }
 }

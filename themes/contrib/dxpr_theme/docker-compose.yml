@@ -88,7 +88,7 @@ services:
   # to watch and build files, use:
   # DEV_WATCH=true docker compose up -d dev && docker compose logs -f dev
   dev:
-    image: ${NODE_IMAGE:-node:14}
+    image: ${NODE_IMAGE:-node:20}
     profiles: ["lint"]
     working_dir: /src
     command: bash -c "./scripts/run_dev.sh"
@@ -100,7 +100,7 @@ services:
       - node_modules:/src/node_modules
 
   eslint:
-    image: ${NODE_IMAGE:-node:14}
+    image: node:20
     profiles: ["lint"]
     working_dir: /src
     command: bash -c "./scripts/run_eslint.sh"
@@ -113,10 +113,34 @@ services:
       - dev
 
   eslint-auto-fix:
-    image: ${NODE_IMAGE:-node:14}
+    image: node:20
     profiles: ["lint"]
     working_dir: /src
     command: bash -c "./scripts/run_eslint-auto-fix.sh"
+    volumes:
+      - .:/src
+      - node_modules:/src/node_modules
+    depends_on:
+      - dev
+
+  stylelint:
+    image: node:20
+    profiles: ["lint"]
+    working_dir: /src
+    command: bash -c "./scripts/run_stylelint.sh"
+    environment:
+      REPORT_ENABLED: ${REPORT_ENABLED:-false}
+    volumes:
+      - .:/src
+      - node_modules:/src/node_modules
+    depends_on:
+      - dev
+
+  stylelint-auto-fix:
+    image: node:20
+    profiles: ["lint"]
+    working_dir: /src
+    command: bash -c "./scripts/run_stylelint-auto-fix.sh"
     volumes:
       - .:/src
       - node_modules:/src/node_modules

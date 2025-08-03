@@ -24,4 +24,4 @@ docker compose \
 docker compose \
   -f docker-compose.yml \
   -f docker-compose.dev.yml \
-  logs -f ${SERVICES_WATCH_LIST:-dxpr-builder-grunt}
+  logs -f

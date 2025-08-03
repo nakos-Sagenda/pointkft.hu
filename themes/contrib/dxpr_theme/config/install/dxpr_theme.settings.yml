@@ -52,22 +52,22 @@ blockquote_font_size: '21'
 blockquote_line_height: '1.5'
 headings_letter_spacing: '0'
 headings_uppercase: 0
-headings_bold: 0
+headings_bold: 1
 body_mobile_font_size: '14'
 nav_mobile_font_size: '14'
 h1_mobile_font_size: '52'
 h2_mobile_font_size: '38'
 h3_mobile_font_size: '29'
 h4_mobile_font_size: '24'
-body_font_face: '0Source+Sans+Pro:'
+body_font_face: SF_Segoe_Roboto
 body_font_face_selector: body
-headings_font_face: '0Source+Sans+Pro:300'
+headings_font_face: SF_Segoe_Roboto
 headings_font_face_selector: 'h1,h2,h3,h4,h5,h6,label,.field--label,.page-title, .html .tp-caption'
-nav_font_face: '0Source+Sans+Pro:'
+nav_font_face: SF_Segoe_Roboto
 nav_font_face_selector: 'nav,nav ul li,nav a'
-sitename_font_face: '0Source+Sans+Pro:300'
+sitename_font_face: SF_Segoe_Roboto
 sitename_font_face_selector: '.site-name, .navbar-brand'
-blockquote_font_face: '0Source+Sans+Pro:300italic'
+blockquote_font_face: SF_Segoe_Roboto
 blockquote_font_face_selector: 'blockquote, blockquote p'
 portfolio_details: top
 portfolio_sidebar: '4'
@@ -210,5 +210,4 @@ hidden_regions:
 popover_placement: top
 tooltip_placement: 'auto top'
 modal_enabled: 0
-modal_jquery_ui_bridge: 0
 cdn_provider: ''
