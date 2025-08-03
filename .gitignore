@@ -1,16 +1,39 @@
 # Drupal standard ignore
-/sites/*/settings.php
-/sites/*/services.yml
-/sites/*/files
+# Composer
 /vendor/
-/node_modules/
-core/
-/config/sync/
-/.ddev/.global_config.yaml
-.ddev/db_dumps/
+/composer.lock
+
+# Drupal-specific
+/core/
+/modules/contrib/
+/themes/contrib/
+/profiles/contrib/
+/sites/*/settings*.php
+/sites/*/services*.yml
+/sites/*/files/
+/sites/*/private/
+/sites/simpletest
+
+# IDE/editor fájlok
 .idea/
-*.sql
-*.sqlite
-*.tar.gz
-*.zip
+*.sublime-project
+*.sublime-workspace
+*.vscode/
+*.DS_Store
+*.swp
+
+# DDEV-related
+.dbinfo
+db_dumps/
+import-db/
+ddev-export/
+web/sites/default/settings.ddev.php
+
+# Logs
 *.log
+
+# Backup, temp
+*.bak
+*.tmp
+*.old
+*.orig
