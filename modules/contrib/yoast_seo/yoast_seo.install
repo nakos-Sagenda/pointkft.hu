@@ -5,6 +5,7 @@
  * Install, update, and uninstall functions for the Real-Time SEO module.
  */
 
+use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\views\Views;
 
@@ -83,4 +84,23 @@ function yoast_seo_update_8203() {
       5 => 'Okay',
     ])
     ->save();
+}
+
+/**
+ * Added an option to disable auto-refresh of the SEO results.
+ *
+ * In case you have complex pages that are being analysed and the form freezes
+ * during analysis, or you experience delays when editing,, consider disabling
+ * the feature in the module settings.
+ *
+ * Auto refresh remains enabled for existing installations.
+ */
+function yoast_seo_update_8204() : void {
+  // Keep enabled for BC on existing installations:
+  \Drupal::configFactory()->getEditable('yoast_seo.settings')
+    ->set('auto_refresh_seo_result', TRUE)
+    ->save();
+  $kernel = \Drupal::service('kernel');
+  assert($kernel instanceof DrupalKernelInterface);
+  $kernel->rebuildContainer();
 }

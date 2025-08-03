@@ -28,11 +28,12 @@ class SchedulerJavascriptDefaultTimeTest extends SchedulerJavascriptTestBase {
     // to local testing having a different locale to drupal.org testing.
     // @see https://www.drupal.org/project/scheduler/issues/2913829 from #18.
     $this->drupalLogin($this->schedulerUser);
+    $this->nodetype->setThirdPartySetting('scheduler', 'fields_display_mode', 'fieldset')
+      ->setThirdPartySetting('scheduler', 'expand_fieldset', 'always')->save();
     $this->drupalGet('node/add/' . $this->type);
     $page = $this->getSession()->getPage();
-    $title = 'Date format test ' . $this->randomString(12);
+    $title = "Add a {$this->typeName} to determine the date-picker format";
     $page->fillField('edit-title-0-value', $title);
-    $page->clickLink('Scheduling options');
     // Set the date using a day and month which could be correctly interpreted
     // either way. Set the year to be next year to ensure a future date.
     // Use a time format which includes 'pm' as this may be necessary, and will
@@ -48,10 +49,12 @@ class SchedulerJavascriptDefaultTimeTest extends SchedulerJavascriptTestBase {
   /**
    * Test the default time functionality when scheduling dates are required.
    *
-   * @dataProvider dataTimeWhenSchedulingIsRequired()
+   * @dataProvider dataTimeWhenSchedulingIsRequired
    */
-  public function testTimeWhenSchedulingIsRequired($field) {
+  public function testTimeWhenSchedulingIsRequired($entityTypeId, $bundle, $field) {
     $config = $this->config('scheduler.settings');
+    $titleField = $this->titleField($entityTypeId);
+    $entityType = $this->entityTypeObject($entityTypeId);
 
     // This test is only relevant when the configuration allows a date only with
     // a default time specified. Testing with 'allow_date_only' = false is
@@ -67,36 +70,39 @@ class SchedulerJavascriptDefaultTimeTest extends SchedulerJavascriptTestBase {
     $scheduling_time = new \DateTime();
     $scheduling_time->add(new \DateInterval('P1D'))->setTime(19, 30, 20);
 
+    // Node and Media entities are revisionable and the 'Revision Information'
+    // tab is the default active one, so needs a click on 'Scheduling Options'.
+    // Products do not have this link, so the click would fail. A simple way to
+    // resolve this is display the scheduler options as a separate fieldset.
+    $entityType->setThirdPartySetting('scheduler', 'fields_display_mode', 'fieldset')->save();
+
     foreach ([TRUE, FALSE] as $required) {
-      // Set the publish-on/unpublish-on date to the $required setting.
-      $this->nodetype->setThirdPartySetting('scheduler', $field . '_required', $required)->save();
+      // Set the publish_on/unpublish_on required setting.
+      $entityType->setThirdPartySetting('scheduler', $field . '_required', $required)->save();
 
-      // Create a node.
-      $this->drupalGet('node/add/' . $this->type);
+      // Create an entity.
+      $this->drupalGet($this->entityAddUrl($entityTypeId, $bundle));
       $page = $this->getSession()->getPage();
-
-      $title = ucfirst($field) . ($required ? ' required ' : ' not required ') . $this->randomString(12);
-      $page->fillField('edit-title-0-value', $title);
-      $page->fillField('edit-body-0-value', 'datepickerFormat = ' . $this->datepickerFormat);
-      $page->clickLink('Scheduling options');
+      $title = ucfirst($field) . ($required ? ' required' : ' not required') . ', datepickerFormat = ' . $this->datepickerFormat;
+      $page->fillField("edit-{$titleField}-0-value", $title);
       if ($required) {
         // Fill in the date value but do nothing with the time field.
         $page->fillField('edit-' . $field . '-on-0-value-date', $scheduling_time->format($this->datepickerFormat));
       }
       $page->pressButton('Save');
 
-      // Test that the content has saved properly.
-      $this->assertSession()->pageTextContains(sprintf('%s %s has been created', $this->typeName, $title));
+      // Test that the entity has saved properly.
+      $this->assertSession()->pageTextMatches($this->entitySavedMessage($entityTypeId, $title));
 
-      $node = $this->drupalGetNodeByTitle($title);
-      $this->assertNotEmpty($node, 'The node could not be found');
+      $entity = $this->getEntityByTitle($entityTypeId, $title);
+      $this->assertNotEmpty($entity, 'The entity object can be found by title');
       if ($required) {
         // Check that the scheduled date and time are correct.
-        $this->assertEquals($scheduling_time->getTimestamp(), (int) $node->{$field . '_on'}->value);
+        $this->assertEquals($scheduling_time->getTimestamp(), (int) $entity->{$field . '_on'}->value);
       }
       else {
         // Check that no scheduled date was stored.
-        $this->assertEmpty($node->{$field . '_on'}->value);
+        $this->assertEmpty($entity->{$field . '_on'}->value);
       }
     }
   }
@@ -104,14 +110,19 @@ class SchedulerJavascriptDefaultTimeTest extends SchedulerJavascriptTestBase {
   /**
    * Provides data for testTimeWhenSchedulingIsRequired().
    *
+   * The data in dataStandardEntityTypes() is expanded to test each entity type
+   * with each of the scheduler date fields.
+   *
    * @return array
-   *   The test data.
+   *   Each array item has the values: [entity type id, bundle id, field name].
    */
-  public function dataTimeWhenSchedulingIsRequired() {
-    return [
-      ['publish'],
-      ['unpublish'],
-    ];
+  public static function dataTimeWhenSchedulingIsRequired() {
+    $data = [];
+    foreach (self::dataStandardEntityTypes() as $key => $values) {
+      $data["$key-1"] = array_merge($values, ['publish']);
+      $data["$key-2"] = array_merge($values, ['unpublish']);
+    }
+    return $data;
   }
 
 }

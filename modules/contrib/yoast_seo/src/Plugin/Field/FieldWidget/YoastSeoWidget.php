@@ -3,6 +3,7 @@
 namespace Drupal\yoast_seo\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -50,6 +51,13 @@ class YoastSeoWidget extends WidgetBase implements ContainerFactoryPluginInterfa
   protected ThemeHandlerInterface $themeHandler;
 
   /**
+   * The yoast_seo.settings configuration.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $config;
+
+  /**
    * Target elements for Javascript.
    *
    * @var array
@@ -73,25 +81,27 @@ class YoastSeoWidget extends WidgetBase implements ContainerFactoryPluginInterfa
       $configuration['third_party_settings'],
       $container->get('entity_type.manager'),
       $container->get('yoast_seo.manager'),
-      $container->get("theme_handler")
+      $container->get("theme_handler"),
+      $container->get('config.factory')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, SeoManager $manager, ThemeHandlerInterface $theme_handler) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, SeoManager $manager, ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
     $this->entityTypeManager = $entity_type_manager;
     $this->seoManager = $manager;
     $this->themeHandler = $theme_handler;
+    $this->config = $config_factory->get('yoast_seo.settings');
   }
 
   /**
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $form['#yoast_settings'] = $this->getSettings();
+    $form_state->set('yoast_settings', $this->getSettings());
 
     // Create the form element.
     $element += [
@@ -183,7 +193,7 @@ class YoastSeoWidget extends WidgetBase implements ContainerFactoryPluginInterfa
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     foreach ($values as &$value) {
-      $value['title']       = ($this->getSetting('edit_title') ? $value['edit_title'] : NULL);
+      $value['title'] = ($this->getSetting('edit_title') ? $value['edit_title'] : NULL);
       $value['description'] = ($this->getSetting('edit_description') ? $value['edit_description'] : NULL);
     }
     return $values;
@@ -301,6 +311,8 @@ class YoastSeoWidget extends WidgetBase implements ContainerFactoryPluginInterfa
       'score_rules' => $score_rules,
       // Possibly allow properties to be editable.
       'enable_editing' => [],
+      // Set the auto refresh seo result status.
+      'auto_refresh_seo_result' => $this->config->get('auto_refresh_seo_result'),
     ];
 
     foreach (['title', 'description'] as $property) {

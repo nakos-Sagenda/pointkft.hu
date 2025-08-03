@@ -19,10 +19,10 @@
   {%- if title -%}
     {%
       set summary_classes = [
-        required ? 'js-form-required',
-        required ? 'form-required invalid-feedback',
-        'card-header bg-light',
-      ]
+      required ? 'js-form-required',
+      required ? 'form-required invalid-feedback',
+      'card-header bg-light',
+    ]
     %}
 
     <summary{{ summary_attributes.addClass(summary_classes) }}>{{ title }}</summary>

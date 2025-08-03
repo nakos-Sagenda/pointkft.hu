@@ -236,7 +236,10 @@
     // We use Drupal's AJAX progress indicator to check that we're not
     // interfering with an already running AJAX request. If an AJAX request is
     // already running then we reschedule the update.
-    if (!jQuery('.ajax-progress').length) {
+    if (
+      !jQuery('.ajax-progress').length &&
+       this.config.auto_refresh_seo_result
+    ) {
       // Click the refresh data button to perform a Drupal AJAX submit.
       this.$form.find('.yoast-seo-preview-submit-button').mousedown();
     }
@@ -302,8 +305,8 @@
 
     // We convert the label to lowercase here, which is not as good as clean_css that's being called on the back-end,
     // but is good enough for the constraints on the classes we use.
-    scoreDisplay.classList.remove(scoreLabel.innerHTML.toLowerCase());
-    scoreDisplay.classList.add(newLabelText.toLowerCase());
+    scoreDisplay.classList.remove(scoreLabel.innerHTML.toLowerCase().replace(' ', '-'));
+    scoreDisplay.classList.add(newLabelText.toLowerCase().replace(' ', '-'));
 
     // Update the label for the user to the new text.
     scoreLabel.innerHTML = newLabelText;
@@ -346,50 +349,77 @@
    * Updates the preview with the newest snippet.
    */
   Orchestrator.prototype.updatePreview = function () {
-    var emphasized_title = this.data.metaTitle;
-
-    if (this.data.keyword) {
-      var keyword_pos = this.data.metaTitle.toLowerCase().indexOf(this.data.keyword.toLowerCase());
-      var keyword_length = this.data.keyword.length;
-
-      if (keyword_pos > -1 && keyword_length > 0) {
-        emphasized_title = this.data.metaTitle.substr(0, keyword_pos) + '<strong>' + this.data.metaTitle.substr(keyword_pos, keyword_length) + '</strong>' + this.data.metaTitle.substr(keyword_pos + keyword_length);
-      }
-    }
-
-    var title_class = 'title';
-    var title_editable = '';
+    // Title
+    const snippetTitle = document.createElement('span');
+    snippetTitle.classList.add("title");
+    snippetTitle.textContent = this.data.metaTitle;
+    snippetTitle.id = "snippet_title";
 
     if (this.config.enable_editing.title) {
-      title_class += ' editable';
-      title_editable = 'contenteditable="true"';
+      snippetTitle.classList.add("editable");
+      snippetTitle.attr('contenteditable', 'true');
     }
 
-    var desc_class = 'desc desc-default';
-    var desc_editable = '';
+    // Highlight keyword by splitting the sentence on the keyword and then
+    // reinserting it as strong element.
+    if (this.data.keyword) {
+      const highlight = document.createElement('strong');
+      highlight.textContent = this.data.keyword;
+      snippetTitle.replaceChildren(
+        ...snippetTitle.textContent
+          .split(this.data.keyword)
+          .flatMap((
+            part, index, arr) => index < arr.length-1 ? [part, highlight.cloneNode(true)] : part
+          )
+      );
+    }
+
+    const titleContainer = document.createElement('div');
+    titleContainer.classList.add("snippet_container", "snippet-editor__container");
+    titleContainer.id = "title_container";
+    titleContainer.appendChild(snippetTitle);
+
+    // URL Base
+    const urlBase = document.createElement('cite');
+    urlBase.classList.add("url", "urlBase");
+    urlBase.id = "snippet_citeBase";
+    urlBase.textContent = this.config.base_root;
+
+    // URL Path
+    const urlPath = document.createElement('cite');
+    urlPath.classList.add("url");
+    urlPath.id = "snippet_cite";
+    urlPath.textContent = this.data.url;
+
+
+    const urlContainer = document.createElement('div');
+    urlContainer.classList.add("snippet_container", "snippet-editor__container");
+    urlContainer.id = "url_container";
+    urlContainer.appendChild(urlBase);
+    urlContainer.appendChild(urlPath);
+
+    // Description
+    const snippetMeta = document.createElement('span');
+    snippetMeta.classList.add("desc", "desc-default");
+    snippetMeta.id = "snippet_meta";
+    snippetMeta.textContent = this.data.meta;
 
     if (this.config.enable_editing.description) {
-      desc_class += ' editable';
-      desc_editable = 'contenteditable="true"';
+      snippetMeta.classList.add("editable");
+      snippetMeta.attr('contenteditable', 'true');
     }
 
-    document.getElementById(this.config.targets.snippet).innerHTML =
-      '<section class="snippet-editor__preview">' +
-        '<div class="snippet_container snippet-editor__container" id="title_container">' +
-          '<span class="' + title_class + '"' + title_editable + ' id="snippet_title">' +
-            emphasized_title +
-          '</span>' +
-        '</div>' +
-        '<div class="snippet_container snippet-editor__container" id="url_container">' +
-          '<cite class="url urlBase" id="snippet_citeBase">' + this.config.base_root + '</cite>' +
-          '<cite class="url" id="snippet_cite">' + this.data.url + '</cite>' +
-        '</div>' +
-        '<div class="snippet_container snippet-editor__container" id="meta_container">' +
-          '<span class="' + desc_class + '"' + desc_editable + ' id="snippet_meta">' +
-            this.data.meta +
-          '</span>' +
-        '</div>' +
-      '</section>';
+    const metaContainer = document.createElement('div');
+    metaContainer.classList.add("snippet_container", "snippet-editor__container");
+    metaContainer.id = "meta_container";
+    metaContainer.appendChild(snippetMeta);
+
+    // Preview snippet
+    const previewSnippet = document.createElement('section');
+    previewSnippet.classList.add('snippet-editor__preview');
+    previewSnippet.append(titleContainer, urlContainer, metaContainer);
+
+    document.getElementById(this.config.targets.snippet).replaceChildren(previewSnippet);
   };
 
 })(jQuery);

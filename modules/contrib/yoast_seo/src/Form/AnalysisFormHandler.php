@@ -4,6 +4,7 @@ namespace Drupal\yoast_seo\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\InvokeCommand;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityHandlerInterface;
@@ -35,16 +36,30 @@ class AnalysisFormHandler implements EntityHandlerInterface {
   protected $messenger;
 
   /**
+   * The yoast_seo.settings configuration.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $config;
+
+  /**
    * SeoPreviewFormHandler constructor.
    *
    * @param \Drupal\yoast_seo\EntityAnalyser $entity_analyser
    *   The entity analyser.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
-  public function __construct(EntityAnalyser $entity_analyser, MessengerInterface $messenger) {
+  public function __construct(
+    EntityAnalyser $entity_analyser,
+    MessengerInterface $messenger,
+    ConfigFactoryInterface $config_factory,
+  ) {
     $this->entityAnalyser = $entity_analyser;
     $this->messenger = $messenger;
+    $this->config = $config_factory->get('yoast_seo.settings');
   }
 
   /**
@@ -53,7 +68,8 @@ class AnalysisFormHandler implements EntityHandlerInterface {
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $container->get('yoast_seo.entity_analyser'),
-      $container->get('messenger')
+      $container->get('messenger'),
+      $container->get('config.factory')
     );
   }
 
@@ -72,10 +88,16 @@ class AnalysisFormHandler implements EntityHandlerInterface {
     $preview_entity = $form_state->getTemporaryValue('preview_entity');
     $preview_entity->in_preview = TRUE;
 
+    /** @var array{render_theme: ?string, render_view_mode: string} $yoast_settings */
+    $yoast_settings = $form_state->get('yoast_settings') ?? [
+      'render_theme' => NULL,
+      'render_view_mode' => 'default',
+    ];
+
     $entity_data = $this->entityAnalyser->createEntityPreview(
       $preview_entity,
-      $form['#yoast_settings']['render_theme'],
-      $form['#yoast_settings']['render_view_mode']
+      $yoast_settings['render_theme'],
+      $yoast_settings['render_view_mode']
     );
 
     // The current value of the alias field, if any,
@@ -129,8 +151,6 @@ class AnalysisFormHandler implements EntityHandlerInterface {
       '#value' => t('Seo preview'),
       '#attributes' => [
         'class' => ['yoast-seo-preview-submit-button'],
-        // Inline styles are bad but we can't reliably use class order here.
-        'style' => 'display: none',
       ],
       '#ajax' => [
         'callback' => [$this, 'analysisSubmitAjax'],
@@ -141,6 +161,12 @@ class AnalysisFormHandler implements EntityHandlerInterface {
       // processed by analysisSubmitAjax callback.
       '#validate' => [[$this, 'cacheProcessedEntityForPreview']],
     ];
+
+    $auto_refresh_seo_result = $this->config->get('auto_refresh_seo_result');
+    if ($auto_refresh_seo_result) {
+      // Inline styles are bad but we can't reliably use class order here.
+      $element['yoast_seo_preview_button']['#attributes']['style'] = 'display: none';
+    }
   }
 
   /**

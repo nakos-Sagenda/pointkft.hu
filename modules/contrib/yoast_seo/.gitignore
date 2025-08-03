@@ -49,3 +49,6 @@ fabric.properties
 
 # Ignore patch files
 *.patch
+
+# Ignore PHPUnit cache
+/.phpunit.cache

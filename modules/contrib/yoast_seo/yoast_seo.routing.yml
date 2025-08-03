@@ -2,6 +2,6 @@ yoast_seo.settings:
   path: 'admin/config/yoast_seo'
   defaults:
     _title: 'Real-time SEO'
-    _controller: '\Drupal\yoast_seo\Controller\SettingsController::index'
+    _form: 'Drupal\yoast_seo\Form\SettingsForm'
   requirements:
     _permission: 'administer yoast seo'

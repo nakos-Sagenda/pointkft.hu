@@ -3,6 +3,7 @@ Feature: Taxonomy term analysis works in different circumstances
 
   Background:
     Given module taxonomy is enabled
+    And config yoast_seo.settings has key auto_refresh_seo_result with value true
     And taxonomy type:
       | vid      | name     |
       | category | Category |

@@ -13,7 +13,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\TableSortExtender;
-use Drupal\Core\Database\StatementWrapper;
+use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -28,7 +28,7 @@ class Log extends RawMinkContext {
    * Only contains levels we care about in tests (we ignore debug or info level
    * logs).
    *
-   * @return array<int,string>
+   * @return array<int, string>
    *   An array of log level labels.
    */
   protected static function getLogLevelLabelMap() : array {
@@ -51,7 +51,6 @@ class Log extends RawMinkContext {
     $environment = $scope->getEnvironment();
     assert($environment instanceof InitializedContextEnvironment);
     $setupContext = $environment->getContext(Setup::class);
-    assert($setupContext instanceof Setup);
     $setupContext->assertModuleEnabled("dblog");
 
     $this->deleteAllLogMessages();
@@ -62,7 +61,7 @@ class Log extends RawMinkContext {
    *
    * @AfterStep
    */
-  public function assertCleanConsole() : void {
+  public function assertCleanConsole(AfterStepScope $scope) : void {
     $driver = $this->getSession()->getDriver();
     assert($driver instanceof ChromeDriver, "Not using ChromeDriver, console messages can't be tested.");
 
@@ -74,7 +73,11 @@ class Log extends RawMinkContext {
     $messages = $driver->getConsoleMessages();
 
     if (count($messages) !== 0) {
-      throw new \RuntimeException("A step generated messages on the console: \n\n" . implode("\n", $messages));
+      $message_strings = array_map(
+        fn (array $message) => "[{$message['level']}] {$message['text']}'\n{$message['url']}:{$message['line']}:{$message['column']}",
+        $messages
+      );
+      throw new \RuntimeException("A step generated messages on the console: \n\n" . implode("\n", $message_strings));
     }
   }
 
@@ -94,10 +97,11 @@ class Log extends RawMinkContext {
     $problems = [];
     foreach ($messages as $dblog) {
       // Ignore debug information and only trigger on errors.
-      if (!$dblog instanceof \StdClass || !isset($dblog->severity, $dblog->type, $error_labels[$dblog->severity])) {
+      if (!is_object($dblog) || !isset($dblog->severity, $dblog->type, $error_labels[$dblog->severity])) {
         continue;
       }
 
+      // @phpstan-ignore-next-line
       if ($this->isIgnoredLogMessage($dblog)) {
         continue;
       }
@@ -114,7 +118,7 @@ class Log extends RawMinkContext {
   /**
    * Drupal can produce a lot of log messages that are not actual problems.
    *
-   * @param object $row
+   * @param object{"type": string, "severity": string, "message": string} $row
    *   The row from the watchdog table.
    *
    * @return bool
@@ -134,6 +138,8 @@ class Log extends RawMinkContext {
       || ($row->type === 'comment' && (int) $row->severity === RfcLogLevel::NOTICE)
       // Ignore language creation notices.
       || ($row->type === 'language' && (int) $row->severity === RfcLogLevel::NOTICE && str_contains($row->message, "language has been created"))
+      // Ignore access denied messages since we should explicitly check those.
+      || ($row->type === 'access denied' && (int) $row->severity === RfcLogLevel::WARNING)
     );
   }
 
@@ -189,10 +195,10 @@ class Log extends RawMinkContext {
    * We must query for this manually taking inspiration from the DbLogController
    * because there's no service that provides proper non-database access.
    *
-   * @return \Drupal\Core\Database\StatementWrapper
+   * @return \Drupal\Core\Database\StatementWrapperIterator
    *   The result of the log message query.
    */
-  private function getLogMessages() : StatementWrapper {
+  private function getLogMessages() : StatementWrapperIterator {
     // @phpstan-ignore-next-line
     $query = \Drupal::database()->select('watchdog', 'w')
       ->extend(PagerSelectExtender::class)
@@ -212,7 +218,7 @@ class Log extends RawMinkContext {
     $query->leftJoin('users_field_data', 'ufd', '[w].[uid] = [ufd].[uid]');
 
     $result = $query->execute();
-    assert($result instanceof StatementWrapper, "Invalid query for watchdog table");
+    assert($result instanceof StatementWrapperIterator, "Invalid query for watchdog table");
     return $result;
   }
 

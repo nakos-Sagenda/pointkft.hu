@@ -1,2 +1,4 @@
-# Drupal ./core/.prettierignore has *.yml so contrib can do likewise.
-*.yml
+# Config and Views exports from UI do not follow the prettier formatting rules,
+# so we ignore these, rather than manually edit the exported files.
+config/*/views.*.yml
+tests/modules/*/config/install/*.yml

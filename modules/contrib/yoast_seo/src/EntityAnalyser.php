@@ -87,7 +87,7 @@ class EntityAnalyser {
     RouterInterface $router,
     ?ThemeManagerInterface $theme_manager = NULL,
     ?ThemeInitializationInterface $theme_initialization = NULL,
-    ?ConfigFactoryInterface $configFactory = NULL
+    ?ConfigFactoryInterface $configFactory = NULL,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->renderer = $renderer;
@@ -115,9 +115,15 @@ class EntityAnalyser {
    */
   public function createEntityPreview(EntityInterface $entity, ?string $theme = NULL, string $view_mode = 'full') {
     // Nodes want to know when they're being previewed.
-    // @phpstan-ignore-next-line
     if (property_exists($entity, "in_preview")) {
       $entity->in_preview = TRUE;
+      // @phpstan-ignore-next-line property.notFound
+      $entity->preview_view_mode = $view_mode;
+    }
+
+    // Dealing with a non-renderable entity. When configuring a field.
+    if (!$this->entityTypeManager->hasHandler($entity->getEntityTypeId(), 'view_builder')) {
+      return [];
     }
 
     $html = $this->renderEntity($entity, $theme, $view_mode);
@@ -214,7 +220,7 @@ class EntityAnalyser {
     foreach ($metatags as $tag => $value) {
       $metatags[$tag] = str_replace('[current-page:title]', $entity->label() ?? '', $value);
       // URL metatags cause issues for new nodes as they don't have a URL yet.
-      if ($entity->isNew() && (substr($tag, -4) === '_url')) {
+      if ($entity->isNew() && preg_match('/[.\-_:]url/', $value)) {
         $metatags[$tag] = '';
       }
     }

@@ -40,7 +40,7 @@ analytics_core:
     url: https://github.com/goalgorilla/RTSEO.js/blob/master/LICENSE
     gpl-compatible: true
   js:
-    /libraries/rtseo.js/dist/rtseo.js: {}
+    /libraries/rtseo.js/dist/rtseo.js: { preprocess: false }
   css:
     theme:
       /libraries/rtseo.js/dist/rtseo.min.css: {}

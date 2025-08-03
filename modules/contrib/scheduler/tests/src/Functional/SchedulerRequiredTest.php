@@ -12,7 +12,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
   /**
    * Tests creating and editing nodes with required scheduling enabled.
    *
-   * @dataProvider dataRequiredScheduling()
+   * @dataProvider dataRequiredScheduling
    */
   public function testRequiredScheduling($id, $publish_required, $unpublish_required, $operation, $scheduled, $status, $publish_expected, $unpublish_expected, $message) {
 
@@ -26,7 +26,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
       ->setThirdPartySetting('scheduler', 'unpublish_required', $unpublish_required)
       ->save();
 
-    // To assist viewing and analysing the generated test result pages create a
+    // To assist viewing and analyzing the generated test result pages create a
     // text string showing all the test case parameters.
     $title_data = ['id = ' . $id,
       $publish_required ? 'Publishing required' : '',
@@ -107,14 +107,14 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
    *                        required' error message
    *   message            - Descriptive text used in the body of the node
    */
-  public function dataRequiredScheduling() {
+  public static function dataRequiredScheduling() {
 
     $data = [
       // The numbering used below matches the test cases described in
       // http://drupal.org/node/1198788#comment-7816119
 
       // Check the default case when neither date should be required.
-      [
+      '#node-0' => [
         'id' => 0,
         'publish_required' => FALSE,
         'unpublish_required' => FALSE,
@@ -129,7 +129,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
       // A. Test scenarios that require scheduled publishing.
       // When creating a new unpublished node it is required to enter a
       // publication date.
-      [
+      '#node-1' => [
         'id' => 1,
         'publish_required' => TRUE,
         'unpublish_required' => FALSE,
@@ -143,7 +143,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
 
       // When creating a new published node it is required to enter a
       // publication date. The node will be unpublished on form submit.
-      [
+      '#node-2' => [
         'id' => 2,
         'publish_required' => TRUE,
         'unpublish_required' => FALSE,
@@ -157,7 +157,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
 
       // When editing a published node it is not needed to enter a publication
       // date since the node is already published.
-      [
+      '#node-3' => [
         'id' => 3,
         'publish_required' => TRUE,
         'unpublish_required' => FALSE,
@@ -171,7 +171,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
 
       // When editing an unpublished node that is scheduled for publication it
       // is required to enter a publication date.
-      [
+      '#node-4' => [
         'id' => 4,
         'publish_required' => TRUE,
         'unpublish_required' => FALSE,
@@ -186,7 +186,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
       // When editing an unpublished node that is not scheduled for publication
       // it is not required to enter a publication date since this means that
       // the node has already gone through a publication > unpublication cycle.
-      [
+      '#node-5' => [
         'id' => 5,
         'publish_required' => TRUE,
         'unpublish_required' => FALSE,
@@ -203,7 +203,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
       // When creating a new unpublished node it is required to enter an
       // unpublication date since it is to be expected that the node will be
       // published at some point and should subsequently be unpublished.
-      [
+      '#node-6' => [
         'id' => 6,
         'publish_required' => FALSE,
         'unpublish_required' => TRUE,
@@ -217,7 +217,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
 
       // When creating a new published node it is required to enter an
       // unpublication date.
-      [
+      '#node-7' => [
         'id' => 7,
         'publish_required' => FALSE,
         'unpublish_required' => TRUE,
@@ -231,7 +231,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
 
       // When editing a published node it is required to enter an unpublication
       // date.
-      [
+      '#node-8' => [
         'id' => 8,
         'publish_required' => FALSE,
         'unpublish_required' => TRUE,
@@ -245,7 +245,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
 
       // When editing an unpublished node that is scheduled for publication it
       // it is required to enter an unpublication date.
-      [
+      '#node-9' => [
         'id' => 9,
         'publish_required' => FALSE,
         'unpublish_required' => TRUE,
@@ -260,7 +260,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
       // When editing an unpublished node that is not scheduled for publication
       // it is not required to enter an unpublication date since this means that
       // the node has already gone through a publication - unpublication cycle.
-      [
+      '#node-10' => [
         'id' => 10,
         'publish_required' => FALSE,
         'unpublish_required' => TRUE,
@@ -276,7 +276,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
 
       // This section is an amalgamation of the values in the sections A and B
       // to check that the settings do not interfere with each other.
-      [
+      '#node-11' => [
         'id' => 11,
         'publish_required' => TRUE,
         'unpublish_required' => TRUE,
@@ -288,7 +288,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
         'message' => 'When both scheduled publishing and unpublishing are required and a new unpublished node is created, entering a date in both the publish and unpublish on fields is required.',
       ],
 
-      [
+      '#node-12' => [
         'id' => 12,
         'publish_required' => TRUE,
         'unpublish_required' => TRUE,
@@ -300,7 +300,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
         'message' => 'When both scheduled publishing and unpublishing are required and a new published node is created, entering a date in both the publish and unpublish on fields is required.',
       ],
 
-      [
+      '#node-13' => [
         'id' => 13,
         'publish_required' => TRUE,
         'unpublish_required' => TRUE,
@@ -312,7 +312,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
         'message' => 'When both scheduled publishing and unpublishing are required and an existing published, unscheduled node is edited, entering a date in the unpublish on field is required, but a publish date is not required.',
       ],
 
-      [
+      '#node-14' => [
         'id' => 14,
         'publish_required' => TRUE,
         'unpublish_required' => TRUE,
@@ -324,7 +324,7 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
         'message' => 'When both scheduled publishing and unpublishing are required and an existing unpublished, scheduled node is edited, entering a date in both the publish and unpublish on fields is required.',
       ],
 
-      [
+      '#node-15' => [
         'id' => 15,
         'publish_required' => TRUE,
         'unpublish_required' => TRUE,
@@ -338,9 +338,6 @@ class SchedulerRequiredTest extends SchedulerBrowserTestBase {
 
     ];
 
-    // Use unset($data[n]) to remove a temporarily unwanted item, use
-    // return [$data[n]] to selectively test just one item, or have the default
-    // return $data to test everything.
     return $data;
   }
 

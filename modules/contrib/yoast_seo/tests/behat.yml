@@ -16,7 +16,7 @@ default:
   extensions:
     DMore\ChromeExtension\Behat\ServiceContainer\ChromeExtension: ~
     Drupal\MinkExtension:
-      base_url: 'http://web'
+      base_url: 'http://router'
       files_path: '%paths.base%/features'
       browser_name: chrome_headless
       javascript_session: chrome_headless
@@ -29,9 +29,9 @@ default:
     Drupal\DrupalExtension:
       api_driver: 'drupal'
       drush:
-        root: '/var/www/html'
+        root: '/app/html'
       drupal:
-        drupal_root: '/var/www/html'
+        drupal_root: '/app/html'
     FriendsOfBehat\MinkDebugExtension:
       directory: '%paths.base%/logs'
       screenshot: true

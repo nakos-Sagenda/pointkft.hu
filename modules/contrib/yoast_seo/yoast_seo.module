@@ -33,11 +33,10 @@ function yoast_seo_form_field_storage_config_edit_form_alter(&$form, FormStateIn
 /**
  * Implements hook_field_access().
  */
-function yoast_seo_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+function yoast_seo_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
   if ($field_definition->getType() == 'yoast_seo') {
     return AccessResult::forbiddenIf(
       !($account->hasPermission('use yoast seo') || $account->hasPermission('administer yoast seo'))
-      || !($account->hasPermission('create url aliases') || $account->hasPermission('administer url aliases'))
       // Such edit meta tags permission doesn't exist anymore, and administer
       // meta tags is too restrictive.
       // Wait or changes.

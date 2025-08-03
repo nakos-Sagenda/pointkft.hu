@@ -5,6 +5,7 @@ Feature: It's possible to configure the theme that the output is rendered in for
 
   Background:
     Given theme yoast_seo_test_theme is enabled
+    And config yoast_seo.settings has key auto_refresh_seo_result with value true
     And theme claro is enabled
     And config system.theme has key admin with value claro
     And config system.theme has key default with value yoast_seo_test_theme

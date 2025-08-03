@@ -1,11 +1,11 @@
-name: 'Scheduler Node Access Test'
+name: 'Scheduler Entity Access Test'
 type: module
-description: 'Support module for Scheduler restricted node access testing.'
+description: 'Support module for Scheduler testing with restricted entity access.'
 package: Testing
 dependencies:
   - scheduler:scheduler
 
-# Information added by Drupal.org packaging script on 2023-01-07
-version: '8.x-1.5'
+# Information added by Drupal.org packaging script on 2025-02-05
+version: '2.2.1'
 project: 'scheduler'
-datestamp: 1673107037
+datestamp: 1738771367

@@ -16,12 +16,12 @@ class SchedulerUnpublishOnConstraintValidator extends ConstraintValidator {
   public function validate($entity, Constraint $constraint) {
 
     // If the content type is not enabled for unpublishing then exit early.
-    if (!$entity->getEntity()->type->entity->getThirdPartySetting('scheduler', 'unpublish_enable', FALSE)) {
+    if (!\Drupal::service('scheduler.manager')->getThirdPartySetting($entity->getEntity(), 'unpublish_enable', FALSE)) {
       return;
     }
 
     $default_unpublish_required = \Drupal::config('scheduler.settings')->get('default_unpublish_required');
-    $scheduler_unpublish_required = $entity->getEntity()->type->entity->getThirdPartySetting('scheduler', 'unpublish_required', $default_unpublish_required);
+    $scheduler_unpublish_required = \Drupal::service('scheduler.manager')->getThirdPartySetting($entity->getEntity(), 'unpublish_required', $default_unpublish_required);
     $publish_on = $entity->getEntity()->publish_on->value;
     $unpublish_on = $entity->value;
     $status = $entity->getEntity()->status->value;
@@ -45,7 +45,7 @@ class SchedulerUnpublishOnConstraintValidator extends ConstraintValidator {
 
     // Check that the unpublish-on date is in the future. Unlike the publish-on
     // field, there is no option to use a past date, as this is not relevant for
-    // unpublshing. The date must ALWAYS be in the future if it is entered.
+    // unpublishing. The date must ALWAYS be in the future if it is entered.
     if ($unpublish_on && $unpublish_on < \Drupal::time()->getRequestTime()) {
       $this->context->buildViolation($constraint->messageUnpublishOnDateNotInFuture)
         ->atPath('unpublish_on')

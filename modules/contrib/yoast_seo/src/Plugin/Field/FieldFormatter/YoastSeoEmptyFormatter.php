@@ -12,7 +12,7 @@ use Drupal\Core\Field\FormatterBase;
  *   id = "yoastseo_empty_formatter",
  *   label = @Translation("Empty formatter"),
  *   field_types = {
- *     "field_yoast_seo"
+ *     "yoast_seo",
  *   }
  * )
  */

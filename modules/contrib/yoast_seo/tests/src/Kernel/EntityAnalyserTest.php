@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\yoast_seo\Kernel;
 
-use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;

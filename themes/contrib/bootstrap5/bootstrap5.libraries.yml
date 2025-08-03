@@ -105,9 +105,9 @@ user:
         weight: -10
 
 bootstrap5-js-latest:
-  version: '5.3.2'
+  version: '5.3.3'
   js:
-    dist/bootstrap/5.3.2/dist/js/bootstrap.bundle.js: {}
+    dist/bootstrap/5.3.3/dist/js/bootstrap.bundle.js: {}
 
 global-styling:
   css:
@@ -115,7 +115,7 @@ global-styling:
       css/style.css: {}
 
 drupal.nav-tabs:
-  version: '5.3.2'
+  version: '5.3.3'
   js:
     js/nav-tabs.js: {}
   dependencies:
@@ -127,7 +127,7 @@ drupal.nav-tabs:
     - core/collapse
 
 style-guide:
-  version: '5.3.2'
+  version: '5.3.3'
   js:
     dist/bootstrap/5.3.2/site/content/docs/5.3/examples/cheatsheet/cheatsheet.js: {}
   css:

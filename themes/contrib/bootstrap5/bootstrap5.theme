@@ -7,7 +7,7 @@
 
 use Drupal\block\Entity\Block;
 use Drupal\bootstrap5\SettingsManager;
-use Drupal\bootstrap5\SubthemeManager;
+use Drupal\bootstrap5\SubthemeFormManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\views\ViewExecutable;
@@ -40,8 +40,8 @@ function bootstrap5_form_system_theme_settings_alter(&$form, FormStateInterface 
  * Validate callback to ensure filter order and allowed_html are compatible.
  */
 function bootstrap5_form_system_theme_settings_subtheme_validate(array &$form, FormStateInterface $form_state) {
-  $subtheme_manager = new SubthemeManager(\Drupal::service('file_system'), \Drupal::service('messenger'));
-  return $subtheme_manager->validateForm($form, $form_state);
+  $subtheme_form_manager = new SubthemeFormManager();
+  return $subtheme_form_manager->validateForm($form, $form_state);
 }
 
 /**
@@ -50,8 +50,8 @@ function bootstrap5_form_system_theme_settings_subtheme_validate(array &$form, F
  * @see bootstrap5_form_system_theme_settings_alter()
  */
 function bootstrap5_form_system_theme_settings_subtheme_submit($form, FormStateInterface $form_state) {
-  $subtheme_manager = new SubthemeManager(\Drupal::service('file_system'), \Drupal::service('messenger'));
-  return $subtheme_manager->submitForm($form, $form_state);
+  $subtheme_form_manager = new SubthemeFormManager();
+  return $subtheme_form_manager->submitForm($form, $form_state);
 }
 
 /**

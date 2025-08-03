@@ -3,6 +3,7 @@ Feature: Node analysis works in different circumstances
 
   Background:
     Given module node is enabled
+    And config yoast_seo.settings has key auto_refresh_seo_result with value true
     And content type:
       | type    | name    |
       | article | Article |
@@ -46,3 +47,5 @@ Feature: Node analysis works in different circumstances
     Then I should see "The SEO title has a nice length."
     And I should see "The meta description contains the focus keyword."
     And I should see "The focus keyword appears in the first paragraph of the copy."
+    # Detects issue #3503405: "You're linking to another page with the focus keyword" is always flagged
+    And I should not see "You're linking to another page with the focus keyword you want this page to rank for. Consider changing that if you truly want this page to rank."

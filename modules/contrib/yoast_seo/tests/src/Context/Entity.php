@@ -48,7 +48,7 @@ class Entity implements Context {
 
       // Look for or add the specified field to the requested entity bundle.
       if (!FieldStorageConfig::loadByName($field['entity_type'], $field['field_name'])) {
-        $cardinality = $field['cardinality'] ?? 1;
+        $cardinality = (int) ($field['cardinality'] ?? 1);
         if ($cardinality === -1) {
           $cardinality = FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED;
         }
